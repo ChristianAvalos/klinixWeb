@@ -1,0 +1,57 @@
+
+services:
+  # Backend: Laravel (PHP 8.5 + Apache)
+  backend:
+    build: ./klinixWeb-Laravel
+    container_name: laravel-app-klinixWeb
+    ports:
+      - "8002:80"
+
+    environment:
+      - DB_CONNECTION=pgsql
+      - DB_HOST=db_postgres
+      - DB_PORT=5432
+      - DB_DATABASE=klinixWeb
+      - DB_USERNAME=klinixWeb
+      - DB_PASSWORD=#Password#
+    depends_on:
+      - db_postgres
+    networks:
+      - backend-klinixWeb
+    restart: always
+
+##  Frontend: React (con Apache sirviendo los archivos estáticos)
+  frontend:
+    build: ./klinixWeb-React
+    container_name: react-app-klinixWeb
+    ports:
+      - "3002:3000"
+    restart: always
+    networks:
+      - backend-klinixWeb
+  
+
+  # Base de datos: PostgreSQL
+  db_postgres:
+    image: postgres:18
+    container_name: postgres-klinixWeb
+    restart: always
+    ports:
+      - "5435:5432"
+    environment:
+      - POSTGRES_DB=klinixWeb
+      - POSTGRES_USER=klinixWeb
+      - POSTGRES_PASSWORD=#Password#
+    volumes:
+      - postgres_data_klinixWeb:/var/lib/postgresql
+    networks:
+      - backend-klinixWeb
+
+volumes:
+  # sqlserver_data_klinixWeb:
+  # sqlserver_backups_klinixWeb:
+  postgres_data_klinixWeb:
+
+networks:
+  backend-klinixWeb:
+    driver: bridge
