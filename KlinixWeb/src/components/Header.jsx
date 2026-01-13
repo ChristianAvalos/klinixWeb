@@ -1,0 +1,145 @@
+import { React, useState,useEffect, useRef }from 'react';
+import ModalUsuarios from '../views/ModalUsuarios';
+import { useAuth } from "../hooks/useAuth";
+import ChangePasswordModal from '../views/ModalPassword';
+
+export default function Header() {
+  const { logout, user } = useAuth({ middleware: 'auth' })
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Función para manejar el cierre de sesión
+  const handleLogout = () => {
+    logout();
+    setDropdownOpen(false);  // Cerrar el menú después de hacer logout
+  };
+
+  //para cuando se toca fuera del boton el menu desplegable 
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
+  const handleClickOutside = (event) => {
+    // Verifica si el clic fue fuera del dropdown
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setDropdownOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    // Agrega el evento de clic en el documento
+    document.addEventListener('mousedown', handleClickOutside);
+    
+    // Limpia el evento al desmontar el componente
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+
+
+  //apertura de modal de password
+  const [isModalOpenPassword, setIsModalOpenPassword] = useState(false);
+
+  // Apertura del modal en modo "perfil"
+  const [modalMode, setModalMode] = useState('perfil');
+  const [isModalOpen, setModalOpen] = useState(false);
+  const openProfileModal = (modo) => {
+    setModalMode(modo);
+    setModalOpen(true);
+  };
+
+  // Cierre del modal
+  const closeModal = () => {
+    setModalOpen(false);
+  };
+
+
+  return (
+    <div>
+      {/* Navbar */}
+      <nav className="main-header navbar navbar-expand navbar-white navbar-light">
+        {/* Left navbar links */}
+        <ul className="navbar-nav">
+          <li className="nav-item">
+            <a className="nav-link" data-widget="pushmenu" href="#" role="button"><i className="fas fa-bars" /></a>
+          </li>
+        </ul>
+        {/* Right navbar links */}
+        <ul className="navbar-nav ml-auto">
+          <li className="nav-item">
+            <a className="nav-link" data-widget="fullscreen" href="#" role="button">
+              <i className="fas fa-expand-arrows-alt" />
+            </a>
+          </li>
+          <li className="nav-item">
+            {/* Usuario logueado y menú desplegable */}
+            <div className="relative" ref={dropdownRef}>
+              <button
+                onClick={toggleDropdown}
+                className="nav-link text-black font-semibold focus:outline-none flex items-center space-x-2"
+              >
+                {user?.name} {/* Muestra el nombre del usuario */}
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </button>
+
+              {/* Menú desplegable */}
+              {dropdownOpen && (
+                <ul className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-20 transition-all duration-200 ease-in-out border border-gray-200">
+                  <li>
+                    <button
+                      onClick={() => openProfileModal('perfil')}
+                      className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-md transition-colors duration-150 ease-in-out"
+                    >
+                      <i className="fas fa-user mr-2"></i>
+                      Mi perfil
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-md transition-colors duration-150 ease-in-out"
+                      onClick={() => setIsModalOpenPassword(true)}
+                    >
+                      <i className="fas fa-key mr-2"></i>
+                      Cambiar contraseña
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={handleLogout}
+                      className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-md transition-colors duration-150 ease-in-out"
+                    >
+                      <i className="fas fa-sign-out-alt mr-2"></i>
+                      Cerrar sesión
+                    </button>
+                  </li>
+
+                </ul>
+              )}
+            </div>
+          </li>
+
+
+        </ul>
+      </nav>
+      {/* Renderizar el modal usuario */}
+      {isModalOpen && (
+        <ModalUsuarios
+          usuario={user}
+          modo={modalMode}
+          onClose={closeModal}
+          ocultarRolesYOrganizaciones={true}
+        />
+      )}
+
+      {/* Renderizar el modal de cambio de contraseña */}
+      {isModalOpenPassword && (
+        <ChangePasswordModal
+          isOpen={isModalOpenPassword}
+          onClose={() => setIsModalOpenPassword(false)}
+        />
+      )}
+    </div>
+  )
+}
