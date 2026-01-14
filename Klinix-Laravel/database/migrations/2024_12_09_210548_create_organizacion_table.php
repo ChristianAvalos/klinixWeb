@@ -32,10 +32,10 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('Ciudad_id')->references('id')->on('ciudad');
-            $table->foreign('Pais_id')->references('id')->on('Pais');
+            $table->foreign('Pais_id')->references('id')->on('pais');
 
         });
-        DB::statement('ALTER TABLE organizacion ADD UrevCalc AS (ISNULL(UrevUsuario, \'\') + \' - \' + ISNULL(FORMAT(UrevFechaHora, \'dd/MM/yyyy HH:mm\'), \'\'))');
+       // DB::statement('ALTER TABLE organizacion ADD UrevCalc AS (ISNULL(UrevUsuario, \'\') + \' - \' + ISNULL(FORMAT(UrevFechaHora, \'dd/MM/yyyy HH:mm\'), \'\'))');
     }
 
     /**

@@ -16,7 +16,7 @@ return new class extends Migration
                 $table->string('UrevUsuario')->nullable(); 
                 $table->dateTime('UrevFechaHora')->nullable();
         });
-        DB::statement('ALTER TABLE users ADD UrevCalc AS (ISNULL(UrevUsuario, \'\') + \' - \' + ISNULL(FORMAT(UrevFechaHora, \'dd/MM/yyyy HH:mm\'), \'\'))');
+       // DB::statement('ALTER TABLE users ADD UrevCalc AS (ISNULL(UrevUsuario, \'\') + \' - \' + ISNULL(FORMAT(UrevFechaHora, \'dd/MM/yyyy HH:mm\'), \'\'))');
     }
 
     /**
@@ -25,7 +25,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['UrevUsuario', 'UrevFechaHora','UrevCalc']);
+            $table->dropColumn(['UrevUsuario', 'UrevFechaHora']);
         });
     }
 };

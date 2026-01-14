@@ -32,7 +32,7 @@ return new class extends Migration
             $table->dateTime('UrevFechaHora')->nullable();
 
         });
-        DB::statement('ALTER TABLE visitors ADD UrevCalc AS (ISNULL(UrevUsuario, \'\') + \' - \' + ISNULL(FORMAT(UrevFechaHora, \'dd/MM/yyyy HH:mm\'), \'\'))');
+        //DB::statement('ALTER TABLE visitors ADD UrevCalc AS (ISNULL(UrevUsuario, \'\') + \' - \' + ISNULL(FORMAT(UrevFechaHora, \'dd/MM/yyyy HH:mm\'), \'\'))');
     }
 
     /**

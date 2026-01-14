@@ -26,7 +26,7 @@ return new class extends Migration
 
             $table->foreign('City_Id')->references('id')->on('ciudad');
         });
-        DB::statement('ALTER TABLE doctors ADD UrevCalc AS (ISNULL(UrevUsuario, \'\') + \' - \' + ISNULL(FORMAT(UrevFechaHora, \'dd/MM/yyyy HH:mm\'), \'\'))');
+       // DB::statement('ALTER TABLE doctors ADD UrevCalc AS (ISNULL(UrevUsuario, \'\') + \' - \' + ISNULL(FORMAT(UrevFechaHora, \'dd/MM/yyyy HH:mm\'), \'\'))');
     }
 
     /**

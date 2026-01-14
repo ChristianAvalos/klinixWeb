@@ -50,15 +50,15 @@ class RolePermissionSeeder extends Seeder
             ]); 
         }
 
-        // Asocia permisos específicos con el rol de usuario
-        $userRole->permissions()->attach(Permission::where('name', 'ver_reportes')->first()->id,
-        [
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
-            'UrevUsuario' => 'Admin',
-            'UrevFechaHora' => Carbon::now(),
-        ]
-        );
+        // // Asocia permisos específicos con el rol de usuario
+        // $userRole->permissions()->attach(Permission::where('name', 'ver_reportes')->first()->id,
+        // [
+        //     'created_at' => Carbon::now(),
+        //     'updated_at' => Carbon::now(),
+        //     'UrevUsuario' => 'Admin',
+        //     'UrevFechaHora' => Carbon::now(),
+        // ]
+        // );
     }
 }
 
