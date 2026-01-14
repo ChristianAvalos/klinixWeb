@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,6 +14,18 @@ class Role extends Model
         'UrevUsuario',
         'UrevFechaHora'
     ];
+
+    protected $appends = ['UrevCalc'];
+    public function getUrevCalcAttribute()
+    {
+        // Si no hay fecha, devuelve solo el usuario
+        if (empty($this->UrevFechaHora)) {
+            return $this->UrevUsuario ?? ''; 
+        }
+        $fechaFormateada = Carbon::parse($this->UrevFechaHora)->format('d/m/Y H:i');
+
+        return "{$this->UrevUsuario} - {$fechaFormateada}";
+    }
 
         /**
      * Relación con los permisos: un rol puede tener muchos permisos.
