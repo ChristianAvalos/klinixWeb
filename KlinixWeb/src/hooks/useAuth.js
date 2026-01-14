@@ -27,10 +27,10 @@ export const useAuth = ({middleware,url}) =>{
             const {data} = await clienteAxios.post('/api/login',datos)
             localStorage.setItem('AUTH_TOKEN',data.token);
             setErrores([]);
-            await mutate();
+            mutate(data.user, false);
         } catch (error) {
             setErrores(Object.values(error.response.data.errors));
-            await mutate(null);
+            mutate(null,false);
         }
 
     }
@@ -62,32 +62,39 @@ export const useAuth = ({middleware,url}) =>{
 
 
     useEffect(() => {
-        // if (middleware === 'guest' && url && user){
-        //     navigate(url);
-        // }
+        
+        if (middleware === 'guest' && url && user){
+            navigate(url);
+        }
 
         //Si su estado es inactivo va a error por mas que sea administrador no podra hacer nada
-        if (user && user.id_tipoestado !== "1"){
+        if (user && Number(user.id_tipoestado) !== 1){
+            console.log('user',user)
             navigate('/errorEstadoUsuario');
-            return;
-        }
-        
-
-        //Si es administrador inicia en el panel de administrador
-        if (user && user.rol_id === "1"){
-            navigate('/');
-            return;
-        }
-
-        //Si es un usuario y su rol es diferente de su rol administrador ingresa a la vista general 
-        if (middleware === 'guest' && user && user.rol_id !== "1"){
-            navigate('/iniciousuarios');
             return;
         }
 
         //Si es un usuario y no tiene definido su rol le va a aparecer en la pagina de error 
-        if (middleware === 'guest' && user && (user.rol_id === undefined || user.rol_id === null) ){
+        if (middleware === 'guest' && user && (Number(user.rol_id) === undefined || Number(user.rol_id)  === null) ){
             navigate('/error');
+            return;
+        }
+        
+        //  //Si no tiene definido su organizacion le va a aparecer en la pagina de error
+        if (middleware === 'guest' && user && (Number(user.id_organizacion) === undefined || Number(user.id_organizacion) === null) ){
+            navigate('/error');
+            return;
+        }
+
+        //Si es un usuario y su rol es diferente de su rol administrador ingresa a la vista general 
+        if (middleware === 'guest' && user && Number(user.rol_id) !== 1){
+            navigate('/iniciousuarios');
+            return;
+        }
+
+        //Para este caso no importa que sea administrador o no, si es un usuario inactivo lo redirige a error
+        if (user && middleware === 'guest'){
+            navigate('/');
             return;
         }
 
