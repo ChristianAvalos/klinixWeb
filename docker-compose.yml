@@ -2,7 +2,7 @@
 services:
   # Backend: Laravel (PHP 8.5 + Apache)
   backend:
-    build: ./klinixWeb-Laravel
+    build: ./Klinix-Laravel
     container_name: laravel-app-klinixWeb
     ports:
       - "8002:80"
@@ -22,7 +22,7 @@ services:
 
 ##  Frontend: React (con Apache sirviendo los archivos estáticos)
   frontend:
-    build: ./klinixWeb-React
+    build: ./KlinixWeb
     container_name: react-app-klinixWeb
     ports:
       - "3002:3000"
