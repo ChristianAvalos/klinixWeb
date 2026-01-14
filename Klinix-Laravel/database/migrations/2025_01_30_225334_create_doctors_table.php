@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -11,16 +12,48 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('doctors', function (Blueprint $table) {
+        $isSqlsrv = DB::connection()->getDriverName() === 'sqlsrv';
+
+        Schema::create('doctors', function (Blueprint $table) use ($isSqlsrv) {
             $table->id();
-            $table->string('Lastname', 150)->collation('Modern_Spanish_CI_AS')->nullable();
-            $table->string('Firstname', 150)->collation('Modern_Spanish_CI_AS')->nullable();
-            $table->string('Address', 250)->collation('Modern_Spanish_CI_AS')->nullable();
+
+            $column = $table->string('Lastname', 150)->nullable();
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
+            $column = $table->string('Firstname', 150)->nullable();
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
+            $column = $table->string('Address', 250)->nullable();
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
             $table->bigInteger('City_Id')->nullable();
-            $table->string('PhoneNumber', 30)->collation('Modern_Spanish_CI_AS')->nullable();
-            $table->string('CellPhoneNumber', 30)->collation('Modern_Spanish_CI_AS')->nullable();
-            $table->char('SupportWhatsapp', 1)->collation('Modern_Spanish_CI_AS')->nullable();
-            $table->string('Email', 200)->collation('Modern_Spanish_CI_AS')->nullable();
+
+            $column = $table->string('PhoneNumber', 30)->nullable();
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
+            $column = $table->string('CellPhoneNumber', 30)->nullable();
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
+            $column = $table->char('SupportWhatsapp', 1)->nullable();
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
+            $column = $table->string('Email', 200)->nullable();
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
             $table->string('UrevUsuario')->nullable(); 
             $table->dateTime('UrevFechaHora')->nullable();
 

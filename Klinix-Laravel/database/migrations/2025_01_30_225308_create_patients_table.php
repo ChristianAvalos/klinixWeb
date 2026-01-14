@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -11,39 +12,151 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('patients', function (Blueprint $table) {
+        $isSqlsrv = DB::connection()->getDriverName() === 'sqlsrv';
+
+        Schema::create('patients', function (Blueprint $table) use ($isSqlsrv) {
             $table->id('id');
-            $table->string('Lastname', 150)->collation('Modern_Spanish_CI_AS');
-            $table->string('Firstname', 150)->collation('Modern_Spanish_CI_AS');
-            $table->string('Title', 30)->collation('Modern_Spanish_CI_AS')->nullable();
-            $table->string('DocumentNo', 30)->collation('Modern_Spanish_CI_AS')->nullable();
-            $table->string('Nationality', 100)->collation('Modern_Spanish_CI_AS')->nullable();
+
+            $column = $table->string('Lastname', 150);
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
+            $column = $table->string('Firstname', 150);
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
+            $column = $table->string('Title', 30)->nullable();
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
+            $column = $table->string('DocumentNo', 30)->nullable();
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
+            $column = $table->string('Nationality', 100)->nullable();
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
             $table->dateTime('Birthday')->nullable();
-            $table->char('Sex', 1)->collation('Modern_Spanish_CI_AS')->nullable();
+
+            $column = $table->char('Sex', 1)->nullable();
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
             $table->binary('Photo')->nullable();
-            $table->string('Address', 250)->collation('Modern_Spanish_CI_AS')->nullable();
+
+            $column = $table->string('Address', 250)->nullable();
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
             //Esto creo para que luego pueda ser eliminado si no se necesita
-            $table->string('City', 50)->collation('Modern_Spanish_CI_AS')->nullable();
+
+            $column = $table->string('City', 50)->nullable();
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
             $table->bigInteger('City_Id')->nullable();
-            $table->string('PhoneNumber', 30)->collation('Modern_Spanish_CI_AS')->nullable();
-            $table->string('CellPhoneNumber', 30)->collation('Modern_Spanish_CI_AS')->nullable();
-            $table->char('SupportWhatsapp', 1)->collation('Modern_Spanish_CI_AS')->nullable();
-            $table->string('Email', 200)->collation('Modern_Spanish_CI_AS')->nullable();
-            $table->string('Notes', 1000)->collation('Modern_Spanish_CI_AS')->nullable();
-            $table->string('BloodType', 2)->collation('Modern_Spanish_CI_AS')->nullable();
-            $table->string('RhFactor', 1)->collation('Modern_Spanish_CI_AS')->nullable();
-            $table->string('Allergies', 500)->collation('Modern_Spanish_CI_AS')->nullable();
-            $table->char('MaritalStatus', 1)->collation('Modern_Spanish_CI_AS')->nullable();
-            $table->string('MedicalInsurance', 500)->collation('Modern_Spanish_CI_AS')->nullable();
+
+            $column = $table->string('PhoneNumber', 30)->nullable();
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
+            $column = $table->string('CellPhoneNumber', 30)->nullable();
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
+            $column = $table->char('SupportWhatsapp', 1)->nullable();
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
+            $column = $table->string('Email', 200)->nullable();
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
+            $column = $table->string('Notes', 1000)->nullable();
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
+            $column = $table->string('BloodType', 2)->nullable();
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
+            $column = $table->string('RhFactor', 1)->nullable();
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
+            $column = $table->string('Allergies', 500)->nullable();
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
+            $column = $table->char('MaritalStatus', 1)->nullable();
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
+            $column = $table->string('MedicalInsurance', 500)->nullable();
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
             $table->dateTime('DeathDate')->nullable();
-            $table->string('DeathCause', 500)->collation('Modern_Spanish_CI_AS')->nullable();
-            $table->string('DeathPlace', 100)->collation('Modern_Spanish_CI_AS')->nullable();
-            $table->string('DeathCertificateNumber', 255)->collation('Modern_Spanish_CI_AS')->nullable();
-            $table->string('MedicalDiagnosis', 500)->collation('Modern_Spanish_CI_AS')->nullable();
-            $table->string('District', 100)->collation('Modern_Spanish_CI_AS')->nullable();
-            $table->string('Neighborhood', 150)->collation('Modern_Spanish_CI_AS')->nullable();
-            $table->string('PatientCode', 10)->collation('Modern_Spanish_CI_AS')->nullable();
-            $table->string('Department', 100)->collation('Modern_Spanish_CI_AS')->nullable();
+
+            $column = $table->string('DeathCause', 500)->nullable();
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
+            $column = $table->string('DeathPlace', 100)->nullable();
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
+            $column = $table->string('DeathCertificateNumber', 255)->nullable();
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
+            $column = $table->string('MedicalDiagnosis', 500)->nullable();
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
+            $column = $table->string('District', 100)->nullable();
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
+            $column = $table->string('Neighborhood', 150)->nullable();
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
+            $column = $table->string('PatientCode', 10)->nullable();
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
+            $column = $table->string('Department', 100)->nullable();
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
             $table->string('UrevUsuario')->nullable(); 
             $table->dateTime('UrevFechaHora')->nullable();
         });
