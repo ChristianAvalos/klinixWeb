@@ -24,8 +24,8 @@ class DoctorController extends Controller
             $doctores = Doctor::with(['ciudad'])
                 ->when($search, function ($query, $search) {
                     return $query->where(function ($q) use ($search) {
-                        $q->where('LastName', 'like', '%' . $search . '%')
-                            ->orWhere('FirstName', 'like', '%' . $search . '%');
+                        $q->where('LastName', 'ilike', '%' . $search . '%')
+                            ->orWhere('FirstName', 'ilike', '%' . $search . '%');
                     });
                 })
                 ->paginate(10);

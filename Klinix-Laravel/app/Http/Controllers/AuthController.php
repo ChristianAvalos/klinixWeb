@@ -20,8 +20,8 @@ class AuthController extends Controller
         $search = $request->input('search');
         $usuarios = User::with('role','organizacion')->
         when($search, function ($query, $search) {
-            return $query->where('name', 'like', '%' . $search . '%')
-                            ->orWhere('email', 'like', '%' . $search . '%');
+            return $query->where('name', 'ilike', '%' . $search . '%')
+                            ->orWhere('email', 'ilike', '%' . $search . '%');
         })
         ->paginate(10);
         //$cantidadUsuarios = User::all()->count(); 

@@ -21,7 +21,7 @@ class OrganizacionController extends Controller
         } else {
             $organizaciones = Organizacion::with(['ciudad', 'pais'])
             ->when($search, function ($query, $search) {
-                return $query->where('RazonSocial', 'like', '%' . $search . '%');
+                return $query->where('RazonSocial', 'ilike', '%' . $search . '%');
             })->paginate(10);
         }
         return response()->json($organizaciones);

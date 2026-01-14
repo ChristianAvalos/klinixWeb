@@ -22,9 +22,9 @@ class PatientController extends Controller
             $pacientes = Patient::with(['ciudad'])
                     ->when($search, function ($query, $search) {
                     return $query->where(function ($q) use ($search) {
-                        $q->where('LastName', 'like', '%' . $search . '%')
-                            ->orWhere('FirstName', 'like', '%' . $search . '%')
-                            ->orWhere('DocumentNo', 'like', '%' . $search . '%');
+                        $q->where('LastName', 'ilike', '%' . $search . '%')
+                            ->orWhere('FirstName', 'ilike', '%' . $search . '%')
+                            ->orWhere('DocumentNo', 'ilike', '%' . $search . '%');
                     });
                 })
                 ->paginate(10);
