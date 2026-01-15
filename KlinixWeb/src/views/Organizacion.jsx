@@ -146,7 +146,7 @@ export default function Organizacion() {
         <div>
             <section className="content">
                 <div className="container-fluid">
-                    <div className="card">
+                    <div className="card shadow-sm">
 
 
 
@@ -203,7 +203,7 @@ export default function Organizacion() {
                             <div className="overflow-x-auto">
                                 <table className="table table-bordered table-striped w-full">
                                     <thead>
-                                        <tr className="bg-gray-600 text-white text-center">
+                                        <tr className="font-bold bg-gradient-to-br from-blue-900 to-cyan-900 text-white rounded text-center">
                                             <th>ID</th>
                                             <th>Razón social</th>
                                             <th>RUC</th>
@@ -219,32 +219,48 @@ export default function Organizacion() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {organizacion.map((organizacion) => (
-                                            <tr key={organizacion.id}>
-                                                <td>{organizacion.id}</td>
-                                                <td>{organizacion.RazonSocial}</td>
-                                                <td>{organizacion.RUC}</td>
-                                                <td>{organizacion.Direccion}</td>
-                                                <td>{organizacion.ciudad ? organizacion.ciudad.nombre : 'Sin ciudad seleccionada'}</td>
-                                                <td>{organizacion.pais ? organizacion.pais.Name : 'Sin pais seleccionado'}</td>
-                                                <td>{organizacion.Telefono}</td>
-                                                <td>{organizacion.Fax}</td>
-                                                <td>{organizacion.Email}</td>
-                                                <td>{organizacion.Sigla}</td>
-                                                <td>{organizacion.SitioWeb}</td>
-                                                <td>
-                                                    <div className="flex space-x-2">
-                                                        <button onClick={() => openModal('editar', organizacion)} className="flex items-center focus:outline-none">
-                                                            <img src="/img/edit.png" alt="Edit Rol" />
-                                                        </button>
-                                                        <button onClick={() => handleDelete(organizacion.id)} className="flex items-center focus:outline-none">
-                                                            <img src="/img/Delete.png" alt="Delete Rol" />
-                                                        </button>
-                                                    </div>
+                                        {organizacion.length === 0 ? (
+                                            <tr>
+                                                <td colSpan={12} className="text-center text-gray-600 py-6">
+                                                    No existen organizaciones.
                                                 </td>
-
                                             </tr>
-                                        ))}
+                                        ) : (
+                                            organizacion.map((organizacion) => (
+                                                <tr key={organizacion.id}>
+                                                    <td>{organizacion.id}</td>
+                                                    <td>{organizacion.RazonSocial}</td>
+                                                    <td>{organizacion.RUC}</td>
+                                                    <td>{organizacion.Direccion}</td>
+                                                    <td>{organizacion.ciudad ? organizacion.ciudad.nombre : 'Sin ciudad seleccionada'}</td>
+                                                    <td>{organizacion.pais ? organizacion.pais.Name : 'Sin pais seleccionado'}</td>
+                                                    <td>{organizacion.Telefono}</td>
+                                                    <td>{organizacion.Fax}</td>
+                                                    <td>{organizacion.Email}</td>
+                                                    <td>{organizacion.Sigla}</td>
+                                                    <td>{organizacion.SitioWeb}</td>
+                                                    <td>
+                                                        <div className="flex space-x-2">
+                                                            <button
+                                                                onClick={() => openModal('editar', organizacion)}
+                                                                className="flex items-center rounded hover:bg-gray-200 focus:outline-none p-1"
+                                                                type="button"
+                                                            >
+                                                                <img src="/img/edit.png" alt="Edit Rol" />
+                                                            </button>
+                                                            <button
+                                                                onClick={() => handleDelete(organizacion.id)}
+                                                                className="flex items-center rounded hover:bg-gray-200 focus:outline-none p-1"
+                                                                type="button"
+                                                            >
+                                                                <img src="/img/Delete.png" alt="Delete Rol" />
+                                                            </button>
+                                                        </div>
+                                                    </td>
+
+                                                </tr>
+                                            ))
+                                        )}
                                     </tbody>
                                 </table>
                             </div>
@@ -260,14 +276,14 @@ export default function Organizacion() {
                                     <button
                                         onClick={() => handlePageChange(1)}
                                         disabled={paginaActual === 1}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-br from-blue-900 to-cyan-900 hover:from-blue-800 hover:to-cyan-800'}`}
                                     >
                                         Primera
                                     </button>
                                     <button
                                         onClick={() => handlePageChange(paginaActual - 1)}
                                         disabled={paginaActual === 1}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-br from-blue-900 to-cyan-900 hover:from-blue-800 hover:to-cyan-800'}`}
                                     >
                                         Anterior
                                     </button>
@@ -283,14 +299,14 @@ export default function Organizacion() {
                                     <button
                                         onClick={() => handlePageChange(paginaActual + 1)}
                                         disabled={paginaActual === totalPaginas}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === totalPaginas ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === totalPaginas ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-br from-blue-900 to-cyan-900 hover:from-blue-800 hover:to-cyan-800'}`}
                                     >
                                         Siguiente
                                     </button>
                                     <button
                                         onClick={() => handlePageChange(totalPaginas)}
                                         disabled={paginaActual === totalPaginas}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === totalPaginas ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === totalPaginas ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-br from-blue-900 to-cyan-900 hover:from-blue-800 hover:to-cyan-800'}`}
                                     >
                                         Última
                                     </button>

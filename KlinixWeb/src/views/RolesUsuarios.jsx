@@ -147,7 +147,7 @@ export default function Roles() {
         <div>
             <section className="content">
                 <div className="container-fluid">
-                    <div className="card">
+                    <div className="card shadow-sm">
 
 
 
@@ -204,33 +204,53 @@ export default function Roles() {
                             <div className="overflow-x-auto">
                                 <table className="table table-bordered table-striped w-full">
                                     <thead>
-                                        <tr className="bg-gray-600 text-white text-center">
+                                        <tr className="font-bold bg-gradient-to-br from-blue-900 to-cyan-900 text-white rounded text-center">
                                             <th>ID</th>
                                             <th>Rol</th>
                                             <th>Utilidades</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {roles.map((roles) => (
-                                            <tr key={roles.id}>
-                                                <td>{roles.id}</td>
-                                                <td>{roles.name}</td>
-                                                <td>
-                                                    <div className="flex space-x-2">
-                                                        <button onClick={() => openModal('editar', roles)} className="flex items-center focus:outline-none">
-                                                            <img src="/img/edit.png" alt="Edit Rol" />
-                                                        </button>
-                                                        <button onClick={() => openModalRolePermissions(roles.id)} className="flex items-center focus:outline-none">
-                                                            <img src="/img/accept.png" alt="Rol permisos" />
-                                                        </button>
-                                                        <button onClick={() => handleDelete(roles.id)} className="flex items-center focus:outline-none">
-                                                            <img src="/img/Delete.png" alt="Delete Rol" />
-                                                        </button>
-                                                    </div>
+                                        {roles.length === 0 ? (
+                                            <tr>
+                                                <td colSpan={3} className="text-center text-gray-600 py-6">
+                                                    No existen roles.
                                                 </td>
-
                                             </tr>
-                                        ))}
+                                        ) : (
+                                            roles.map((roles) => (
+                                                <tr key={roles.id}>
+                                                    <td>{roles.id}</td>
+                                                    <td>{roles.name}</td>
+                                                    <td>
+                                                        <div className="flex space-x-2">
+                                                            <button
+                                                                onClick={() => openModal('editar', roles)}
+                                                                className="flex items-center rounded hover:bg-gray-200 focus:outline-none p-1"
+                                                                type="button"
+                                                            >
+                                                                <img src="/img/edit.png" alt="Edit Rol" />
+                                                            </button>
+                                                            <button
+                                                                onClick={() => openModalRolePermissions(roles.id)}
+                                                                className="flex items-center rounded hover:bg-gray-200 focus:outline-none p-1"
+                                                                type="button"
+                                                            >
+                                                                <img src="/img/accept.png" alt="Rol permisos" />
+                                                            </button>
+                                                            <button
+                                                                onClick={() => handleDelete(roles.id)}
+                                                                className="flex items-center rounded hover:bg-gray-200 focus:outline-none p-1"
+                                                                type="button"
+                                                            >
+                                                                <img src="/img/Delete.png" alt="Delete Rol" />
+                                                            </button>
+                                                        </div>
+                                                    </td>
+
+                                                </tr>
+                                            ))
+                                        )}
                                     </tbody>
                                 </table>
                             </div>
@@ -246,14 +266,14 @@ export default function Roles() {
                                     <button
                                         onClick={() => handlePageChange(1)}
                                         disabled={paginaActual === 1}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-br from-blue-900 to-cyan-900 hover:from-blue-800 hover:to-cyan-800'}`}
                                     >
                                         Primera
                                     </button>
                                     <button
                                         onClick={() => handlePageChange(paginaActual - 1)}
                                         disabled={paginaActual === 1}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-br from-blue-900 to-cyan-900 hover:from-blue-800 hover:to-cyan-800'}`}
                                     >
                                         Anterior
                                     </button>
@@ -269,14 +289,14 @@ export default function Roles() {
                                     <button
                                         onClick={() => handlePageChange(paginaActual + 1)}
                                         disabled={paginaActual === totalPaginas}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === totalPaginas ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === totalPaginas ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-br from-blue-900 to-cyan-900 hover:from-blue-800 hover:to-cyan-800'}`}
                                     >
                                         Siguiente
                                     </button>
                                     <button
                                         onClick={() => handlePageChange(totalPaginas)}
                                         disabled={paginaActual === totalPaginas}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === totalPaginas ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === totalPaginas ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-br from-blue-900 to-cyan-900 hover:from-blue-800 hover:to-cyan-800'}`}
                                     >
                                         Última
                                     </button>

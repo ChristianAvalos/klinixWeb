@@ -206,7 +206,7 @@ export default function Usuarios() {
         <div>
             <section className="content">
                 <div className="container-fluid">
-                    <div className="card">
+                    <div className="card shadow-sm">
 
                         <SearchBar
                             title="Usuarios"
@@ -258,7 +258,7 @@ export default function Usuarios() {
                             <div className="overflow-x-auto">
                                 <table className="table table-bordered table-striped w-full">
                                     <thead>
-                                        <tr className="bg-gray-600 text-white text-center">
+                                        <tr className="font-bold bg-gradient-to-br from-blue-900 to-cyan-900 text-white rounded text-center">
                                             <th>ID</th>
                                             <th>Nombre del Usuario</th>
                                             <th>Correo</th>
@@ -268,37 +268,60 @@ export default function Usuarios() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {usuarios.map((usuario) => (
-                                            <tr key={usuario.id}>
-                                                <td>{usuario.id}</td>
-                                                <td>{usuario.name}</td>
-                                                <td>{usuario.email}</td>
-                                                <td>{usuario.role ? usuario.role.name : 'Sin rol'}</td>
-                                                <td>{usuario.organizacion ? usuario.organizacion.RazonSocial : 'Sin organización'}</td>
-                                                <td>
-                                                    <div className="flex space-x-2">
-                                                        <button onClick={() => openModal('editar', usuario)} className="flex items-center  rounded hover:bg-gray-200 focus:outline-none">
-                                                            <img src="/img/edit.png" alt="Edit User" />
-                                                        </button>
-                                                        <button onClick={() => handleDelete(usuario.id)} className="flex items-center rounded hover:bg-gray-200 focus:outline-none">
-                                                            <img src="/img/Delete.png" alt="Delete User" />
-                                                        </button>
-                                                        <button onClick={() => handleResetPassword(usuario.id)} className="flex items-center rounded hover:bg-gray-200 focus:outline-none">
-                                                            <img src="/img/password.png" alt="Reset password" />
-                                                        </button>
-
-                                                        <button onClick={() => handleUserActive(usuario.id, usuario.id_tipoestado)}>
-                                                            {usuario.id_tipoestado === '1' ? (
-                                                                <i className="fas fa-toggle-on"></i>
-                                                            ) : (
-                                                                <i className="fas fa-toggle-off"></i>
-                                                            )}
-                                                        </button>
-
-                                                    </div>
+                                        {usuarios.length === 0 ? (
+                                            <tr>
+                                                <td colSpan={6} className="text-center text-gray-600 py-6">
+                                                    No existen usuarios.
                                                 </td>
                                             </tr>
-                                        ))}
+                                        ) : (
+                                            usuarios.map((usuario) => (
+                                                <tr key={usuario.id}>
+                                                    <td>{usuario.id}</td>
+                                                    <td>{usuario.name}</td>
+                                                    <td>{usuario.email}</td>
+                                                    <td>{usuario.role ? usuario.role.name : 'Sin rol'}</td>
+                                                    <td>{usuario.organizacion ? usuario.organizacion.RazonSocial : 'Sin organización'}</td>
+                                                    <td>
+                                                        <div className="flex space-x-2">
+                                                            <button
+                                                                onClick={() => openModal('editar', usuario)}
+                                                                className="flex items-center rounded hover:bg-gray-200 focus:outline-none p-1"
+                                                                type="button"
+                                                            >
+                                                                <img src="/img/edit.png" alt="Edit User" />
+                                                            </button>
+                                                            <button
+                                                                onClick={() => handleDelete(usuario.id)}
+                                                                className="flex items-center rounded hover:bg-gray-200 focus:outline-none p-1"
+                                                                type="button"
+                                                            >
+                                                                <img src="/img/Delete.png" alt="Delete User" />
+                                                            </button>
+                                                            <button
+                                                                onClick={() => handleResetPassword(usuario.id)}
+                                                                className="flex items-center rounded hover:bg-gray-200 focus:outline-none p-1"
+                                                                type="button"
+                                                            >
+                                                                <img src="/img/password.png" alt="Reset password" />
+                                                            </button>
+
+                                                            <button
+                                                                onClick={() => handleUserActive(usuario.id, usuario.id_tipoestado)}
+                                                                className="flex items-center rounded hover:bg-gray-200 focus:outline-none p-1"
+                                                                type="button"
+                                                            >
+                                                                {usuario.id_tipoestado === 1 ? (
+                                                                    <i className="fas fa-toggle-on"></i>
+                                                                ) : (
+                                                                    <i className="fas fa-toggle-off"></i>
+                                                                )}
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        )}
                                     </tbody>
                                 </table>
                             </div>
@@ -314,14 +337,14 @@ export default function Usuarios() {
                                     <button
                                         onClick={() => handlePageChange(1)}
                                         disabled={paginaActual === 1}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-br from-blue-900 to-cyan-900 hover:from-blue-800 hover:to-cyan-800'}`}
                                     >
                                         Primera
                                     </button>
                                     <button
                                         onClick={() => handlePageChange(paginaActual - 1)}
                                         disabled={paginaActual === 1}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-br from-blue-900 to-cyan-900 hover:from-blue-800 hover:to-cyan-800'}`}
                                     >
                                         Anterior
                                     </button>
@@ -337,14 +360,14 @@ export default function Usuarios() {
                                     <button
                                         onClick={() => handlePageChange(paginaActual + 1)}
                                         disabled={paginaActual === totalPaginas}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === totalPaginas ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === totalPaginas ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-br from-blue-900 to-cyan-900 hover:from-blue-800 hover:to-cyan-800'}`}
                                     >
                                         Siguiente
                                     </button>
                                     <button
                                         onClick={() => handlePageChange(totalPaginas)}
                                         disabled={paginaActual === totalPaginas}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === totalPaginas ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === totalPaginas ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-br from-blue-900 to-cyan-900 hover:from-blue-800 hover:to-cyan-800'}`}
                                     >
                                         Última
                                     </button>

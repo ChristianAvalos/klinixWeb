@@ -146,7 +146,7 @@ export default function Doctores() {
         <div>
             <section className="content">
                 <div className="container-fluid">
-                    <div className="card">
+                    <div className="card shadow-sm">
                         <SearchBar
                             title="Doctores"
                             placeholder="Buscar doctor..."
@@ -161,7 +161,7 @@ export default function Doctores() {
                             <div className="overflow-x-auto">
                                 <table className="table table-bordered table-striped w-full">
                                     <thead>
-                                        <tr className="bg-gray-600 text-white text-center">
+                                        <tr className="font-bold bg-gradient-to-br from-blue-900 to-cyan-900 text-white rounded text-center">
                                             <th>ID</th>
                                             <th>Apellido(s)</th>
                                             <th>Nombre(s)</th>
@@ -176,31 +176,46 @@ export default function Doctores() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {doctor.map((doctor) => (
-                                            <tr key={doctor.id}>
-                                                <td>{doctor.id}</td>
-                                                <td>{doctor.Lastname}</td>
-                                                <td>{doctor.Firstname}</td>
-                                                <td>{doctor.Address}</td>
-                                                <td>{doctor.City_Id ? doctor.ciudad.nombre : 'Sin ciudad seleccionada'}</td>
-                                                <td>{doctor.PhoneNumber}</td>
-                                                <td>{doctor.CellPhoneNumber}</td>
-                                                <td>{doctor.SupportWhatsapp  === "1" ? "Sí" : "No"}</td>
-                                                <td>{doctor.Email}</td>
-                                                <td>{doctor.UrevCalc}</td>
-                                                <td>
-                                                    <div className="flex space-x-2">
-                                                        <button onClick={() => openModal('editar', doctor)} className="flex items-center focus:outline-none">
-                                                            <img src="/img/edit.png" alt="Edit Doctor" />
-                                                        </button>
-                                                        <button onClick={() => handleDelete(doctor.id)} className="flex items-center focus:outline-none">
-                                                            <img src="/img/Delete.png" alt="Delete Doctor" />
-                                                        </button>
-                                                    </div>
+                                        {doctor.length === 0 ? (
+                                            <tr>
+                                                <td colSpan={11} className="text-center text-gray-600 py-6">
+                                                    No existen doctores.
                                                 </td>
-
                                             </tr>
-                                        ))}
+                                        ) : (
+                                            doctor.map((doctor) => (
+                                                <tr key={doctor.id}>
+                                                    <td>{doctor.id}</td>
+                                                    <td>{doctor.Lastname}</td>
+                                                    <td>{doctor.Firstname}</td>
+                                                    <td>{doctor.Address}</td>
+                                                    <td>{doctor.City_Id ? doctor.ciudad.nombre : 'Sin ciudad seleccionada'}</td>
+                                                    <td>{doctor.PhoneNumber}</td>
+                                                    <td>{doctor.CellPhoneNumber}</td>
+                                                    <td>{doctor.SupportWhatsapp === "1" ? "Sí" : "No"}</td>
+                                                    <td>{doctor.Email}</td>
+                                                    <td>{doctor.UrevCalc}</td>
+                                                    <td>
+                                                        <div className="flex space-x-2">
+                                                            <button
+                                                                onClick={() => openModal('editar', doctor)}
+                                                                className="flex items-center rounded hover:bg-gray-200 focus:outline-none p-1"
+                                                                type="button"
+                                                            >
+                                                                <img src="/img/edit.png" alt="Edit Doctor" />
+                                                            </button>
+                                                            <button
+                                                                onClick={() => handleDelete(doctor.id)}
+                                                                className="flex items-center rounded hover:bg-gray-200 focus:outline-none p-1"
+                                                                type="button"
+                                                            >
+                                                                <img src="/img/Delete.png" alt="Delete Doctor" />
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        )}
                                     </tbody>
                                 </table>
                             </div>
@@ -216,14 +231,14 @@ export default function Doctores() {
                                     <button
                                         onClick={() => handlePageChange(1)}
                                         disabled={paginaActual === 1}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-br from-blue-900 to-cyan-900 hover:from-blue-800 hover:to-cyan-800'}`}
                                     >
                                         Primera
                                     </button>
                                     <button
                                         onClick={() => handlePageChange(paginaActual - 1)}
                                         disabled={paginaActual === 1}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-br from-blue-900 to-cyan-900 hover:from-blue-800 hover:to-cyan-800'}`}
                                     >
                                         Anterior
                                     </button>
@@ -239,14 +254,14 @@ export default function Doctores() {
                                     <button
                                         onClick={() => handlePageChange(paginaActual + 1)}
                                         disabled={paginaActual === totalPaginas}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === totalPaginas ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === totalPaginas ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-br from-blue-900 to-cyan-900 hover:from-blue-800 hover:to-cyan-800'}`}
                                     >
                                         Siguiente
                                     </button>
                                     <button
                                         onClick={() => handlePageChange(totalPaginas)}
                                         disabled={paginaActual === totalPaginas}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === totalPaginas ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === totalPaginas ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-br from-blue-900 to-cyan-900 hover:from-blue-800 hover:to-cyan-800'}`}
                                     >
                                         Última
                                     </button>

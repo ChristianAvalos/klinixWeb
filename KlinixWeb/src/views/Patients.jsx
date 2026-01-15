@@ -146,7 +146,7 @@ export default function Pacientes() {
         <div>
             <section className="content">
                 <div className="container-fluid">
-                    <div className="card">
+                    <div className="card shadow-sm">
                         <SearchBar
                             title="Pacientes"
                             placeholder="Buscar paciente..."
@@ -161,7 +161,7 @@ export default function Pacientes() {
                             <div className="overflow-x-auto">
                                 <table className="table table-bordered table-striped w-full">
                                     <thead>
-                                        <tr className="bg-gray-600 text-white text-center">
+                                        <tr className="font-bold bg-gradient-to-br from-blue-900 to-cyan-900 text-white rounded text-center">
                                             <th>ID</th>
                                             <th>Codigo del paciente</th>
                                             <th>Apellido(s)</th>
@@ -195,65 +195,81 @@ export default function Pacientes() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {paciente.map((paciente) => (
-                                            <tr key={paciente.id}>
-                                                <td>{paciente.id}</td>
-                                                <td>{paciente.PatientCode}</td>
-                                                <td>{paciente.Lastname}</td>
-                                                <td>{paciente.Firstname}</td>
-                                                <td>{paciente.Title}</td>
-                                                <td>{paciente.DocumentNo}</td>
-                                                <td>{paciente.Nationality}</td>
-                                                <td>{paciente.Birthday ? new Date(paciente.Birthday).toISOString().split('T')[0] : ''}</td>
-                                                <td>
-                                                    {paciente.Birthday
-                                                        ? (() => {
-                                                            const birthDate = new Date(paciente.Birthday);
-                                                            if (isNaN(birthDate)) return ""; // Manejo de fechas inválidas
-
-                                                            const today = new Date();
-                                                            let age = today.getFullYear() - birthDate.getFullYear();
-                                                            const monthDiff = today.getMonth() - birthDate.getMonth();
-                                                            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-                                                                age--;
-                                                            }
-                                                            return age;
-                                                        })()
-                                                        : "" /*retorno vacio si no hay fecha de nacimiento*/} 
+                                        {paciente.length === 0 ? (
+                                            <tr>
+                                                <td colSpan={30} className="text-center text-gray-600 py-6">
+                                                    No existen pacientes.
                                                 </td>
-                                                <td>{paciente.Sex}</td>
-                                                <td>{paciente.Address}</td>
-                                                <td>{paciente.Neighborhood}</td>
-                                                <td>{paciente.City_Id ? paciente.ciudad.nombre : 'Sin ciudad seleccionada'}</td>
-                                                <td>{paciente.District}</td>
-                                                <td>{paciente.Department}</td>
-                                                <td>{paciente.PhoneNumber}</td>
-                                                <td>{paciente.CellPhoneNumber}</td>
-                                                <td>{paciente.SupportWhatsapp === "1" ? "Sí" : "No"}</td>
-                                                <td>{paciente.Email}</td>
-                                                <td>{paciente.BloodType}</td>
-                                                <td>{paciente.RHFactor}</td>
-                                                <td>{paciente.MaritalStatus}</td>
-                                                <td>{paciente.MedicalDiagnosis}</td>
-                                                <td>{paciente.MedicalInsurance}</td>
-                                                <td>{paciente.DeathDate ? new Date(paciente.DeathDate).toISOString().split('T')[0] : ''}</td>
-                                                <td>{paciente.DeathCause}</td>
-                                                <td>{paciente.DeathPlace}</td>
-                                                <td>{paciente.DeathCertificateNumber}</td>
-                                                <td>{paciente.UrevCalc}</td>
-                                                <td>
-                                                    <div className="flex space-x-2">
-                                                        <button onClick={() => openModal('editar', paciente)} className="flex items-center focus:outline-none">
-                                                            <img src="/img/edit.png" alt="Edit Paciente" />
-                                                        </button>
-                                                        <button onClick={() => handleDelete(paciente.id)} className="flex items-center focus:outline-none">
-                                                            <img src="/img/Delete.png" alt="Delete Paciente" />
-                                                        </button>
-                                                    </div>
-                                                </td>
-
                                             </tr>
-                                        ))}
+                                        ) : (
+                                            paciente.map((paciente) => (
+                                                <tr key={paciente.id}>
+                                                    <td>{paciente.id}</td>
+                                                    <td>{paciente.PatientCode}</td>
+                                                    <td>{paciente.Lastname}</td>
+                                                    <td>{paciente.Firstname}</td>
+                                                    <td>{paciente.Title}</td>
+                                                    <td>{paciente.DocumentNo}</td>
+                                                    <td>{paciente.Nationality}</td>
+                                                    <td>{paciente.Birthday ? new Date(paciente.Birthday).toISOString().split('T')[0] : ''}</td>
+                                                    <td>
+                                                        {paciente.Birthday
+                                                            ? (() => {
+                                                                const birthDate = new Date(paciente.Birthday);
+                                                                if (isNaN(birthDate)) return ""; // Manejo de fechas inválidas
+
+                                                                const today = new Date();
+                                                                let age = today.getFullYear() - birthDate.getFullYear();
+                                                                const monthDiff = today.getMonth() - birthDate.getMonth();
+                                                                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                                                                    age--;
+                                                                }
+                                                                return age;
+                                                            })()
+                                                            : "" /*retorno vacio si no hay fecha de nacimiento*/}
+                                                    </td>
+                                                    <td>{paciente.Sex}</td>
+                                                    <td>{paciente.Address}</td>
+                                                    <td>{paciente.Neighborhood}</td>
+                                                    <td>{paciente.City_Id ? paciente.ciudad.nombre : 'Sin ciudad seleccionada'}</td>
+                                                    <td>{paciente.District}</td>
+                                                    <td>{paciente.Department}</td>
+                                                    <td>{paciente.PhoneNumber}</td>
+                                                    <td>{paciente.CellPhoneNumber}</td>
+                                                    <td>{paciente.SupportWhatsapp === "1" ? "Sí" : "No"}</td>
+                                                    <td>{paciente.Email}</td>
+                                                    <td>{paciente.BloodType}</td>
+                                                    <td>{paciente.RHFactor}</td>
+                                                    <td>{paciente.MaritalStatus}</td>
+                                                    <td>{paciente.MedicalDiagnosis}</td>
+                                                    <td>{paciente.MedicalInsurance}</td>
+                                                    <td>{paciente.DeathDate ? new Date(paciente.DeathDate).toISOString().split('T')[0] : ''}</td>
+                                                    <td>{paciente.DeathCause}</td>
+                                                    <td>{paciente.DeathPlace}</td>
+                                                    <td>{paciente.DeathCertificateNumber}</td>
+                                                    <td>{paciente.UrevCalc}</td>
+                                                    <td>
+                                                        <div className="flex space-x-2">
+                                                            <button
+                                                                onClick={() => openModal('editar', paciente)}
+                                                                className="flex items-center rounded hover:bg-gray-200 focus:outline-none p-1"
+                                                                type="button"
+                                                            >
+                                                                <img src="/img/edit.png" alt="Edit Paciente" />
+                                                            </button>
+                                                            <button
+                                                                onClick={() => handleDelete(paciente.id)}
+                                                                className="flex items-center rounded hover:bg-gray-200 focus:outline-none p-1"
+                                                                type="button"
+                                                            >
+                                                                <img src="/img/Delete.png" alt="Delete Paciente" />
+                                                            </button>
+                                                        </div>
+                                                    </td>
+
+                                                </tr>
+                                            ))
+                                        )}
                                     </tbody>
                                 </table>
                             </div>
@@ -269,14 +285,14 @@ export default function Pacientes() {
                                     <button
                                         onClick={() => handlePageChange(1)}
                                         disabled={paginaActual === 1}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-br from-blue-900 to-cyan-900 hover:from-blue-800 hover:to-cyan-800'}`}
                                     >
                                         Primera
                                     </button>
                                     <button
                                         onClick={() => handlePageChange(paginaActual - 1)}
                                         disabled={paginaActual === 1}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-br from-blue-900 to-cyan-900 hover:from-blue-800 hover:to-cyan-800'}`}
                                     >
                                         Anterior
                                     </button>
@@ -292,14 +308,14 @@ export default function Pacientes() {
                                     <button
                                         onClick={() => handlePageChange(paginaActual + 1)}
                                         disabled={paginaActual === totalPaginas}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === totalPaginas ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === totalPaginas ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-br from-blue-900 to-cyan-900 hover:from-blue-800 hover:to-cyan-800'}`}
                                     >
                                         Siguiente
                                     </button>
                                     <button
                                         onClick={() => handlePageChange(totalPaginas)}
                                         disabled={paginaActual === totalPaginas}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === totalPaginas ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === totalPaginas ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-br from-blue-900 to-cyan-900 hover:from-blue-800 hover:to-cyan-800'}`}
                                     >
                                         Última
                                     </button>
