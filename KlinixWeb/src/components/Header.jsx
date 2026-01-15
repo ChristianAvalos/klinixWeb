@@ -57,7 +57,7 @@ export default function Header() {
   return (
     <div>
       {/* Navbar */}
-      <nav className="main-header navbar navbar-expand navbar-white navbar-light">
+      <nav className="main-header navbar navbar-expand navbar-white navbar-light !z-[1]">
         {/* Left navbar links */}
         <ul className="navbar-nav">
           <li className="nav-item">
@@ -91,9 +91,13 @@ export default function Header() {
                     <button
                       onClick={() => openProfileModal('perfil')}
                       className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-md transition-colors duration-150 ease-in-out"
-                    >
-                      <i className="fas fa-user mr-2"></i>
+                    > 
+                    <div className='flex items-center'>
+                      <img src="/img/Icon/user-man.png" alt="User" className="w-5 h-5 mr-2"  />
+                      {/* <i className="fas fa-user mr-2"></i> */}
                       Mi perfil
+                    </div>
+                      
                     </button>
                   </li>
                   <li>
@@ -101,8 +105,12 @@ export default function Header() {
                       className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-md transition-colors duration-150 ease-in-out"
                       onClick={() => setIsModalOpenPassword(true)}
                     >
-                      <i className="fas fa-key mr-2"></i>
-                      Cambiar contraseña
+                      <div className='flex items-center'>
+                        <img src="/img/Icon/key-user-filled.png" alt="Change Password" className="w-5 h-5 mr-2" />
+                        {/* <i className="fas fa-key mr-2"></i> */}
+                        Cambiar contraseña
+                      </div>
+                      
                     </button>
                   </li>
                   <li>
@@ -110,8 +118,12 @@ export default function Header() {
                       onClick={handleLogout}
                       className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-md transition-colors duration-150 ease-in-out"
                     >
-                      <i className="fas fa-sign-out-alt mr-2"></i>
-                      Cerrar sesión
+                      <div className='flex items-center'>
+                        <img src="/img/Icon/exit.png" alt="Logout" className="w-5 h-5 mr-2" />
+                        {/* <i className="fas fa-sign-out-alt mr-2"></i> */}
+                        Cerrar sesión
+                      </div>
+                      
                     </button>
                   </li>
 

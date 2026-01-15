@@ -21,7 +21,8 @@ export default function SideNav() {
     // Crear un observador para detectar cambios en el DOM
     const observer = new MutationObserver(() => {
       // Obtener los ítems dinámicamente del DOM usando querySelectorAll
-      const links = document.querySelectorAll(".nav-item .nav-link");
+      // Excluye toggles de treeview para no contaminar la búsqueda
+      const links = document.querySelectorAll(".nav-item .nav-link:not(.menu-toggle)");
       const items = Array.from(links).map(link => {
         const route = link.getAttribute('href'); // Obtener el atributo to directamente del Link
         const textElement = link.querySelector('p'); // Buscar el elemento <p> dentro del Link
@@ -67,25 +68,32 @@ export default function SideNav() {
   return (
     <div>
       {/* Main Sidebar Container */}
-      <aside className="main-sidebar sidebar-dark-primary elevation-4">
+      <div className="sidebar bg-gradient-to-br from-blue-900 to-cyan-900 w-64 min-h-screen fixed !z-[1] shadow-xl border-r border-cyan-800/40 overflow-y-auto">
+        {/* Sidebar user panel (optional) */}
+        <div className="user-panel mt-3 pb-3 mb-3 flex justify-center">
+          <div className="info">
+            {hasPermission('Principal') ? (
 
-        <div className="sidebar">
-          {/* Sidebar user panel (optional) */}
-          <div className="user-panel mt-3 pb-3 mb-3 flex items-center">
-            <div className="image">
-              <img src="/img/Logo Institucional.png" className="img-circle elevation-2" alt="User Image" />
-            </div>
-            <div className="info">
-              {hasPermission('Principal') ? (
-                <a href="/" className="d-block text-white">CDSystem</a>
-              ) : (
-                <p className="d-block text-white">CDSystem</p>
-              )}
-            </div>
+              <Link to="/" className="flex justify-center">
+                <img
+                  src="/img/Logo Institucional.png"
+                  alt="CDSystem"
+                  className="rounded-full bg-white w-50 h-30"
+                />
+              </Link>
+            ) : (
+              <img
+                src="/img/Logo Institucional.png"
+                alt="CDSystem"
+                className="rounded-full bg-white w-50 h-30"
+              />
+            )}
           </div>
+        </div>
+
 
           {/* SidebarSearch Form */}
-          <div className="form-inline">
+          <div className="form-inline px-3">
             <div className="input-group" data-widget="sidebar-search">
               <input
                 className="form-control form-control-sidebar"
@@ -96,8 +104,10 @@ export default function SideNav() {
                 onChange={handleSearch}
               />
               <div className="input-group-append">
-                <button className="btn btn-sidebar">
-                  <i className="fas fa-search fa-fw" />
+                <button className="btn btn-sidebar" type="button">
+                  <span className="font-bold text-white">
+                    <i className="fas fa-search fa-fw" />
+                  </span>
                 </button>
               </div>
             </div>
@@ -106,13 +116,13 @@ export default function SideNav() {
 
           {/* Mostrar los items filtrados solo si hay término de búsqueda */}
           {searchTerm && (
-            <ul className="nav nav-pills nav-sidebar flex-column">
+            <ul className="nav nav-pills nav-sidebar flex-column px-2">
               {filteredMenuItems.length > 0 ? (
                 filteredMenuItems.map((item, index) => (
                   <li key={index} className="nav-item">
-                    <Link to={item.route} className="nav-link">
-                      <i className="nav-icon fas fa-circle"></i>
-                      <p>{item.text}</p>
+                    <Link to={item.route} className="nav-link text-white font-bold flex items-center gap-2 rounded-md hover:bg-cyan-800/30 transition-colors">
+                      <i className="nav-icon fas fa-circle text-xs"></i>
+                      <p className="m-0">{item.text}</p>
                     </Link>
                   </li>
                 ))
@@ -125,160 +135,182 @@ export default function SideNav() {
           {/* Sidebar Menu */}
 
 
-          <nav className="mt-2">
+          <nav className="mt-2 px-1">
             <ul className="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
               {(hasPermission('Visitas') || hasPermission('Doctores') || hasPermission('Pacientes')) && (
 
-                <ul className="nav nav-pills ">
-                  <li className="nav-item">
-                    <p className="nav-header">Operaciones</p>
+                <li className="nav-item has-treeview">
+                  <a
+                    href="#"
+                    onClick={(e) => e.preventDefault()}
+                    className="nav-link text-white font-bold underline underline-offset-4 decoration-cyan-300/60 tracking-wide menu-toggle flex items-center justify-between rounded-md hover:bg-cyan-800/30 transition-colors"
+                  >
+                    <p className="m-0">
+                      Operaciones
+                      <i className="right fas fa-angle-left ml-2" />
+                    </p>
+                  </a>
 
+                  <ul className="nav nav-treeview px-2">
                     {hasPermission('Visitas') && (
-                      <ul className="nav nav-pills ">
-                        <li className="nav-item">
-                          <Link to="/scanvisit" className="nav-link flex items-center">
-                            <i className="far fa-address-card"></i>
-                            <p className="ml-2">Escanear visitas</p>
-                          </Link>
-                        </li>
-                      </ul>
+                      <li className="nav-item">
+                        <Link to="/scanvisit" className="nav-link flex items-center gap-2 text-white font-bold rounded-md hover:bg-cyan-800/30 transition-colors">
+                          <i className="far fa-address-card mr-1"></i>
+                          <p className="ml-2 m-0">Escanear visitas</p>
+                        </Link>
+                      </li>
                     )}
 
                     {hasPermission('Visitas') && (
-                      <ul className="nav nav-pills ">
-                        <li className="nav-item">
-                          <Link to="/visit" className="nav-link flex items-center">
-                          <i className="fas fa-users"></i>
-                            <p className="ml-2">Fichero de visitas</p>
-                          </Link>
-                        </li>
-                      </ul>
+                      <li className="nav-item">
+                        <Link to="/visit" className="nav-link flex items-center gap-2 text-white font-bold rounded-md hover:bg-cyan-800/30 transition-colors">
+                          <i className="fas fa-users mr-1"></i>
+                          <p className="ml-2 m-0">Fichero de visitas</p>
+                        </Link>
+                      </li>
                     )}
 
                     {hasPermission('Doctores') && (
-                      <ul className="nav nav-pills ">
-                        <li className="nav-item">
-                          <Link to="/doctor" className="nav-link flex items-center">
-                            <i className="fas fa-user-md"></i>
-                            <p className="ml-2">Fichero de doctores</p>
-                          </Link>
-                        </li>
-                      </ul>
+                      <li className="nav-item">
+                        <Link to="/doctor" className="nav-link flex items-center gap-2 text-white font-bold rounded-md hover:bg-cyan-800/30 transition-colors">
+                          <i className="fas fa-user-md mr-1"></i>
+                          <p className="ml-2 m-0">Fichero de doctores</p>
+                        </Link>
+                      </li>
                     )}
 
                     {hasPermission('Pacientes') && (
-                      <ul className="nav nav-pills ">
-                        <li className="nav-item">
-                          <Link to="/patients" className="nav-link flex items-center">
-                            <i className="fas fa-user-injured"></i>
-                            <p className="ml-2">Fichero de pacientes</p>
-                          </Link>
-                        </li>
-                      </ul>
+                      <li className="nav-item">
+                        <Link to="/patients" className="nav-link flex items-center gap-2 text-white font-bold rounded-md hover:bg-cyan-800/30 transition-colors">
+                          <i className="fas fa-user-injured mr-1"></i>
+                          <p className="ml-2 m-0">Fichero de pacientes</p>
+                        </Link>
+                      </li>
                     )}
-
-
-                  </li>
-                </ul>
+                  </ul>
+                </li>
 
               )}
 
               {(hasPermission('Herraminetas_usuarios') || hasPermission('Organizacion')) && (
 
-                <li className="nav-item">
-                  <p className="nav-header">Herramientas</p>
+                <li className="nav-item has-treeview">
+                  <a
+                    href="#"
+                    onClick={(e) => e.preventDefault()}
+                    className="nav-link text-white font-bold underline underline-offset-4 decoration-cyan-300/60 tracking-wide menu-toggle flex items-center justify-between rounded-md hover:bg-cyan-800/30 transition-colors"
+                  >
+                    <p className="m-0">
+                      Herramientas
+                      <i className="right fas fa-angle-left ml-2" />
+                    </p>
+                  </a>
 
-                  {hasPermission('Organizacion') && (
-                    <ul className="nav nav-pills ">
+                  <ul className="nav nav-treeview px-2">
+                    {hasPermission('Organizacion') && (
                       <li className="nav-item">
-                        <Link to="/organizacion" className="nav-link flex items-center">
-                          <i className="fas fa-sitemap"></i>
-                          <p className="ml-2">Organización</p>
+                        <Link to="/organizacion" className="nav-link flex items-center gap-2 text-white font-bold rounded-md hover:bg-cyan-800/30 transition-colors">
+                          <i className="fas fa-sitemap mr-1"></i>
+                          <p className="ml-2 m-0">Organización</p>
                         </Link>
                       </li>
-                    </ul>
-                  )}
+                    )}
 
+                    {hasPermission('Herraminetas_usuarios') && (
+                      <>
+                        <li className="nav-item">
+                          <Link to="/usuarios" className="nav-link flex items-center gap-2 text-white font-bold rounded-md hover:bg-cyan-800/30 transition-colors">
+                            <i className="fas fa-user mr-1"></i>
+                            <p className="ml-2 m-0">Usuarios</p>
+                          </Link>
+                        </li>
 
-                  {hasPermission('Herraminetas_usuarios') && (
-
-                    <ul className="nav nav-pills ">
-                      <li className="nav-item">
-                        <Link to="/usuarios" className="nav-link flex items-center">
-                          <i className="fas fa-user"></i>
-                          <p className="ml-2">Usuarios</p>
-                        </Link>
-                      </li>
-
-
-                      <li className="nav-item">
-                        <Link to="/usuarios/roles" className="nav-link flex items-center">
-                          <i className="fas fa-user-tag"></i>
-                          <p className="ml-2">Roles usuario </p>
-                        </Link>
-                      </li>
-                    </ul>
-
-                  )}
+                        <li className="nav-item">
+                          <Link to="/usuarios/roles" className="nav-link flex items-center gap-2 text-white font-bold rounded-md hover:bg-cyan-800/30 transition-colors">
+                            <i className="fas fa-user-tag mr-1"></i>
+                            <p className="ml-2 m-0">Roles usuario </p>
+                          </Link>
+                        </li>
+                      </>
+                    )}
+                  </ul>
                 </li>
 
               )}
 
 
               {hasPermission('Reporte_Usuarios') && (
+                <li className="nav-item has-treeview">
+                  <a
+                    href="#"
+                    onClick={(e) => e.preventDefault()}
+                    className="nav-link text-white font-bold underline underline-offset-4 decoration-cyan-300/60 tracking-wide menu-toggle flex items-center justify-between rounded-md hover:bg-cyan-800/30 transition-colors"
+                  >
+                    <p className="m-0">
+                      Reportes
+                      <i className="right fas fa-angle-left ml-2" />
+                    </p>
+                  </a>
 
-                <ul className="nav nav-pills ">
-                  <li className="nav-item">
-                    <p className="nav-header">Reportes</p>
-
+                  <ul className="nav nav-treeview px-2">
                     {hasPermission('Reporte_Usuarios') && (
-                      <ul className="nav nav-pills ">
-                        <li className="nav-item">
-                          <Link to="/usuarios/reporte" className="nav-link flex items-center">
-                            <i className="fas fa-file-invoice"></i>
-                            <p className="ml-2">Reporte de usuarios</p>
-                          </Link>
-                        </li>
-                      </ul>
+                      <li className="nav-item">
+                        <Link to="/usuarios/reporte" className="nav-link flex items-center gap-2 text-white font-bold rounded-md hover:bg-cyan-800/30 transition-colors">
+                          <i className="fas fa-file-invoice mr-1"></i>
+                          <p className="ml-2 m-0">Reporte de usuarios</p>
+                        </Link>
+                      </li>
                     )}
-                  </li>
-                </ul>
-
+                  </ul>
+                </li>
               )}
 
               {hasPermission('altas y bajas') && (
 
-                <li className="nav-item">
-                  <p className="nav-header">Operaciones</p>
+                <li className="nav-item has-treeview">
+                  <a
+                    href="#"
+                    onClick={(e) => e.preventDefault()}
+                    className="nav-link text-white font-bold underline underline-offset-4 decoration-cyan-300/60 tracking-wide menu-toggle flex items-center justify-between rounded-md hover:bg-cyan-800/30 transition-colors"
+                  >
+                    <p className="m-0">
+                      Operaciones
+                      <i className="right fas fa-angle-left ml-2" />
+                    </p>
+                  </a>
 
-                  <Link to="#" className="nav-link">
-                    <i className="fas nav-icon" />
-                    <p>Altas y Bajas</p>
-                    <i className="right fas fa-angle-left" />
-                  </Link>
+                  <ul className="nav nav-treeview px-2">
+                    <li className="nav-item">
+                      <a href="#" onClick={(e) => e.preventDefault()} className="nav-link text-white font-bold flex items-center justify-between rounded-md hover:bg-cyan-800/30 transition-colors menu-toggle">
+                        <span className="flex items-center gap-2">
+                          <i className="fas nav-icon" />
+                          <p className="m-0">Altas y Bajas</p>
+                        </span>
+                        <i className="right fas fa-angle-left" />
+                      </a>
 
-                  {hasPermission('Ventas') && (
-                    <ul className="nav nav-treeview">
-                      <li className="nav-item">
-                        <Link to="/ventas" className="nav-link">
-                          <i className="fas fa-circle nav-icon" />
-                          <p>Ventas</p>
-                        </Link>
-                      </li>
-                    </ul>
-                  )}
+                      <ul className="nav nav-treeview px-2">
+                        {hasPermission('Ventas') && (
+                          <li className="nav-item">
+                            <Link to="/ventas" className="nav-link text-white font-bold flex items-center gap-2 rounded-md hover:bg-cyan-800/30 transition-colors">
+                              <i className="fas fa-circle nav-icon text-xs" />
+                              <p className="m-0">Ventas</p>
+                            </Link>
+                          </li>
+                        )}
 
-                  {hasPermission('Bajas') && (
-                    <ul className="nav nav-treeview">
-                      <li className="nav-item">
-                        <Link to="/bajas" className="nav-link">
-                          <i className="fas fa-circle nav-icon" />
-                          <p>Bajas</p>
-                        </Link>
-                      </li>
-                    </ul>
-                  )}
+                        {hasPermission('Bajas') && (
+                          <li className="nav-item">
+                            <Link to="/bajas" className="nav-link text-white font-bold flex items-center gap-2 rounded-md hover:bg-cyan-800/30 transition-colors">
+                              <i className="fas fa-circle nav-icon text-xs" />
+                              <p className="m-0">Bajas</p>
+                            </Link>
+                          </li>
+                        )}
+                      </ul>
+                    </li>
+                  </ul>
                 </li>
               )}
             </ul>
@@ -286,7 +318,6 @@ export default function SideNav() {
           {/* /.sidebar-menu */}
         </div>
         {/* /.sidebar */}
-      </aside>
 
     </div>
   )
