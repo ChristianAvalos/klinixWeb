@@ -1,0 +1,15 @@
+INSERT INTO doctors
+  ("LastName", "FirstName", "Address", "City_Id", "PhoneNumber", "CellPhoneNumber", "SupportWhatsapp", "Email","UrevUsuario","UrevFechaHora")
+SELECT
+  d.lastname,
+  d.firstname,
+  d.address,
+  1 AS City_Id,
+  d.phonenumber,
+  d.cellphonenumber,
+  d.supportwhatsapp,
+  d.email,
+  'Admin',
+  now()
+FROM doctor d;
+
