@@ -255,14 +255,14 @@ export default function Pacientes() {
                                                                 className="flex items-center rounded hover:bg-gray-200 focus:outline-none p-1"
                                                                 type="button"
                                                             >
-                                                                <img src="/img/edit.png" alt="Edit Paciente" />
+                                                                <img src="/img/Icon/edit.png" alt="Edit Paciente" />
                                                             </button>
                                                             <button
                                                                 onClick={() => handleDelete(paciente.id)}
                                                                 className="flex items-center rounded hover:bg-gray-200 focus:outline-none p-1"
                                                                 type="button"
                                                             >
-                                                                <img src="/img/Delete.png" alt="Delete Paciente" />
+                                                                <img src="/img/Icon/trash_bin-remove.png" alt="Delete Paciente" />
                                                             </button>
                                                         </div>
                                                     </td>

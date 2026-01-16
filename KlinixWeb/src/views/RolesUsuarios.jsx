@@ -99,7 +99,7 @@ export default function Roles() {
 
         setRolAEliminar(id);
         setTipoAlertaModal('confirmacion');
-        setMensajeAlertaModal('¿Estás seguro de que deseas eliminar este rol?');
+        setMensajeAlertaModal('¿Estás seguro de que deseas eliminar este usuario?');
         setMostrarAlertaModal(true);
     };
 
@@ -168,40 +168,28 @@ export default function Roles() {
                                     </thead>
                                     <tbody>
                                         {roles.length === 0 ? (
-                                            <NoExistenDatos colSpan={3} mensaje="No existen roles." />
+                                            <NoExistenDatos colSpan={3} mensaje="No existen roles." />  
                                         ) : (
-                                            roles.map((roles) => (
-                                                <tr key={roles.id}>
-                                                    <td>{roles.id}</td>
-                                                    <td>{roles.name}</td>
-                                                    <td>
-                                                        <div className="flex space-x-2">
-                                                            <button
-                                                                onClick={() => openModal('editar', roles)}
-                                                                className="flex items-center focus:outline-none"
-                                                                type="button"
-                                                            >
-                                                                <img src="/img/edit.png" alt="Edit Rol" />
-                                                            </button>
-                                                            <button
-                                                                onClick={() => openModalRolePermissions(roles.id)}
-                                                                className="flex items-center focus:outline-none"
-                                                                type="button"
-                                                            >
-                                                                <img src="/img/accept.png" alt="Rol permisos" />
-                                                            </button>
-                                                            <button
-                                                                onClick={() => handleDelete(roles.id)}
-                                                                className="flex items-center focus:outline-none"
-                                                                type="button"
-                                                            >
-                                                                <img src="/img/Delete.png" alt="Delete Rol" />
-                                                            </button>
-                                                        </div>
-                                                    </td>
+                                        roles.map((roles) => (
+                                            <tr key={roles.id}>
+                                                <td>{roles.id}</td>
+                                                <td>{roles.name}</td>
+                                                <td>
+                                                    <div className="flex space-x-2">
+                                                        <button onClick={() => openModal('editar', roles)} className="flex items-center focus:outline-none">
+                                                            <img src="/img/Icon/edit.png" alt="Edit Rol" />
+                                                        </button>
+                                                        <button onClick={() => openModalRolePermissions(roles.id)} className="flex items-center focus:outline-none">
+                                                            <img src="/img/Icon/planning-user.png" alt="Rol permisos" />
+                                                        </button>
+                                                        <button onClick={() => handleDelete(roles.id)} className="flex items-center focus:outline-none">
+                                                            <img src="/img/Icon/trash_bin-remove.png" alt="Delete Rol" />
+                                                        </button>
+                                                    </div>
+                                                </td>
 
-                                                </tr>
-                                            ))
+                                            </tr>
+                                        ))
                                         )}
                                     </tbody>
                                 </table>

@@ -202,14 +202,14 @@ export default function Doctores() {
                                                                 className="flex items-center rounded hover:bg-gray-200 focus:outline-none p-1"
                                                                 type="button"
                                                             >
-                                                                <img src="/img/edit.png" alt="Edit Doctor" />
+                                                                <img src="/img/Icon/edit.png" alt="Edit Doctor" />
                                                             </button>
                                                             <button
                                                                 onClick={() => handleDelete(doctor.id)}
                                                                 className="flex items-center rounded hover:bg-gray-200 focus:outline-none p-1"
                                                                 type="button"
                                                             >
-                                                                <img src="/img/Delete.png" alt="Delete Doctor" />
+                                                                <img src="/img/Icon/trash_bin-remove.png" alt="Delete Doctor" />
                                                             </button>
                                                         </div>
                                                     </td>

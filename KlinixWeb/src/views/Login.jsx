@@ -1,110 +1,101 @@
-import { createRef,useState } from "react"
-import { Link,useNavigate } from "react-router-dom"
+import { createRef, useState } from "react"
+import { Link } from "react-router-dom"
 import Alerta from "../components/Alerta";
 import { useAuth } from "../hooks/useAuth";
 import Spinner from "../components/Spinner";
 
 export default function Login() {
-
     const emailRef = createRef();
     const passwordRef = createRef();
-
-    const [errores,setErrores] = useState([]);
+    const [errores, setErrores] = useState([]);
     const [cargando, setCargando] = useState(false);
 
-    const navigate = useNavigate();
-
     // Definir el middleware inicial como 'guest'
-    const [middleware, setMiddleware] = useState('guest');
-    const [url, setUrl] = useState('/');
+    const [middleware] = useState('guest');
+    const [url] = useState('/');
 
-    // Utilizar useAuth con el middleware y la URL dinámicos
-    const { login, user } = useAuth({
-        middleware,
-        url
-    });
-
+    const { login } = useAuth({ middleware, url });
 
     const handleSubmit = async e => {
         e.preventDefault();
-
         const datos = {
             email: emailRef.current.value,
-            password: passwordRef.current.value, 
-
+            password: passwordRef.current.value,
         }
+        setErrores([]);
         setCargando(true);
-        //login(datos,setErrores,setCargando)
         try {
-            // Espera a que la función login termine de ejecutarse
             await login(datos, setErrores, setCargando);
         } catch (error) {
-        
             console.error("Error al iniciar sesión:", error);
-        } 
+        } finally {
+            setCargando(false);
+        }
     }
 
-            // // Después de iniciar sesión, verificamos el rol del usuario y actualizamos el middleware
-            // if (user) {
-            //     if (user.rol_id === "1") {
-            //         // Si el usuario es admin, actualizamos el middleware a 'admin'
-            //         setMiddleware('admin');
-            //         setUrl('/'); // Redirigir a la página de administrador
-            //         navigate('/'); // Redirigir a la página de administrador
-            //     } 
-            // }
-    
-return (
-    <>
-        <h1 className="text-4xl font-black">Iniciar sesion</h1>
-        <p>Para poder realizar eventos debes iniciar sesion</p>
+    return (
+        <div className=" flex flex-col justify-center items-center">
 
-        <div className="bg-white shadow-md rounded-md mt-10 px-5 py-10">
-            <form 
-                    onSubmit={handleSubmit}
-                    noValidate
-            >
-
-            {errores ? errores.map((error,i) => <Alerta key={i}>{error}</Alerta>) : null}
-
-                <div className="mb-4">
-                    <label className="text-slate-800" htmlFor="email">
-                        Email:
-                    </label>
-                    <input type="email"
-                            id="email"
-                            className="mt-2 w-full p-3 bg-gray-50"
-                            name="email"
-                            placeholder="Tu correo"
-                            ref={emailRef}
-                            />
-                </div>
-                <div className="mb-4">
-                    <label className="text-slate-800" htmlFor="password">
-                        Contraseña:
-                    </label>
-                    <input type="password"
-                            id="name"
-                            className="mt-2 w-full p-3 bg-gray-50"
-                            name="password"
-                            placeholder="Tu contraseña"
-                            ref={passwordRef}
-                            />
+            <div className="bg-white shadow-lg rounded-2xl px-8 py-10 w-full max-w-md">
+                <div className="flex justify-center">
+                    <img src="/img/Logo Institucional.png" alt="Logo" className="w-24 mb-4" />
                 </div>
 
-                <input type="submit" value="Iniciar sesion"
-                        className="bg-indigo-600 hover:bg-indigo-800 text-white w-full mt-5 p3 uppercase cursor-pointer"
-                        // disabled={cargando}
-                />
-                {cargando && errores.length === 0 && <Spinner />}
-            </form>
-            
+                <h1 className="text-3xl font-bold text-center mb-2">Iniciar sesión</h1>
+                <p className="text-center text-gray-500 mb-6">Accede a tu cuenta para gestionar tus eventos</p>
+                <form onSubmit={handleSubmit} noValidate>
+                    {errores && errores.map((error, i) => <Alerta key={i}>{error}</Alerta>)}
+                    <div className="mb-4">
+                        <label className="sr-only" htmlFor="email">Email</label>
+                        <div className="relative">
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                                {/* Heroicon: Envelope */}
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth ="1.5" stroke="currentColor" className="size-6">
+                                    <path strokeLinecap ="round" strokeLinejoin ="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+                                </svg>
+                            </span>
+                            <input
+                                type="email"
+                                id="email"
+                                className="pl-10 pr-3 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-gray-50"
+                                name="email"
+                                placeholder="Email"
+                                ref={emailRef}
+                            />
+                        </div>
+                    </div>
+                    <div className="mb-6">
+                        <label className="sr-only" htmlFor="password">Contraseña</label>
+                        <div className="relative">
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                                {/* Heroicon: Lock Closed */}
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth ="1.5" stroke="currentColor" className="size-6">
+                                    <path strokeLinecap ="round" strokeLinejoin ="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                                </svg>
+                            </span>
+                            <input
+                                type="password"
+                                id="password"
+                                className="pl-10 pr-3 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-gray-50"
+                                name="password"
+                                placeholder="Contraseña"
+                                ref={passwordRef}
+                            />
+                        </div>
+                    </div>
+                    <input
+                        type="submit"
+                        value="Iniciar sesión"
+                        className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white w-full py-3 rounded-lg font-semibold transition"
+                    />
+                    {cargando && errores.length === 0 && <Spinner />}
+                </form>
+                <nav className="mt-6 text-center">
+                    <Link to="/auth/registro" className="text-blue-600 hover:underline">
+                        ¿No tienes cuenta? <span className="font-semibold">Crear una</span>
+                    </Link>
+                </nav>
+            </div>
         </div>
-        <nav className="mt-5">
-            <Link to="/auth/registro">
-                ¿No tienes cuenta? Crea una
-            </Link>
-        </nav>
-        </>
     )
 }

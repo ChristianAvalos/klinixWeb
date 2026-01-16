@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import AlertaModal from "../components/AlertaModal";
 import ModalOrganizacion from "./ModalOrganizacion";
 import SearchBar from "../components/SearchBar";
+import NoExistenDatos from "../components/NoExistenDatos";
 
 
 export default function Organizacion() {
@@ -93,7 +94,7 @@ export default function Organizacion() {
 
         setOrganizacionAEliminar(id);
         setTipoAlertaModal('confirmacion');
-        setMensajeAlertaModal('¿Estás seguro de que deseas eliminar este usuario?');
+        setMensajeAlertaModal('¿Estás seguro de que deseas eliminar esta organización?');
         setMostrarAlertaModal(true);
     };
 
@@ -105,7 +106,7 @@ export default function Organizacion() {
                 }
             });
 
-            toast.success('Organización eliminado correctamente.');
+            toast.success('Organización eliminada correctamente.');
             fetchOrganizacion();
         } catch (error) {
             setTipoAlertaModal('informativo');
@@ -146,7 +147,7 @@ export default function Organizacion() {
         <div>
             <section className="content">
                 <div className="container-fluid">
-                    <div className="card shadow-sm">
+                    <div className="card">
 
 
 
@@ -220,11 +221,7 @@ export default function Organizacion() {
                                     </thead>
                                     <tbody>
                                         {organizacion.length === 0 ? (
-                                            <tr>
-                                                <td colSpan={12} className="text-center text-gray-600 py-6">
-                                                    No existen organizaciones.
-                                                </td>
-                                            </tr>
+                                            <NoExistenDatos colSpan={12} mensaje="No existen organizaciones registradas." />
                                         ) : (
                                             organizacion.map((organizacion) => (
                                                 <tr key={organizacion.id}>
@@ -243,17 +240,17 @@ export default function Organizacion() {
                                                         <div className="flex space-x-2">
                                                             <button
                                                                 onClick={() => openModal('editar', organizacion)}
-                                                                className="flex items-center rounded hover:bg-gray-200 focus:outline-none p-1"
+                                                                className="flex items-center focus:outline-none"
                                                                 type="button"
                                                             >
-                                                                <img src="/img/edit.png" alt="Edit Rol" />
+                                                                <img src="/img/Icon/edit.png" alt="Editar organización" />
                                                             </button>
                                                             <button
                                                                 onClick={() => handleDelete(organizacion.id)}
-                                                                className="flex items-center rounded hover:bg-gray-200 focus:outline-none p-1"
+                                                                className="flex items-center focus:outline-none"
                                                                 type="button"
                                                             >
-                                                                <img src="/img/Delete.png" alt="Delete Rol" />
+                                                                <img src="/img/Icon/trash_bin-remove.png" alt="Eliminar organización" />
                                                             </button>
                                                         </div>
                                                     </td>
@@ -276,14 +273,14 @@ export default function Organizacion() {
                                     <button
                                         onClick={() => handlePageChange(1)}
                                         disabled={paginaActual === 1}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-br from-blue-900 to-cyan-900 hover:from-blue-800 hover:to-cyan-800'}`}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
                                     >
                                         Primera
                                     </button>
                                     <button
                                         onClick={() => handlePageChange(paginaActual - 1)}
                                         disabled={paginaActual === 1}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-br from-blue-900 to-cyan-900 hover:from-blue-800 hover:to-cyan-800'}`}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
                                     >
                                         Anterior
                                     </button>
@@ -299,14 +296,14 @@ export default function Organizacion() {
                                     <button
                                         onClick={() => handlePageChange(paginaActual + 1)}
                                         disabled={paginaActual === totalPaginas}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === totalPaginas ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-br from-blue-900 to-cyan-900 hover:from-blue-800 hover:to-cyan-800'}`}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === totalPaginas ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
                                     >
                                         Siguiente
                                     </button>
                                     <button
                                         onClick={() => handlePageChange(totalPaginas)}
                                         disabled={paginaActual === totalPaginas}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === totalPaginas ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-br from-blue-900 to-cyan-900 hover:from-blue-800 hover:to-cyan-800'}`}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === totalPaginas ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
                                     >
                                         Última
                                     </button>

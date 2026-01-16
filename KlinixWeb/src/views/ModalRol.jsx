@@ -1,4 +1,4 @@
-import { useEffect, useState,useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import clienteAxios from "../config/axios";
 import { toast } from "react-toastify";
 
@@ -8,12 +8,20 @@ export default function ModalRol({ onClose, modo, rol = {}, refrescarRoles }) {
     const nombreRef = useRef(null);
     // Obtener el token de autenticación
     const token = localStorage.getItem('AUTH_TOKEN');
-    // Enfocar el campo de nombre al abrir el modal
+    // Enfocar el campo de nombre al abrir el modal (y cuando cambia crear/editar)
     useEffect(() => {
-        if (nombreRef.current) {
+        const timeoutId = setTimeout(() => {
+            if (!nombreRef.current) return;
+
             nombreRef.current.focus();
-        }
-    }, []);
+
+            if (modo === 'editar') {
+                nombreRef.current.select?.();
+            }
+        }, 0);
+
+        return () => clearTimeout(timeoutId);
+    }, [modo, rol?.id]);
 
     // Actualizar el estado del formulario cuando cambie el usuario
     useEffect(() => {
