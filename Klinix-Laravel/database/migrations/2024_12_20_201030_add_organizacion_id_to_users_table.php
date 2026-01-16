@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->bigInteger('organizacion_id')->nullable();
-            $table->foreign('organizacion_id')->references('id')->on('organizacion');
+            $table->bigInteger('id_organizacion')->nullable();
+            $table->foreign('id_organizacion')->references('id')->on('organizacion');
         });
     }
 
@@ -23,8 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign(['organizacion_id']);   
-            $table->dropColumn('organizacion_id');
+            $table->dropForeign(['id_organizacion']);   
+            $table->dropColumn('id_organizacion');
         });
     }
 };

@@ -73,6 +73,6 @@ class Organizacion extends Model
      */
     public function users()
     {
-        return $this->hasMany(User::class, 'organizacion_id');
+        return $this->hasMany(User::class, 'id_organizacion');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Log;
 use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -16,14 +17,14 @@ use App\Http\Requests\CambiarPasswordRequest;
 
 class AuthController extends Controller
 {
-    public function index(Request $request){
+    public function index(Request $request)
+    {
         $search = $request->input('search');
-        $usuarios = User::with('role','organizacion')->
-        when($search, function ($query, $search) {
+        $usuarios = User::with('role', 'organizacion')->when($search, function ($query, $search) {
             return $query->where('name', 'ilike', '%' . $search . '%')
-                            ->orWhere('email', 'ilike', '%' . $search . '%');
+                ->orWhere('email', 'ilike', '%' . $search . '%');
         })
-        ->paginate(10);
+            ->paginate(10);
         //$cantidadUsuarios = User::all()->count(); 
         return response()->json([
             'usuarios' => $usuarios/*,
@@ -32,7 +33,8 @@ class AuthController extends Controller
     }
 
 
-    public function register(RegistroRequest $request){
+    public function register(RegistroRequest $request)
+    {
         //validar el registro 
 
         $data = $request->validated();
@@ -42,22 +44,23 @@ class AuthController extends Controller
             [
                 'name' => $data['name'],
                 'email' => $data['email'],
-                'password' => bcrypt($data['password']),
-                'id_tipoestado'=> 1, //por defecto se crea con estado Activo
+                'password' => Hash::make($data['password']),
+                'rol_id' => 2, //por defecto se crea como usuario
+                'id_tipoestado' => 1, //por defecto se crea con estado Activo
                 'UrevUsuario' => 'Registrado - ' . $data['name'],
                 'UrevFechaHora' => Carbon::now()
-                
-            ]
-            );
-            //retorna una respuesta
-            return [
-                    'token' => $user->createToken('token')->plainTextToken,
-                    'user' => $user
-            ];
 
+            ]
+        );
+        //retorna una respuesta
+        return [
+            'token' => $user->createToken('token')->plainTextToken,
+            'user' => $user
+        ];
     }
 
-    public function createUser(CreateUserRequest $request){
+    public function createUser(CreateUserRequest $request)
+    {
         //validar el registro 
 
         $data = $request->validated();
@@ -67,20 +70,20 @@ class AuthController extends Controller
             [
                 'name' => $data['name'],
                 'email' => $data['email'],
-                'password' => bcrypt(123456),
-                'rol_id'=> $data['rol_id'],
-                'organizacion_id'=> $data['organizacion_id'],
-                'id_tipoestado'=> 1, //por defecto se crea con estado Activo
+                'password' => Hash::make('123456'),
+                'rol_id' => $data['rol_id'],
+                'id_organizacion' => $data['id_organizacion'],
+                'id_tipoestado' => 1, //por defecto se crea con estado Activo
                 'UrevUsuario' => 'Creado - ' . Auth::user()->name,
                 'UrevFechaHora' => Carbon::now()
             ]
-            );
+        );
 
-    // Retornar respuesta exitosa
-    return response()->json([
-        'message' => 'Usuario creado exitosamente',
-        'user' => $user
-    ], 201);
+        // Retornar respuesta exitosa
+        return response()->json([
+            'message' => 'Usuario creado exitosamente',
+            'user' => $user
+        ], 201);
     }
 
     public function updateUser(UpdateUserRequest $request, $id)
@@ -97,7 +100,7 @@ class AuthController extends Controller
         $usuario->name = $data['name'];
         $usuario->email = $data['email'];
         $usuario->rol_id = $data['rol_id'];
-        $usuario->organizacion_id = $data['organizacion_id'];
+        $usuario->id_organizacion = $data['id_organizacion'];
         $usuario->UrevUsuario = 'Actualizado - ' . Auth::user()->name;
         $usuario->UrevFechaHora = Carbon::now();
 
@@ -107,40 +110,40 @@ class AuthController extends Controller
         // Retornar una respuesta exitosa
         return response()->json([
             'message' => 'Usuario actualizado exitosamente',
-            'usuario' => $usuario 
+            'usuario' => $usuario
         ], 200);
     }
 
 
 
-    public function login(LoginRequest $request){
+    public function login(LoginRequest $request)
+    {
         $data = $request->validated();
 
         //Revisar el password 
-        if (!Auth::attempt($data)){
+        if (!Auth::attempt($data)) {
             return response([
-                'errors'=>['El correo o la contraseña no son correctas']
-            ],422);
+                'errors' => ['El correo o la contraseña no son correctas']
+            ], 422);
         }
-        
+
         //Autenticar al usuario
         $user = Auth::user();
         //retorna una respuesta
         return [
             'token' => $user->createToken('token')->plainTextToken,
             'user' => $user
-    ];
-
+        ];
     }
 
-    public function logout(Request $request){
+    public function logout(Request $request)
+    {
         $user = $request->user();
         $user->currentAccessToken()->delete();
 
         return [
             'user' => null
         ];
-
     }
 
 
@@ -148,31 +151,34 @@ class AuthController extends Controller
     public function ObtenerPermisosUsuario()
     {
         $user = Auth::user();
-        
-    // Verifica si el usuario tiene un rol asignado
-    if (!$user->role) {
-        return response()->json(['error' => 'El usuario no tiene un rol asignado.'], 404);
-    }
-    
-    // Obtener los permisos del usuario a través del rol
-    $permissions = $user->role->permissions->pluck('name')->unique();
+
+        // Verifica si el usuario tiene un rol asignado
+        if (!$user->role) {
+            return response()->json(['error' => 'El usuario no tiene un rol asignado.'], 404);
+        }
+
+        // Obtener los permisos del usuario a través del rol
+        $permissions = $user->role->permissions->pluck('name')->unique();
 
         return $user;
-
     }
 
 
     public function DeleteUser($id)
     {
+        // Buscar el usuario por ID
         $user = User::findOrFail($id);
+
+        //eliminar el usuario
         $user->delete();
 
-        return response()->json(['message' => 'Usuario eliminado correctamente.'],200);
+        return response()->json(['message' => 'Usuario eliminado correctamente.'], 200);
     }
 
 
     public function cambiarpassword(CambiarPasswordRequest $request)
     {
+
         try {
             $data = $request->validated();
             $user = Auth::user();
@@ -183,7 +189,7 @@ class AuthController extends Controller
                     'message' => 'Usuario no autenticado',
                 ], 401);
             }
-    
+
             // Verificar si la contraseña actual es correcta
             if (!Hash::check($request->currentPassword, $user->password)) {
                 return response()->json([
@@ -191,13 +197,13 @@ class AuthController extends Controller
                     'message' => 'La contraseña actual no es correcta',
                 ], 400);
             }
-    
+
             // Actualizar la contraseña
             $user->password = Hash::make($request->newPassword);
             $user->UrevUsuario = 'Actualizado - ' . Auth::user()->name;
             $user->UrevFechaHora = Carbon::now();
             $user->save();
-    
+
             return response()->json([
                 'success' => true,
                 'message' => 'Contraseña actualizada con éxito',
@@ -243,9 +249,6 @@ class AuthController extends Controller
         //Guardo los cambios
         $user->save();
 
-        return response()->json(['message' => 'Estado del usuario actualizado correctamente.'],200);
+        return response()->json(['message' => 'Estado del usuario actualizado correctamente.'], 200);
     }
-
-
-
 }

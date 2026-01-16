@@ -7,7 +7,7 @@ export default function ModalUsuarios({ onClose, modo, usuario = {}, refrescarUs
     const [correo, setCorreo] = useState(usuario.email || '');
     const [rolSeleccionado, setRolSeleccionado] = useState(usuario.rol_id || '');
     const [roles, setRoles] = useState([]);
-    const [organizacionSeleccionada, setorganizacionSeleccionada] = useState(usuario.organizacion_id || '');
+    const [organizacionSeleccionada, setorganizacionSeleccionada] = useState(usuario.id_organizacion || '');
     const [organizaciones, setOrganizacion] = useState([]);
     const [errores, setErrores] = useState({});
     // Obtener el token de autenticación
@@ -57,7 +57,7 @@ export default function ModalUsuarios({ onClose, modo, usuario = {}, refrescarUs
             setNombre(usuario.name || '');
             setCorreo(usuario.email || '');
             setRolSeleccionado(usuario.rol_id || '');
-            setorganizacionSeleccionada(usuario.organizacion_id || '');
+            setorganizacionSeleccionada(usuario.id_organizacion || '');
         }
     }, [usuario, modo]); // Dependencia en 'usuario' y 'modo'
 
@@ -71,7 +71,7 @@ export default function ModalUsuarios({ onClose, modo, usuario = {}, refrescarUs
                 name: nombre,
                 email: correo,
                 rol_id: rolSeleccionado,
-                organizacion_id: organizacionSeleccionada
+                id_organizacion: organizacionSeleccionada
             };
 
             if (modo === 'crear') {
@@ -187,7 +187,7 @@ export default function ModalUsuarios({ onClose, modo, usuario = {}, refrescarUs
                             <div className="mb-4">
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Organizacion</label>
                                 <select
-                                    className={`w-full px-3 py-2 border ${errores.organizacion_id ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                    className={`w-full px-3 py-2 border ${errores.id_organizacion ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                     value={organizacionSeleccionada}
                                     onChange={(e) => setorganizacionSeleccionada(e.target.value)}
                                 >
@@ -198,7 +198,7 @@ export default function ModalUsuarios({ onClose, modo, usuario = {}, refrescarUs
                                         </option>
                                     ))}
                                 </select>
-                                {errores.organizacion_id && <p className="text-red-500 text-sm">{errores.organizacion_id[0]}</p>}
+                                {errores.id_organizacion && <p className="text-red-500 text-sm">{errores.id_organizacion[0]}</p>}
                             </div>
 
                         </>

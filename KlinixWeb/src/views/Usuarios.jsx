@@ -149,8 +149,8 @@ export default function Usuarios() {
 
     const UserActive = async () => {
         try {
-            const nuevoEstado = tipoEstadoSeleccionado === '1' ? '2' : '1'; // Cambiar el estado
-            const accion2 = tipoEstadoSeleccionado === '1' ? 'Desactivado' : 'Activado';
+            const nuevoEstado = tipoEstadoSeleccionado === 1 ? 2 : 1; // Cambiar el estado
+            const accion2 = tipoEstadoSeleccionado === 1 ? 'Desactivado' : 'Activado';
 
 
             await clienteAxios.post(`api/usuario_estado/${usuarioSeleccionado}`,

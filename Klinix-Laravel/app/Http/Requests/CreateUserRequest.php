@@ -25,7 +25,7 @@ class CreateUserRequest extends FormRequest
             'name' => ['required','string'],
             'email' => ['required','email','unique:users,email'],
             'rol_id' => ['required', 'exists:roles,id'],
-            'organizacion_id' => ['required', 'exists:organizacion,id']
+            'id_organizacion' => ['required', 'exists:organizacion,id']
         ];
     }
     public function messages()
@@ -37,7 +37,7 @@ class CreateUserRequest extends FormRequest
             'email.unique' => 'El correo ingresado ya existe',
             'rol_id.required' => 'El rol seleccionado no es válido',
             'rol_id.exists' => 'El rol seleccionado no es válido',
-            'organizacion_id.required' => 'La organizacion seleccionada es no válida',
+            'id_organizacion.required' => 'La organizacion seleccionada es no válida',
         ];
     }
 }

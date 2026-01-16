@@ -26,7 +26,7 @@ class UpdateUserRequest extends FormRequest
             'name' => ['required','string'],
             'email' => ['required', 'email', 'unique:users,email,' . $userId],
             'rol_id' => ['required', 'exists:roles,id'],
-            'organizacion_id' => ['required', 'exists:organizacion,id']
+            'id_organizacion' => ['required', 'exists:organizacion,id']
         ];
     }
     public function messages()
@@ -38,7 +38,7 @@ class UpdateUserRequest extends FormRequest
             'email.unique' => 'El correo ingresado ya existe',
             'rol_id.required' => 'El rol seleccionado no es válido',
             'rol_id.exists' => 'El rol seleccionado no es válido',
-            'organizacion_id.required' => 'La organizacion es obligatoria',
+            'id_organizacion.required' => 'La organizacion es obligatoria',
         ];
     }
 }

@@ -24,7 +24,7 @@ class User extends Authenticatable
         'email',
         'password',
         'rol_id',
-        'organizacion_id',
+        'id_organizacion',
         'id_tipoestado',
         'UrevUsuario',
         'UrevFechaHora'
@@ -63,7 +63,7 @@ class User extends Authenticatable
      */
     public function organizacion()
     {
-        return $this->belongsTo(Organizacion::class, 'organizacion_id');
+        return $this->belongsTo(Organizacion::class, 'id_organizacion');
     }
 
     /**
