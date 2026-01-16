@@ -6,6 +6,7 @@ import ModalRol from './ModalRol';
 import ModalRolPermisos from './ModalRolPermisos';
 import SearchBar from "../components/SearchBar";
 import { obtenerRoles } from '../helpers/HelpersUsuarios';
+import NoExistenDatos from "../components/NoExistenDatos";
 
 
 export default function Roles() {
@@ -98,7 +99,7 @@ export default function Roles() {
 
         setRolAEliminar(id);
         setTipoAlertaModal('confirmacion');
-        setMensajeAlertaModal('¿Estás seguro de que deseas eliminar este usuario?');
+        setMensajeAlertaModal('¿Estás seguro de que deseas eliminar este rol?');
         setMostrarAlertaModal(true);
     };
 
@@ -147,49 +148,7 @@ export default function Roles() {
         <div>
             <section className="content">
                 <div className="container-fluid">
-                    <div className="card shadow-sm">
-
-
-
-
-                        {/* <div className="content-header bg-blue-500 text-white rounded">
-                            <div className="container-fluid">
-                                <div className="row mb-2">
-                                    <div className="col-sm-6 d-flex align-items-center">
-                                        <h1 className="m-0">Roles</h1>
-
-                                    </div>
-                                    <div className="col-sm-6 d-flex justify-content-end align-items-center">
-                                        <input
-                                            type="text"
-                                            className="form-control mr-2"
-                                            placeholder="Buscar rol..."
-                                            value={searchTerm}
-                                            onChange={(e) => setSearchTerm(e.target.value)}
-                                            onKeyDown={(e) => {
-                                                if (e.key === 'Enter') {
-                                                    fetchRoles(1, searchTerm);
-                                                }
-                                            }}
-
-                                        />
-                                        <button
-                                            className="btn btn-secondary"
-                                            onClick={() => fetchRoles(1, searchTerm)}
-                                        >
-                                            Buscar
-                                        </button>
-                                        <button
-                                            className="btn btn-success ml-2"
-                                            onClick={() => openModal('crear')}
-                                        >
-                                            Añadir Rol
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> */}
-
+                    <div className="card">
                         <SearchBar
                             title="Roles"
                             placeholder="Buscar roles..."
@@ -197,9 +156,6 @@ export default function Roles() {
                             onSearch={handleSearch}
                             onAdd={handleAdd}
                         />
-
-
-
                         <div className="card-body">
                             <div className="overflow-x-auto">
                                 <table className="table table-bordered table-striped w-full">
@@ -212,11 +168,7 @@ export default function Roles() {
                                     </thead>
                                     <tbody>
                                         {roles.length === 0 ? (
-                                            <tr>
-                                                <td colSpan={3} className="text-center text-gray-600 py-6">
-                                                    No existen roles.
-                                                </td>
-                                            </tr>
+                                            <NoExistenDatos colSpan={3} mensaje="No existen roles." />
                                         ) : (
                                             roles.map((roles) => (
                                                 <tr key={roles.id}>
@@ -226,21 +178,21 @@ export default function Roles() {
                                                         <div className="flex space-x-2">
                                                             <button
                                                                 onClick={() => openModal('editar', roles)}
-                                                                className="flex items-center rounded hover:bg-gray-200 focus:outline-none p-1"
+                                                                className="flex items-center focus:outline-none"
                                                                 type="button"
                                                             >
                                                                 <img src="/img/edit.png" alt="Edit Rol" />
                                                             </button>
                                                             <button
                                                                 onClick={() => openModalRolePermissions(roles.id)}
-                                                                className="flex items-center rounded hover:bg-gray-200 focus:outline-none p-1"
+                                                                className="flex items-center focus:outline-none"
                                                                 type="button"
                                                             >
                                                                 <img src="/img/accept.png" alt="Rol permisos" />
                                                             </button>
                                                             <button
                                                                 onClick={() => handleDelete(roles.id)}
-                                                                className="flex items-center rounded hover:bg-gray-200 focus:outline-none p-1"
+                                                                className="flex items-center focus:outline-none"
                                                                 type="button"
                                                             >
                                                                 <img src="/img/Delete.png" alt="Delete Rol" />
@@ -266,14 +218,14 @@ export default function Roles() {
                                     <button
                                         onClick={() => handlePageChange(1)}
                                         disabled={paginaActual === 1}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-br from-blue-900 to-cyan-900 hover:from-blue-800 hover:to-cyan-800'}`}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
                                     >
                                         Primera
                                     </button>
                                     <button
                                         onClick={() => handlePageChange(paginaActual - 1)}
                                         disabled={paginaActual === 1}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-br from-blue-900 to-cyan-900 hover:from-blue-800 hover:to-cyan-800'}`}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
                                     >
                                         Anterior
                                     </button>
@@ -289,14 +241,14 @@ export default function Roles() {
                                     <button
                                         onClick={() => handlePageChange(paginaActual + 1)}
                                         disabled={paginaActual === totalPaginas}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === totalPaginas ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-br from-blue-900 to-cyan-900 hover:from-blue-800 hover:to-cyan-800'}`}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === totalPaginas ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
                                     >
                                         Siguiente
                                     </button>
                                     <button
                                         onClick={() => handlePageChange(totalPaginas)}
                                         disabled={paginaActual === totalPaginas}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === totalPaginas ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-br from-blue-900 to-cyan-900 hover:from-blue-800 hover:to-cyan-800'}`}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base text-white font-semibold rounded-lg ${paginaActual === totalPaginas ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
                                     >
                                         Última
                                     </button>
