@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState,useRef } from 'react';
 import clienteAxios from "../config/axios";
 import { toast } from "react-toastify";
 
@@ -12,6 +12,7 @@ export default function ModalDoctor({ onClose, modo, doctor = {}, refrescarDocto
     const [correo, setCorreo] = useState(doctor.Email || '');
     const [ciudadSeleccionado, setCiudadSeleccionado] = useState(doctor.City_Id || '');
     const [ciudades, setCiudades] = useState([]);
+    const nombreRef = useRef(null);
 
     const [errores, setErrores] = useState({});
     // Obtener el token de autenticación
@@ -34,6 +35,14 @@ export default function ModalDoctor({ onClose, modo, doctor = {}, refrescarDocto
         };
 
         fetchCiudades();
+    }, []);
+
+
+    // Enfocar el campo de nombre al abrir el modal
+    useEffect(() => {
+        if (nombreRef.current) {
+            nombreRef.current.focus();
+        }
     }, []);
 
 
@@ -120,6 +129,7 @@ export default function ModalDoctor({ onClose, modo, doctor = {}, refrescarDocto
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Nombre(s)</label>
                             <input type="text" 
+                            ref={nombreRef}
                             className={`w-full px-3 py-2 border ${errores.FirstName ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
                             value={nombre} 
                             onChange={(e) => setNombre(e.target.value)} />
