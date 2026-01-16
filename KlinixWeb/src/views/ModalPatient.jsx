@@ -4,8 +4,8 @@ import { toast } from "react-toastify";
 
 export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPacientes }) {
     const [codigoPaciente, setCodigoPaciente] = useState(paciente.PatientCode || '');
-    const [nombre, setNombre] = useState(paciente.Firstname || '');
-    const [apellido, setApellido] = useState(paciente.Lastname || '');
+    const [nombre, setNombre] = useState(paciente.FirstName || '');
+    const [apellido, setApellido] = useState(paciente.LastName || '');
     const [titulo, setTitulo] = useState(paciente.Title || '');
     const [numeroDocumento, setNumeroDocumento] = useState(paciente.DocumentNo || '');
     const [nacionalidad, setNacionalidad] = useState(paciente.Nationality || '');
@@ -60,8 +60,8 @@ export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPa
     useEffect(() => {
         if (modo === 'editar') {
             setCodigoPaciente(paciente.PatientCode || '');
-            setNombre(paciente.Firstname || '');
-            setApellido(paciente.Lastname || '');
+            setNombre(paciente.FirstName || '');
+            setApellido(paciente.LastName || '');
             setTitulo(paciente.Title || '');
             setNumeroDocumento(paciente.DocumentNo || '');
             setNacionalidad(paciente.Nationality || '');
@@ -97,8 +97,8 @@ export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPa
         try {
             const userData = {
                 PatientCode: codigoPaciente,
-                Firstname: nombre,
-                Lastname: apellido,
+                FirstName: nombre,
+                LastName: apellido,
                 Title: titulo,
                 DocumentNo: numeroDocumento,
                 Nationality: nacionalidad,
@@ -177,19 +177,19 @@ export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPa
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Nombre(s)</label>
                             <input type="text"
-                                className={`w-full px-3 py-2 border ${errores.Firstname ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                className={`w-full px-3 py-2 border ${errores.FirstName ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                 value={nombre}
                                 onChange={(e) => setNombre(e.target.value)} />
-                            {errores.Firstname && <p className="text-red-500 text-sm">{errores.Firstname[0]}</p>}
+                            {errores.FirstName && <p className="text-red-500 text-sm">{errores.FirstName[0]}</p>}
                         </div>
                         {/* Apellido(s) */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Apellido(s)</label>
                             <input type="text"
-                                className={`w-full px-3 py-2 border ${errores.Lastname ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                className={`w-full px-3 py-2 border ${errores.LastName ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                 value={apellido}
                                 onChange={(e) => setApellido(e.target.value)} />
-                            {errores.Lastname && <p className="text-red-500 text-sm">{errores.Lastname[0]}</p>}
+                            {errores.LastName && <p className="text-red-500 text-sm">{errores.LastName[0]}</p>}
                         </div>
                         {/* Dirección */}
                         <div>

@@ -17,12 +17,12 @@ return new class extends Migration
         Schema::create('patients', function (Blueprint $table) use ($isSqlsrv) {
             $table->id('id');
 
-            $column = $table->string('Lastname', 150);
+            $column = $table->string('LastName', 150);
             if ($isSqlsrv) {
                 $column->collation('Modern_Spanish_CI_AS');
             }
 
-            $column = $table->string('Firstname', 150);
+            $column = $table->string('FirstName', 150);
             if ($isSqlsrv) {
                 $column->collation('Modern_Spanish_CI_AS');
             }

@@ -3,8 +3,8 @@ import clienteAxios from "../config/axios";
 import { toast } from "react-toastify";
 
 export default function ModalDoctor({ onClose, modo, doctor = {}, refrescarDoctores }) {
-    const [nombre, setNombre] = useState(doctor.Firstname || '');
-    const [apellido, setApellido] = useState(doctor.Lastname || '');
+    const [nombre, setNombre] = useState(doctor.FirstName || '');
+    const [apellido, setApellido] = useState(doctor.LastName || '');
     const [direccion, setDireccion] = useState(doctor.Address || '');
     const [celular, setCelular] = useState(doctor.CellPhoneNumber || '');
     const [soportaWhatsapp, setSoportaWhatsapp] = useState(doctor.SupportWhatsapp === "1");
@@ -40,8 +40,8 @@ export default function ModalDoctor({ onClose, modo, doctor = {}, refrescarDocto
     // Actualizar el estado del formulario cuando cambie el doctor
     useEffect(() => {
         if (modo === 'editar') {
-            setNombre(doctor.Firstname || '');
-            setApellido(doctor.Lastname || '');
+            setNombre(doctor.FirstName || '');
+            setApellido(doctor.LastName || '');
             setDireccion(doctor.Address || '');
             setCelular(doctor.CellPhoneNumber || '');
             //setSoportaWhatsapp(doctor.SupportWhatsapp || false);
@@ -59,8 +59,8 @@ export default function ModalDoctor({ onClose, modo, doctor = {}, refrescarDocto
 
         try {
             const userData = {
-                Firstname: nombre,
-                Lastname: apellido,
+                FirstName: nombre,
+                LastName: apellido,
                 Address: direccion,
                 CellPhoneNumber: celular,
                 SupportWhatsapp: soportaWhatsapp,
@@ -120,18 +120,18 @@ export default function ModalDoctor({ onClose, modo, doctor = {}, refrescarDocto
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Nombre(s)</label>
                             <input type="text" 
-                            className={`w-full px-3 py-2 border ${errores.Firstname ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                            className={`w-full px-3 py-2 border ${errores.FirstName ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
                             value={nombre} 
                             onChange={(e) => setNombre(e.target.value)} />
-                            {errores.Firstname && <p className="text-red-500 text-sm">{errores.Firstname[0]}</p>}
+                            {errores.FirstName && <p className="text-red-500 text-sm">{errores.FirstName[0]}</p>}
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Apellido(s)</label>
                             <input type="text" 
-                            className={`w-full px-3 py-2 border ${errores.Lastname ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                            className={`w-full px-3 py-2 border ${errores.LastName ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
                             value={apellido} 
                             onChange={(e) => setApellido(e.target.value)} />
-                            {errores.Lastname && <p className="text-red-500 text-sm">{errores.Lastname[0]}</p>}
+                            {errores.LastName && <p className="text-red-500 text-sm">{errores.LastName[0]}</p>}
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Dirección</label>

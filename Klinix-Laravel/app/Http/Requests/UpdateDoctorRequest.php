@@ -22,8 +22,8 @@ class UpdateDoctorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'Firstname' => ['required', 'string'],
-            'Lastname' => ['required', 'string'],
+            'FirstName' => ['required', 'string'],
+            'LastName' => ['required', 'string'],
             'Address' => ['required', 'string'],
             'CellPhoneNumber' => ['required', 'string'],
             'SupportWhatsapp' => ['boolean'],
@@ -36,8 +36,8 @@ class UpdateDoctorRequest extends FormRequest
     public function messages()
     {
         return [
-            'Firstname.required' => 'El nombre es obligatorio.',
-            'Lastname.required' => 'El apellido es obligatorio.',
+            'FirstName.required' => 'El nombre es obligatorio.',
+            'LastName.required' => 'El apellido es obligatorio.',
             'Address.required' => 'La dirección es obligatoria.',
             'CellPhoneNumber.required' => 'El número de celular es obligatorio.',
             'SupportWhatsapp.boolean' => 'El valor de WhatsApp debe ser verdadero o falso.',

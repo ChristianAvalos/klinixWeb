@@ -15,8 +15,8 @@ class Patient extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'Lastname',
-        'Firstname',
+        'LastName',
+        'FirstName',
         'Title',
         'DocumentNo',
         'Nationality',

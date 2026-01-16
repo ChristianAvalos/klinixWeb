@@ -1,4 +1,4 @@
-import { useState, React } from "react";
+import { useState } from "react";
 
 const SearchBar = ({ title, placeholder, buttonLabel, onSearch, onAdd }) => {
     const [term, setTerm] = useState("");
@@ -18,6 +18,7 @@ const SearchBar = ({ title, placeholder, buttonLabel, onSearch, onAdd }) => {
                             type="text"
                             placeholder={placeholder}
                             className="form-control mr-2"
+                            value={term}
                             onChange={(e) => setTerm(e.target.value)}
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
@@ -44,7 +45,7 @@ const SearchBar = ({ title, placeholder, buttonLabel, onSearch, onAdd }) => {
                 </div>
             </div>
         </div>
-                );
+    );
 };
 
-                export default SearchBar;
+export default SearchBar;

@@ -44,7 +44,10 @@ export default function Roles() {
             setRoles(data.data);
             setTotalPaginas(data.last_page);
             setTotalRegistros(data.total);
-            setPaginaActual(data.current_page);
+            const currentPage = Number(data.current_page ?? page);
+            if (Number.isFinite(currentPage)) {
+                setPaginaActual(currentPage);
+            }
 
         } catch (error) {
             console.error('Error al obtener los roles:', error);

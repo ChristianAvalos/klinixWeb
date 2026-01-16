@@ -206,8 +206,8 @@ export default function Pacientes() {
                                                 <tr key={paciente.id}>
                                                     <td>{paciente.id}</td>
                                                     <td>{paciente.PatientCode}</td>
-                                                    <td>{paciente.Lastname}</td>
-                                                    <td>{paciente.Firstname}</td>
+                                                    <td>{paciente.LastName}</td>
+                                                    <td>{paciente.FirstName}</td>
                                                     <td>{paciente.Title}</td>
                                                     <td>{paciente.DocumentNo}</td>
                                                     <td>{paciente.Nationality}</td>

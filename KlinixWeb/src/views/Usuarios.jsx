@@ -60,7 +60,10 @@ export default function Usuarios() {
             setUsuarios(usuarios.usuarios.data);
             setTotalPaginas(usuarios.usuarios.last_page);
             setTotalRegistros(usuarios.usuarios.total);
-            setPaginaActual(usuarios.usuarios.current_page);
+            const currentPage = Number(usuarios.usuarios.current_page ?? page);
+            if (Number.isFinite(currentPage)) {
+                setPaginaActual(currentPage);
+            }
 
         } catch (error) {
             console.error('Error al cargar los usuarios:', error);

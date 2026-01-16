@@ -186,8 +186,8 @@ export default function Doctores() {
                                             doctor.map((doctor) => (
                                                 <tr key={doctor.id}>
                                                     <td>{doctor.id}</td>
-                                                    <td>{doctor.Lastname}</td>
-                                                    <td>{doctor.Firstname}</td>
+                                                    <td>{doctor.LastName}</td>
+                                                    <td>{doctor.FirstName}</td>
                                                     <td>{doctor.Address}</td>
                                                     <td>{doctor.City_Id ? doctor.ciudad.nombre : 'Sin ciudad seleccionada'}</td>
                                                     <td>{doctor.PhoneNumber}</td>

@@ -50,8 +50,8 @@ return response()->json($doctores);
         //crear doctor
         $doctor = Doctor::create(
             [
-                'FirstName' => $data['Firstname'],
-                'LastName' => $data['Lastname'],
+                'FirstName' => $data['FirstName'],
+                'LastName' => $data['LastName'],
                 'Address' => $data['Address'],
                 'CellPhoneNumber' => $data['CellPhoneNumber'],
                 'SupportWhatsapp' => $data['SupportWhatsapp'] ? '1' : '0',
@@ -117,8 +117,8 @@ return response()->json($doctores);
         //actualizar doctor
         $doctor->update(
             [
-                'FirstName' => $data['Firstname'],
-                'LastName' => $data['Lastname'],
+                'FirstName' => $data['FirstName'],
+                'LastName' => $data['LastName'],
                 'Address' => $data['Address'],
                 'CellPhoneNumber' => $data['CellPhoneNumber'],
                 'SupportWhatsapp' => $data['SupportWhatsapp'] ? '1' : '0',
