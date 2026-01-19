@@ -108,116 +108,100 @@ export default function Home() {
 
   return (
     <>
-      {/* Content Header (Page header) */}
-      <div className="content-header">
-        <div className="container-fluid">
-          <div className="row mb-2">
-            <div className="col-sm-6">
-              <h1 className="m-0">Dashboard</h1>
-            </div>{/* /.col */}
-            <div className="col-sm-6">
-              <ol className="breadcrumb float-sm-right">
-                <li className="breadcrumb-item"><a href="/">Principal</a></li>
-                <li className="breadcrumb-item active">Panel de control</li>
-              </ol>
-            </div>{/* /.col */}
-          </div>{/* /.row */}
-        </div>{/* /.container-fluid */}
+      {/* Encabezado */}
+      <div className="py-4 px-6 bg-white border-b">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+          <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
+          <nav className="text-sm text-gray-500 flex items-center space-x-2">
+            <Link to="/" className="hover:underline">Principal</Link>
+            <span>/</span>
+            <span className="text-gray-700">Panel de control</span>
+          </nav>
+        </div>
       </div>
-      {/* /.content-header */}
-      {/* Main content */}
-      <section className="content">
-        <div className="container-fluid">
-          {/* Small boxes (Stat box) */}
-          <div className="row">
-            <div className="col-lg-3 col-6">
-              {/* small box */}
-              <div className="small-box bg-info">
-                <div className="inner">
-                  <h3>150</h3>
-                  <p>Visitas</p>
-                </div>
-                <div className="icon">
-                  <i className="ion ion-person-add" />
-                </div>
-                <Link to="/visit" className="small-box-footer">Más información <i className="fas fa-arrow-circle-right" /></Link>
+
+      {/* Contenido principal */}
+      <section className="p-6 bg-gray-50 min-h-[calc(100vh-120px)]">
+        <div className="max-w-7xl mx-auto">
+          {/* Cajas resumen */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+            <div className="bg-sky-500 rounded-lg shadow-md p-5 flex flex-col justify-between min-h-[140px] transition-transform hover:-translate-y-0.5 hover:shadow-lg">
+              <div>
+                <h3 className="text-white text-3xl font-bold">150</h3>
+                <p className="text-white/90 text-lg">Visitas</p>
               </div>
-            </div>
-            {/* ./col */}
-            <div className="col-lg-3 col-6">
-              {/* small box */}
-              <div className="small-box bg-success">
-                <div className="inner">
-                <h3>{cantidadPacientes}</h3>
-                  <p>Pacientes</p>
+              <div className="flex items-center justify-between mt-4">
+                <div className="h-10 w-10 rounded-full bg-white/15 flex items-center justify-center" aria-hidden>
+                  <i className="ion ion-person-add text-white text-2xl" />
                 </div>
-                <div className="icon">
-                  <i className="ion ion-person-add" />
-                </div>
-                <Link to="/patients" className="small-box-footer">Más información <i className="fas fa-arrow-circle-right" /></Link>
-              </div>
-            </div>
-            {/* ./col */}
-            <div className="col-lg-3 col-6">
-              {/* small box */}
-              <div className="small-box bg-lime-400">
-                <div className="inner">
-                  <h3>{cantidadDoctores}</h3>
-                  <p>Doctores</p>
-                </div>
-                <div className="icon">
-                  <i className="ion ion-person-add" />
-                </div>
-                <Link to="/doctor" className="small-box-footer">Más información <i className="fas fa-arrow-circle-right" /></Link>
+                <Link to="/visit" className="text-white text-sm underline underline-offset-2 hover:text-sky-100">Más información</Link>
               </div>
             </div>
 
-            {/* ./col */}
-            <div className="col-lg-3 col-6">
-              {/* small box */}
-              <div className="small-box bg-warning">
-                <div className="inner">
-                  <h3>{cantidadUsuarios}</h3>
-                  <p>Usuarios registrados</p>
+            <div className="bg-green-500 rounded-lg shadow-md p-5 flex flex-col justify-between min-h-[140px] transition-transform hover:-translate-y-0.5 hover:shadow-lg">
+              <div>
+                <h3 className="text-white text-3xl font-bold">{cantidadPacientes}</h3>
+                <p className="text-white/90 text-lg">Pacientes</p>
+              </div>
+              <div className="flex items-center justify-between mt-4">
+                <div className="h-10 w-10 rounded-full bg-white/15 flex items-center justify-center" aria-hidden>
+                  <i className="ion ion-person-add text-white text-2xl" />
                 </div>
-                <div className="icon">
-                  <i className="ion ion-person-add"
-                    onClick={() => openModal('crear', {}, 'usuarios')}
-                  />
-
-                </div>
-                <Link to="/usuarios" className="small-box-footer">Más información <i className="fas fa-arrow-circle-right" /></Link>
+                <Link to="/patients" className="text-white text-sm underline underline-offset-2 hover:text-green-100">Más información</Link>
               </div>
             </div>
-            {/* ./col */}
-            <div className="col-lg-3 col-6">
-              {/* small box */}
-              <div className="small-box bg-danger">
-                <div className="inner">
-                  <h3>{cantidadRoles}</h3>
-                  <p>Roles</p>
-                </div>
-                <div className="icon">
-                  <i className="ion ion-android-lock"
-                    onClick={() => openModal('crear', {}, 'roles')}
-                  >
 
-                  </i>
+            <div className="bg-lime-500 rounded-lg shadow-md p-5 flex flex-col justify-between min-h-[140px] transition-transform hover:-translate-y-0.5 hover:shadow-lg">
+              <div>
+                <h3 className="text-white text-3xl font-bold">{cantidadDoctores}</h3>
+                <p className="text-white/90 text-lg">Doctores</p>
+              </div>
+              <div className="flex items-center justify-between mt-4">
+                <div className="h-10 w-10 rounded-full bg-white/15 flex items-center justify-center" aria-hidden>
+                  <i className="ion ion-person-add text-white text-2xl" />
                 </div>
-                <Link to="/usuarios/roles" className="small-box-footer">Más información <i className="fas fa-arrow-circle-right" /></Link>
+                <Link to="/doctor" className="text-white text-sm underline underline-offset-2 hover:text-lime-100">Más información</Link>
               </div>
             </div>
-            {/* ./col */}
+
+            <div className="bg-yellow-400 rounded-lg shadow-md p-5 flex flex-col justify-between min-h-[140px] transition-transform hover:-translate-y-0.5 hover:shadow-lg">
+              <div>
+                <h3 className="text-white text-3xl font-bold">{cantidadUsuarios}</h3>
+                <p className="text-white/90 text-lg">Usuarios registrados</p>
+              </div>
+              <div className="flex items-center justify-between mt-4">
+                <button
+                  type="button"
+                  onClick={() => openModal('crear', {}, 'usuarios')}
+                  className="h-10 w-10 rounded-full bg-white/15 hover:bg-white/25 transition flex items-center justify-center"
+                  aria-label="Crear usuario"
+                >
+                  <i className="ion ion-person-add text-white text-2xl" />
+                </button>
+                <Link to="/usuarios" className="text-white text-sm underline underline-offset-2 hover:text-yellow-50">Más información</Link>
+              </div>
+            </div>
+
+            <div className="bg-red-500 rounded-lg shadow-md p-5 flex flex-col justify-between min-h-[140px] transition-transform hover:-translate-y-0.5 hover:shadow-lg">
+              <div>
+                <h3 className="text-white text-3xl font-bold">{cantidadRoles}</h3>
+                <p className="text-white/90 text-lg">Roles</p>
+              </div>
+              <div className="flex items-center justify-between mt-4">
+                <button
+                  type="button"
+                  onClick={() => openModal('crear', {}, 'roles')}
+                  className="h-10 w-10 rounded-full bg-white/15 hover:bg-white/25 transition flex items-center justify-center"
+                  aria-label="Crear rol"
+                >
+                  <i className="ion ion-android-lock text-white text-2xl" />
+                </button>
+                <Link to="/usuarios/roles" className="text-white text-sm underline underline-offset-2 hover:text-red-100">Más información</Link>
+              </div>
+            </div>
           </div>
-          {/* /.row */}
-          {/* Main row */}
-          <div className="row">
-
-          </div>
-          {/* /.row (main row) */}
-        </div>{/* /.container-fluid */}
+        </div>
       </section>
-      {/* /.content */}
 
       {/* Renderizado de modal de usuarios  */}
       {isModalOpen && (isModalVista === 'usuarios') && (
