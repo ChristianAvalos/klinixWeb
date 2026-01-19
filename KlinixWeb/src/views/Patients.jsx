@@ -36,11 +36,15 @@ export default function Pacientes() {
         try {
 
             // Realizar la solicitud a la API
-            const { data } = await clienteAxios.get(`api/personas?page=${page}&search=${search}`, {
+            const tipoPaciente = 1;
+            const { data } = await clienteAxios.get(
+                `api/personas?page=${page}&search=${encodeURIComponent(search)}&id_type_people=${tipoPaciente}`,
+                {
                 headers: {
                     Authorization: `Bearer ${token}` // Configurar el token en los headers
                 }
-            });
+                }
+            );
 
             // Actualizar el estado con la lista de los pacientes
             setPacientes(data.data);

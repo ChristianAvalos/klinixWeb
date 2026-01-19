@@ -6,6 +6,7 @@ use App\Models\People;
 use Illuminate\Http\Request;
 use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
+use Illuminate\Support\Facades\DB;
 
 class PeopleController extends Controller
 {
@@ -15,16 +16,23 @@ class PeopleController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
+        $idTypePeople = $request->input('id_type_people');
+        $likeOperator = DB::connection()->getDriverName() === 'pgsql' ? 'ilike' : 'like';
+
+        $baseQuery = People::with(['ciudad'])
+            ->when($idTypePeople, function ($query, $idTypePeople) {
+                return $query->where('Id_Type_People', $idTypePeople);
+            });
 
         if ($request->query('all')) {
-            $pacientes = People::with(['ciudad'])->get();
+            $pacientes = $baseQuery->get();
         } else {
-            $pacientes = People::with(['ciudad'])
-                    ->when($search, function ($query, $search) {
-                    return $query->where(function ($q) use ($search) {
-                        $q->where('LastName', 'ilike', '%' . $search . '%')
-                            ->orWhere('FirstName', 'ilike', '%' . $search . '%')
-                            ->orWhere('DocumentNo', 'ilike', '%' . $search . '%');
+            $pacientes = $baseQuery
+                ->when($search, function ($query, $search) use ($likeOperator) {
+                    return $query->where(function ($q) use ($search, $likeOperator) {
+                        $q->where('LastName', $likeOperator, '%' . $search . '%')
+                            ->orWhere('FirstName', $likeOperator, '%' . $search . '%')
+                            ->orWhere('DocumentNo', $likeOperator, '%' . $search . '%');
                     });
                 })
                 ->paginate(10);
