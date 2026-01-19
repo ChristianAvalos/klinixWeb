@@ -138,7 +138,7 @@ export default function SideNav() {
           <nav className="mt-2 px-1">
             <ul className="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
-              {(hasPermission('Visitas') || hasPermission('Doctores') || hasPermission('Pacientes')) && (
+              {(hasPermission('Visitas') || hasPermission('Doctores') || hasPermission('Pacientes') || hasPermission('Consultorios'))  && (
 
                 <li className="nav-item has-treeview">
                   <a
@@ -188,8 +188,22 @@ export default function SideNav() {
                         </Link>
                       </li>
                     )}
+
+                    {hasPermission('Consultorios') && (
+                      <li className="nav-item">
+                        <Link to="/consultorios" className="nav-link flex items-center gap-2 text-white font-bold rounded-md hover:bg-cyan-800/30 transition-colors">
+                          <i className="fas fa-hospital-user mr-1"></i>
+                          <p className="ml-2 m-0">Fichero de consultorios</p>
+                        </Link>
+                      </li>
+                    )}
+
+
                   </ul>
+
                 </li>
+
+                
 
               )}
 

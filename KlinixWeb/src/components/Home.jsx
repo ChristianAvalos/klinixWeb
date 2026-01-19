@@ -164,6 +164,24 @@ export default function Home() {
               </div>
             </div>
 
+             <div className="bg-purple-400 rounded-lg shadow-md p-5 flex flex-col justify-between min-h-[140px] transition-transform hover:-translate-y-0.5 hover:shadow-lg">
+              <div>
+                <h3 className="text-white text-3xl font-bold">12</h3>
+                <p className="text-white/90 text-lg">Consultorios</p>
+              </div>
+              <div className="flex items-center justify-between mt-4">
+                <button
+                  type="button"
+                  onClick={() => openModal('crear', {}, 'consultorios')}
+                  className="h-10 w-10 rounded-full bg-white/15 hover:bg-white/25 transition flex items-center justify-center"
+                  aria-label="Crear consultorio"
+                >
+                  <i className="ion ion-android-lock text-white text-2xl" />
+                </button>
+                <Link to="/consultorios" className="text-white text-sm underline underline-offset-2 hover:text-red-100">Más información</Link>
+              </div>
+            </div>
+
             <div className="bg-yellow-400 rounded-lg shadow-md p-5 flex flex-col justify-between min-h-[140px] transition-transform hover:-translate-y-0.5 hover:shadow-lg">
               <div>
                 <h3 className="text-white text-3xl font-bold">{cantidadUsuarios}</h3>
@@ -199,6 +217,7 @@ export default function Home() {
                 <Link to="/usuarios/roles" className="text-white text-sm underline underline-offset-2 hover:text-red-100">Más información</Link>
               </div>
             </div>
+
           </div>
         </div>
       </section>
