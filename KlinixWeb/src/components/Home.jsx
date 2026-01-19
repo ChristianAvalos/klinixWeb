@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 import { useEffect, useState } from 'react';
-import { obtenerUsuarios, obtenerRoles, obtenerDoctores,obtenerPacientes } from '../helpers/HelpersUsuarios';
+import { obtenerUsuarios, obtenerRoles, obtenerDoctores,obtenerPersonas } from '../helpers/HelpersUsuarios';
 import ModalUsuarios from '../views/ModalUsuarios';
 import ModalRol from '../views/ModalRol';
 
@@ -21,6 +21,9 @@ export default function Home() {
 
   //Cantidad de pacientes registrados
   const [cantidadPacientes, setCantidadPacientes] = useState(0);
+
+  //Cantidad de acompañantes registrados
+  const [cantidadAcompanantes, setCantidadAcompanantes] = useState(0);
 
   //Cantidad de roles registrados
   const [cantidadRoles, setCantidadRoles] = useState(0);
@@ -89,19 +92,27 @@ export default function Home() {
   }, []);
 
     //obtener la cantidad de pacientes registrados
-    const cantidadPacientesRegistrados = async () => {
+    const cantidadPersonasRegistrados = async () => {
       try {
-        const pacientes = await obtenerPacientes();
+        const pacientes = await obtenerPersonas(1, "", 1);
         setCantidadPacientes(pacientes.total);
       } catch (error) {
         console.error('Error al cargar los pacientes:', error);
+      }
+
+      try {
+        const acompañantes = await obtenerPersonas(1, "", 2);
+        setCantidadAcompanantes(acompañantes.total);
+      } catch (error) {
+        console.error('Error al cargar los acompañantes:', error);
       }
     };
   
     useEffect(() => {
   
-      cantidadPacientesRegistrados();
+      cantidadPersonasRegistrados();
     }, []);
+
 
 
 
@@ -127,8 +138,8 @@ export default function Home() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
             <div className="bg-sky-500 rounded-lg shadow-md p-5 flex flex-col justify-between min-h-[140px] transition-transform hover:-translate-y-0.5 hover:shadow-lg">
               <div>
-                <h3 className="text-white text-3xl font-bold">150</h3>
-                <p className="text-white/90 text-lg">Visitas</p>
+                <h3 className="text-white text-3xl font-bold">{cantidadAcompanantes}</h3>
+                <p className="text-white/90 text-lg">Acompañantes</p>
               </div>
               <div className="flex items-center justify-between mt-4">
                 <div className="h-10 w-10 rounded-full bg-white/15 flex items-center justify-center" aria-hidden>
