@@ -7,6 +7,7 @@ use Illuminate\Database\Seeder;
 use Database\Seeders\PaisSeeder;
 use Database\Seeders\RolesSeeder;
 use Database\Seeders\TipoEstadoSeeder;
+use Database\Seeders\TypePeopleSeeder;
 use Database\Seeders\UserAdministrador;
 use Database\Seeders\RolePermissionSeeder;
 use Database\Seeders\CiudadesYdepartamentos;
@@ -26,5 +27,6 @@ class DatabaseSeeder extends Seeder
         $this->call(RolePermissionSeeder::class);
         $this->call(PaisSeeder::class);
         $this->call(CiudadesYdepartamentos::class);
+        $this->call(TypePeopleSeeder::class);
     }
 }

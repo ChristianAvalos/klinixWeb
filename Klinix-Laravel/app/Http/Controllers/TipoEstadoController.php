@@ -12,7 +12,8 @@ class TipoEstadoController extends Controller
      */
     public function index()
     {
-        //
+        $tipoEstados = TipoEstado::all();
+        return response()->json($tipoEstados);
     }
 
     /**

@@ -15,7 +15,7 @@ FROM doctor d;
 
 
 
-INSERT INTO public.patients
+INSERT INTO public.peoples
 (
   "LastName",
   "FirstName",
@@ -47,6 +47,11 @@ INSERT INTO public.patients
   "Neighborhood",
   "PatientCode",
   "Department",
+  "MRTDs",
+  "PeopleNo",
+  "Id_Type_People",
+
+
   "UrevUsuario",
   "UrevFechaHora"
 )
@@ -81,6 +86,9 @@ SELECT
   p.neighborhood,
   p.patientcode,
   p.department,
+  NULL,
+  NULL,
+  1
   'Admin - Migracion'::varchar(255) AS "UrevUsuario",
   now()::timestamp(0) AS "UrevFechaHora"
 FROM public.patient p;

@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Patient;
+use App\Models\People;
 use Illuminate\Http\Request;
 use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
 
-class PatientController extends Controller
+class PeopleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,9 +17,9 @@ class PatientController extends Controller
         $search = $request->input('search');
 
         if ($request->query('all')) {
-            $pacientes = Patient::with(['ciudad'])->get();
+            $pacientes = People::with(['ciudad'])->get();
         } else {
-            $pacientes = Patient::with(['ciudad'])
+            $pacientes = People::with(['ciudad'])
                     ->when($search, function ($query, $search) {
                     return $query->where(function ($q) use ($search) {
                         $q->where('LastName', 'ilike', '%' . $search . '%')
@@ -36,7 +36,7 @@ return response()->json($pacientes);
     public function DeletePaciente($id)
     {      
         //Busco el paciente
-        $paciente = Patient::findOrFail($id);
+        $paciente = People::findOrFail($id);
         //Elimino el paciente
         $paciente->delete();
         //Retorno un mensaje de confirmación
@@ -62,7 +62,7 @@ return response()->json($pacientes);
     /**
      * Display the specified resource.
      */
-    public function show(Patient $patient)
+    public function show(People $people)
     {
         //
     }
@@ -70,7 +70,7 @@ return response()->json($pacientes);
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Patient $patient)
+    public function edit(People $people)
     {
         //
     }
@@ -78,7 +78,7 @@ return response()->json($pacientes);
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePatientRequest $request, Patient $patient)
+    public function update(UpdatePatientRequest $request, People $people)
     {
         //
     }
@@ -86,7 +86,7 @@ return response()->json($pacientes);
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Patient $patient)
+    public function destroy(People $people)
     {
         //
     }

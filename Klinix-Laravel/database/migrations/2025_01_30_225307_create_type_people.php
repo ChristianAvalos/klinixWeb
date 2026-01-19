@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tipo_estados', function (Blueprint $table) {
+        Schema::create('type_people', function (Blueprint $table) {
             $table->id();
-            $table->string('descripcion');
+            $table->string('name', 100);
             $table->string('UrevUsuario')->nullable(); 
             $table->dateTime('UrevFechaHora')->nullable();
             $table->timestamps();
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tipo_estados');
+        Schema::dropIfExists('type_people');
     }
 };

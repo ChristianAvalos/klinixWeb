@@ -14,7 +14,7 @@ return new class extends Migration
     {
         $isSqlsrv = DB::connection()->getDriverName() === 'sqlsrv';
 
-        Schema::create('patients', function (Blueprint $table) use ($isSqlsrv) {
+        Schema::create('peoples', function (Blueprint $table) use ($isSqlsrv) {
             $table->id('id');
 
             $column = $table->string('LastName', 150);
@@ -157,10 +157,27 @@ return new class extends Migration
                 $column->collation('Modern_Spanish_CI_AS');
             }
 
+            $column = $table->string('MRTDs', 300)->nullable();
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
+            $column = $table->string('PeopleNo', 100)->nullable();
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
+            $column = $table->unsignedBigInteger('Id_Type_People');
+            if ($isSqlsrv) {
+                $column->collation('Modern_Spanish_CI_AS');
+            }
+
             $table->string('UrevUsuario')->nullable(); 
             $table->dateTime('UrevFechaHora')->nullable();
+
+            $table->foreign('Id_Type_People')->references('id')->on('type_people');
         });
-        //DB::statement('ALTER TABLE patients ADD UrevCalc AS (ISNULL(UrevUsuario, \'\') + \' - \' + ISNULL(FORMAT(UrevFechaHora, \'dd/MM/yyyy HH:mm\'), \'\'))');
+        //DB::statement('ALTER TABLE peoples ADD UrevCalc AS (ISNULL(UrevUsuario, \'\') + \' - \' + ISNULL(FORMAT(UrevFechaHora, \'dd/MM/yyyy HH:mm\'), \'\'))');
     }
 
     /**
@@ -168,6 +185,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('patients');
+        Schema::dropIfExists('peoples');
     }
 };

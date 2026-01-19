@@ -2,30 +2,25 @@
 
 namespace Database\Seeders;
 
-use App\Models\TipoEstado;
-use Carbon\Carbon;
-use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+use App\Models\TypePeople;
+use Carbon\Carbon;
 
-class TipoEstadoSeeder extends Seeder
+class TypePeopleSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        TipoEstado::insert([
-            ['descripcion' => 'Activo',            
+        TypePeople::insert([
+            ['name' => 'Acompañante',            
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             'UrevUsuario' => 'Admin', 
             'UrevFechaHora' => Carbon::now(),],
-            ['descripcion' => 'Inactivo',            
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
-            'UrevUsuario' => 'Admin', 
-            'UrevFechaHora' => Carbon::now(),],
-            ['descripcion' => 'Pendiente',            
+            ['name' => 'Paciente',            
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             'UrevUsuario' => 'Admin', 

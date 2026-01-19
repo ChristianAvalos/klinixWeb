@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('GentilicioFemenino');
             $table->string('UrevUsuario')->nullable(); 
             $table->dateTime('UrevFechaHora')->nullable();
+            $table->timestamps();
+
 
         });
        // DB::statement('ALTER TABLE pais ADD UrevCalc AS (ISNULL(UrevUsuario, \'\') + \' - \' + ISNULL(FORMAT(UrevFechaHora, \'dd/MM/yyyy HH:mm\'), \'\'))');

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('nombre');
             $table->string('UrevUsuario')->nullable(); 
             $table->dateTime('UrevFechaHora')->nullable();
+            $table->timestamps();
 
         });
 
@@ -26,6 +27,7 @@ return new class extends Migration
             $table->string('nombre');
             $table->string('UrevUsuario')->nullable(); 
             $table->dateTime('UrevFechaHora')->nullable();
+            $table->timestamps();
 
             $table->foreign('departamento_id')->references('id')->on('departamento');
         });

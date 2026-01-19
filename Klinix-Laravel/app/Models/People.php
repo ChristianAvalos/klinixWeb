@@ -7,10 +7,10 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Patient extends Model
+class People extends Model
 {
     use HasFactory;
-    protected $table = 'patients';
+    protected $table = 'peoples';
     
     public $timestamps = false;
 
@@ -44,9 +44,11 @@ class Patient extends Model
         'Neighborhood',
         'PatientCode',
         'Department',
+        'MRTDs',
+        'PeopleNo',
+        'Id_Type_People',
         'UrevUsuario',
-        'UrevFechaHora',
-        'UrevCalc'
+        'UrevFechaHora'
     ];
 
     protected $appends = ['UrevCalc'];
@@ -66,7 +68,12 @@ class Patient extends Model
         {
             return $this->belongsTo(Ciudad::class, 'City_Id');
         }
-    
+
+        //Relacion con tipo persona
+        public function typePeople()
+        {
+            return $this->belongsTo(TypePeople::class, 'Id_Type_People');
+        }
     
 
 }

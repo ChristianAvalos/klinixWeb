@@ -36,7 +36,7 @@ export default function Pacientes() {
         try {
 
             // Realizar la solicitud a la API
-            const { data } = await clienteAxios.get(`api/pacientes?page=${page}&search=${search}`, {
+            const { data } = await clienteAxios.get(`api/personas?page=${page}&search=${search}`, {
                 headers: {
                     Authorization: `Bearer ${token}` // Configurar el token en los headers
                 }
@@ -99,7 +99,7 @@ export default function Pacientes() {
 
     const confirmarEliminacion = async () => {
         try {
-            const response = await clienteAxios.delete(`api/paciente/${pacienteAEliminar}`, {
+            const response = await clienteAxios.delete(`api/persona/${pacienteAEliminar}`, {
                 headers: {
                     Authorization: `Bearer ${token}` // Configurar el token en los headers
                 }
