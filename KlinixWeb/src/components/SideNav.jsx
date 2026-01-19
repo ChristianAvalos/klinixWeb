@@ -225,7 +225,7 @@ export default function SideNav() {
                     {hasPermission('Organizacion') && (
                       <li className="nav-item">
                         <Link to="/organizacion" className="nav-link flex items-center gap-2 text-white font-bold rounded-md hover:bg-cyan-800/30 transition-colors">
-                          <i className="fas fa-sitemap mr-1"></i>
+                          <img src="/img/Icon/organogram.png" alt="Organigrama" className="w-5 h-5 mr-2" />
                           <p className="ml-2 m-0">Organización</p>
                         </Link>
                       </li>
@@ -235,14 +235,14 @@ export default function SideNav() {
                       <>
                         <li className="nav-item">
                           <Link to="/usuarios" className="nav-link flex items-center gap-2 text-white font-bold rounded-md hover:bg-cyan-800/30 transition-colors">
-                            <i className="fas fa-user mr-1"></i>
+                             <img src="/img/Icon/user-group.png" alt="User" className="w-5 h-5 mr-2" />
                             <p className="ml-2 m-0">Usuarios</p>
                           </Link>
                         </li>
 
                         <li className="nav-item">
                           <Link to="/usuarios/roles" className="nav-link flex items-center gap-2 text-white font-bold rounded-md hover:bg-cyan-800/30 transition-colors">
-                            <i className="fas fa-user-tag mr-1"></i>
+                            <img src="/img/Icon/manage-user.png" alt="Roles User" className="w-5 h-5 mr-2" />
                             <p className="ml-2 m-0">Roles usuario </p>
                           </Link>
                         </li>
@@ -271,7 +271,7 @@ export default function SideNav() {
                     {hasPermission('Reporte_Usuarios') && (
                       <li className="nav-item">
                         <Link to="/usuarios/reporte" className="nav-link flex items-center gap-2 text-white font-bold rounded-md hover:bg-cyan-800/30 transition-colors">
-                          <i className="fas fa-file-invoice mr-1"></i>
+                          <img src="/img/Icon/report-print.png" alt="Report" className="w-5 h-5 mr-2" />
                           <p className="ml-2 m-0">Reporte de usuarios</p>
                         </Link>
                       </li>
