@@ -279,54 +279,6 @@ export default function SideNav() {
                   </ul>
                 </li>
               )}
-
-              {hasPermission('altas y bajas') && (
-
-                <li className="nav-item has-treeview">
-                  <a
-                    href="#"
-                    onClick={(e) => e.preventDefault()}
-                    className="nav-link text-white font-bold underline underline-offset-4 decoration-cyan-300/60 tracking-wide menu-toggle flex items-center justify-between rounded-md hover:bg-cyan-800/30 transition-colors"
-                  >
-                    <p className="m-0">
-                      Operaciones
-                      <i className="right fas fa-angle-left ml-2" />
-                    </p>
-                  </a>
-
-                  <ul className="nav nav-treeview px-2">
-                    <li className="nav-item">
-                      <a href="#" onClick={(e) => e.preventDefault()} className="nav-link text-white font-bold flex items-center justify-between rounded-md hover:bg-cyan-800/30 transition-colors menu-toggle">
-                        <span className="flex items-center gap-2">
-                          <i className="fas nav-icon" />
-                          <p className="m-0">Altas y Bajas</p>
-                        </span>
-                        <i className="right fas fa-angle-left" />
-                      </a>
-
-                      <ul className="nav nav-treeview px-2">
-                        {hasPermission('Ventas') && (
-                          <li className="nav-item">
-                            <Link to="/ventas" className="nav-link text-white font-bold flex items-center gap-2 rounded-md hover:bg-cyan-800/30 transition-colors">
-                              <i className="fas fa-circle nav-icon text-xs" />
-                              <p className="m-0">Ventas</p>
-                            </Link>
-                          </li>
-                        )}
-
-                        {hasPermission('Bajas') && (
-                          <li className="nav-item">
-                            <Link to="/bajas" className="nav-link text-white font-bold flex items-center gap-2 rounded-md hover:bg-cyan-800/30 transition-colors">
-                              <i className="fas fa-circle nav-icon text-xs" />
-                              <p className="m-0">Bajas</p>
-                            </Link>
-                          </li>
-                        )}
-                      </ul>
-                    </li>
-                  </ul>
-                </li>
-              )}
             </ul>
           </nav>
           {/* /.sidebar-menu */}

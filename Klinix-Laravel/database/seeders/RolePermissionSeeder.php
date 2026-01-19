@@ -22,10 +22,6 @@ class RolePermissionSeeder extends Seeder
         $permissions = [
             'Principal',
             'Herraminetas_usuarios',
-            'ver_reportes',
-            'altas y bajas',
-            'Ventas',
-            'Bajas',
             'Reporte_Usuarios',
             'Organizacion',
             'Visitas',
