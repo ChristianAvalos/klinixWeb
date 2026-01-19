@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import clienteAxios from "../config/axios";
 import { toast } from "react-toastify";
+import {formatearMiles}from "../helpers/HelpersNumeros";
 
 export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPacientes }) {
     const [codigoPaciente, setCodigoPaciente] = useState(paciente.PatientCode || '');
@@ -173,6 +174,25 @@ export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPa
                 </h2>
                 <form onSubmit={handleSubmit}>
                     <div className="grid grid-cols-3 gap-4">
+                        {/* Documento */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Documento Nº</label>
+                            <input type="text"
+                                className={`w-full px-3 py-2 border ${errores.DocumentNo ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                value={formatearMiles(numeroDocumento)}
+                                onChange={(e) => setNumeroDocumento(e.target.value)} />
+                            {errores.DocumentNo && <p className="text-red-500 text-sm">{errores.DocumentNo[0]}</p>}
+                        </div>
+
+                        {/* Código paciente */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Código Paciente</label>
+                            <input type="text"
+                                className={`w-full px-3 py-2 border ${errores.PatientCode ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                value={codigoPaciente}
+                                onChange={(e) => setCodigoPaciente(e.target.value)} />
+                            {errores.PatientCode && <p className="text-red-500 text-sm">{errores.PatientCode[0]}</p>}
+                        </div>
                         {/* Nombre(s) */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Nombre(s)</label>
@@ -190,6 +210,45 @@ export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPa
                                 value={apellido}
                                 onChange={(e) => setApellido(e.target.value)} />
                             {errores.LastName && <p className="text-red-500 text-sm">{errores.LastName[0]}</p>}
+                        </div>
+                        {/* Título */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Título</label>
+                            <input type="text"
+                                className={`w-full px-3 py-2 border ${errores.Title ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                value={titulo}
+                                onChange={(e) => setTitulo(e.target.value)} />
+                            {errores.Title && <p className="text-red-500 text-sm">{errores.Title[0]}</p>}
+                        </div>
+
+                         {/* Estado Civil */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Estado Civil</label>
+                            <select
+                                className={`w-full px-3 py-2 border ${errores.Sex ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                value={sexo}
+                                onChange={(e) => setSexo(e.target.value)}>
+                                <option value="">Seleccione una opción</option>
+                                <option value="M">Masculino</option>
+                                <option value="F">Femenino</option>
+                            </select>
+                            {errores.Sex && <p className="text-red-500 text-sm">{errores.Sex[0]}</p>}
+                        </div>
+
+
+
+                         {/* Sexo */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Sexo</label>
+                            <select
+                                className={`w-full px-3 py-2 border ${errores.Sex ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                value={sexo}
+                                onChange={(e) => setSexo(e.target.value)}>
+                                <option value="">Seleccione una opción</option>
+                                <option value="M">Masculino</option>
+                                <option value="F">Femenino</option>
+                            </select>
+                            {errores.Sex && <p className="text-red-500 text-sm">{errores.Sex[0]}</p>}
                         </div>
                         {/* Dirección */}
                         <div>
@@ -249,35 +308,6 @@ export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPa
                             {errores.City_Id && <p className="text-red-500 text-sm">{errores.City_Id[0]}</p>}
                         </div>
 
-                        {/* Código paciente */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Código Paciente</label>
-                            <input type="text"
-                                className={`w-full px-3 py-2 border ${errores.PatientCode ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                                value={codigoPaciente}
-                                onChange={(e) => setCodigoPaciente(e.target.value)} />
-                            {errores.PatientCode && <p className="text-red-500 text-sm">{errores.PatientCode[0]}</p>}
-                        </div>
-
-                        {/* Título */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Título</label>
-                            <input type="text"
-                                className={`w-full px-3 py-2 border ${errores.Title ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                                value={titulo}
-                                onChange={(e) => setTitulo(e.target.value)} />
-                            {errores.Title && <p className="text-red-500 text-sm">{errores.Title[0]}</p>}
-                        </div>
-
-                        {/* Número de documento */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Número de Documento</label>
-                            <input type="text"
-                                className={`w-full px-3 py-2 border ${errores.DocumentNo ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                                value={numeroDocumento}
-                                onChange={(e) => setNumeroDocumento(e.target.value)} />
-                            {errores.DocumentNo && <p className="text-red-500 text-sm">{errores.DocumentNo[0]}</p>}
-                        </div>
 
                         {/* Nacionalidad */}
                         <div>
@@ -299,19 +329,7 @@ export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPa
                             {errores.Birthday && <p className="text-red-500 text-sm">{errores.Birthday[0]}</p>}
                         </div>
 
-                        {/* Sexo */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Sexo</label>
-                            <select
-                                className={`w-full px-3 py-2 border ${errores.Sex ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                                value={sexo}
-                                onChange={(e) => setSexo(e.target.value)}>
-                                <option value="">Seleccione una opción</option>
-                                <option value="M">Masculino</option>
-                                <option value="F">Femenino</option>
-                            </select>
-                            {errores.Sex && <p className="text-red-500 text-sm">{errores.Sex[0]}</p>}
-                        </div>
+                       
 
                         {/* Foto 
                         <div>

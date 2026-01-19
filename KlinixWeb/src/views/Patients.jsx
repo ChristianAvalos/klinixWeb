@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import AlertaModal from "../components/AlertaModal";
 import SearchBar from "../components/SearchBar";
 import ModalPatient from './ModalPatient';
+import {formatearMiles}from "../helpers/HelpersNumeros";
 
 
 export default function Pacientes() {
@@ -213,7 +214,7 @@ export default function Pacientes() {
                                                     <td>{paciente.LastName}</td>
                                                     <td>{paciente.FirstName}</td>
                                                     <td>{paciente.Title}</td>
-                                                    <td>{paciente.DocumentNo}</td>
+                                                    <td>{formatearMiles(paciente.DocumentNo)}</td>
                                                     <td>{paciente.Nationality}</td>
                                                     <td>{paciente.Birthday ? new Date(paciente.Birthday).toISOString().split('T')[0] : ''}</td>
                                                     <td>
