@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\People;
 use Illuminate\Http\Request;
-use App\Http\Requests\StorePatientRequest;
-use App\Http\Requests\UpdatePatientRequest;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\CreatePeoplesRequest;
+use App\Http\Requests\UpdatePeoplesRequest;
 
 class PeopleController extends Controller
 {
@@ -41,30 +43,78 @@ class PeopleController extends Controller
 return response()->json($pacientes);
     }
 
+    public function DeletePersona($id)
+    {
+        $persona = People::findOrFail($id);
+        $persona->delete();
+        return response()->json(['message' => 'Persona eliminada correctamente.'], 200);
+    }
+
+    // Alias por compatibilidad (si alguna vista antigua lo llama)
     public function DeletePaciente($id)
-    {      
-        //Busco el paciente
-        $paciente = People::findOrFail($id);
-        //Elimino el paciente
-        $paciente->delete();
-        //Retorno un mensaje de confirmación
-        return response()->json(['message' => 'Paciente eliminado correctamente.'],200);
+    {
+        return $this->DeletePersona($id);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(CreatePeoplesRequest $request)
     {
-        //
+        $data = $request->validated();
+
+        // Obtener el usuario autenticado
+        $usuarioActual = Auth::user();
+
+        $people = People::create([
+            'PatientCode' => $data['PatientCode'] ?? null,
+            'FirstName' => $data['FirstName'],
+            'LastName' => $data['LastName'],
+            'Title' => $data['Title'] ?? null,
+            'DocumentNo' => $data['DocumentNo'],
+            'Nationality' => $data['Nationality'] ?? null,
+            'Birthday' => $data['Birthday'] ?? null,
+            'Id_Sex' => $data['Id_Sex'],
+            'Address' => $data['Address'] ?? null,
+            'Neighborhood' => $data['Neighborhood'] ?? null,
+            'District' => $data['District'] ?? null,
+            'City_Id' => $data['City_Id'],
+            'Id_Department' => $data['Department_Id'],
+            'PhoneNumber' => $data['PhoneNumber'] ?? null,
+            'CellPhoneNumber' => $data['CellPhoneNumber'] ?? null,
+            'SupportWhatsapp' => array_key_exists('SupportWhatsapp', $data)
+                ? ($data['SupportWhatsapp'] ? '1' : '0')
+                : null,
+            'Email' => $data['Email'] ?? null,
+            'Notes' => $data['Notes'] ?? null,
+            'BloodType' => $data['BloodType'] ?? null,
+            'RhFactor' => $data['RHFactor'] ?? null,
+            'Allergies' => $data['Allergies'] ?? null,
+            'MedicalDiagnosis' => $data['MedicalDiagnosis'] ?? null,
+            'MedicalInsurance' => $data['MedicalInsurance'] ?? null,
+            'Id_Marital_Status' => $data['MaritalStatus_Id'] ?? null,
+            'DeathDate' => $data['DeathDate'] ?? null,
+            'DeathCause' => $data['DeathCause'] ?? null,
+            'DeathPlace' => $data['DeathPlace'] ?? null,
+            'DeathCertificateNumber' => $data['DeathCertificateNumber'] ?? null,
+
+            // Forzar tipo persona desde este modal
+            'Id_Type_People' => 2,
+
+            'UrevUsuario' => 'Registrado - ' . ($usuarioActual ? $usuarioActual->name : 'Desconocido'),
+            'UrevFechaHora' => Carbon::now(),
+        ]);
+
+        return response()->json($people->load(['ciudad', 'sexes', 'maritalStatus']), 201);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorePatientRequest $request)
+    public function store(Request $request)
     {
-        //
+        // No se usa actualmente (rutas usan create)
+        return response()->json(['message' => 'No implementado.'], 501);
     }
 
     /**
@@ -86,9 +136,55 @@ return response()->json($pacientes);
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePatientRequest $request, People $people)
+    public function update(UpdatePeoplesRequest $request, $id)
     {
-        //
+        $data = $request->validated();
+
+        // Obtener el usuario autenticado
+        $usuarioActual = Auth::user();
+
+        $people = People::findOrFail($id);
+
+        $people->update([
+            'PatientCode' => $data['PatientCode'] ?? null,
+            'FirstName' => $data['FirstName'],
+            'LastName' => $data['LastName'],
+            'Title' => $data['Title'] ?? null,
+            'DocumentNo' => $data['DocumentNo'],
+            'Nationality' => $data['Nationality'] ?? null,
+            'Birthday' => $data['Birthday'] ?? null,
+            'Id_Sex' => $data['Id_Sex'],
+            'Address' => $data['Address'] ?? null,
+            'Neighborhood' => $data['Neighborhood'] ?? null,
+            'District' => $data['District'] ?? null,
+            'City_Id' => $data['City_Id'],
+            'Id_Department' => $data['Department_Id'],
+            'PhoneNumber' => $data['PhoneNumber'] ?? null,
+            'CellPhoneNumber' => $data['CellPhoneNumber'] ?? null,
+            'SupportWhatsapp' => array_key_exists('SupportWhatsapp', $data)
+                ? ($data['SupportWhatsapp'] ? '1' : '0')
+                : null,
+            'Email' => $data['Email'] ?? null,
+            'Notes' => $data['Notes'] ?? null,
+            'BloodType' => $data['BloodType'] ?? null,
+            'RhFactor' => $data['RHFactor'] ?? null,
+            'Allergies' => $data['Allergies'] ?? null,
+            'MedicalDiagnosis' => $data['MedicalDiagnosis'] ?? null,
+            'MedicalInsurance' => $data['MedicalInsurance'] ?? null,
+            'Id_Marital_Status' => $data['MaritalStatus_Id'] ?? null,
+            'DeathDate' => $data['DeathDate'] ?? null,
+            'DeathCause' => $data['DeathCause'] ?? null,
+            'DeathPlace' => $data['DeathPlace'] ?? null,
+            'DeathCertificateNumber' => $data['DeathCertificateNumber'] ?? null,
+
+            // Forzar tipo persona desde este modal
+            'Id_Type_People' => 2,
+
+            'UrevUsuario' => 'Actualizado - ' . ($usuarioActual ? $usuarioActual->name : 'Desconocido'),
+            'UrevFechaHora' => Carbon::now(),
+        ]);
+
+        return response()->json($people->load(['ciudad', 'sexes', 'maritalStatus']), 200);
     }
 
     /**

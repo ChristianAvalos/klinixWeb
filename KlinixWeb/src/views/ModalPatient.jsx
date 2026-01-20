@@ -108,13 +108,13 @@ export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPa
     const [soportaWhatsapp, setSoportaWhatsapp] = useState(paciente.SupportWhatsapp === "1");
     const [correo, setCorreo] = useState(paciente.Email || '');
     const [notas, setNotas] = useState(paciente.Notes || '');
-    const [factorRH, setFactorRH] = useState(paciente.RHFactor || '');
+    const [factorRH, setFactorRH] = useState(paciente.RhFactor || '');
     const [alergias, setAlergias] = useState(paciente.Allergies || '');
 
     const [tipoSangre, setTipoSangre] = useState(paciente.BloodType || '');
 
     const [estadoCiviles, setEstadoCiviles] = useState([]);
-    const [estadoCivilSeleccionado, setEstadoCivilSeleccionado] = useState(paciente.MaritalStatus_Id || '');
+    const [estadoCivilSeleccionado, setEstadoCivilSeleccionado] = useState(paciente.Id_Marital_Status || '');
 
     const [diagnosticoMedico, setDiagnosticoMedico] = useState(paciente.MedicalDiagnosis || '');
     const [seguroMedico, setSeguroMedico] = useState(paciente.MedicalInsurance || '');
@@ -305,8 +305,8 @@ export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPa
             setSoportaWhatsapp(paciente.SupportWhatsapp === "1");
             setCorreo(paciente.Email || '');
             setTipoSangre(paciente.BloodType || '');
-            setFactorRH(paciente.RHFactor || '');
-            setEstadoCivilSeleccionado(paciente.MaritalStatus_Id || '');
+            setFactorRH(paciente.RhFactor || '');
+            setEstadoCivilSeleccionado(paciente.Id_Marital_Status || '');
             setDiagnosticoMedico(paciente.MedicalDiagnosis || '');
             setSeguroMedico(paciente.MedicalInsurance || '');
             setFechaFallecimiento(deathIso);
@@ -326,42 +326,46 @@ export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPa
         e.preventDefault(); // Prevenir el comportamiento por defecto del formulario
         setErrores({}); // Resetear errores antes de la validación
 
+        const formData = new FormData();
+        formData.append('Id_Type_People', '2');
+        formData.append('PatientCode', codigoPaciente || '');
+        formData.append('FirstName', nombre || '');
+        formData.append('LastName', apellido || '');
+        formData.append('Title', titulo || '');
+        formData.append('DocumentNo', numeroDocumento || '');
+        formData.append('Nationality', nacionalidad || '');
+        formData.append('Birthday', fechaNacimiento || '');
+        formData.append('Id_Sex', sexoSeleccionado || '');
+        formData.append('Address', direccion || '');
+        formData.append('Neighborhood', barrio || '');
+        formData.append('City_Id', ciudadSeleccionado || '');
+        formData.append('District', distrito || '');
+
+        // Obligatorio para backend
+        formData.append('Department_Id', departamentoSeleccionado || '');
+
+        formData.append('PhoneNumber', telefono || '');
+        formData.append('CellPhoneNumber', celular || '');
+        formData.append('SupportWhatsapp', soportaWhatsapp ? '1' : '0');
+        formData.append('Email', correo || '');
+        formData.append('BloodType', tipoSangre || '');
+        formData.append('RHFactor', factorRH || '');
+        formData.append('MaritalStatus_Id', estadoCivilSeleccionado || '');
+        formData.append('MedicalDiagnosis', diagnosticoMedico || '');
+        formData.append('MedicalInsurance', seguroMedico || '');
+        formData.append('DeathDate', fechaFallecimiento || '');
+        formData.append('DeathCause', causaFallecimiento || '');
+        formData.append('DeathPlace', lugarFallecimiento || '');
+        formData.append('DeathCertificateNumber', numeroCertificadoDefuncion || '');
+        formData.append('Notes', notas || '');
+        formData.append('Allergies', alergias || '');
+
         try {
-            const userData = {
-                PatientCode: codigoPaciente,
-                FirstName: nombre,
-                LastName: apellido,
-                Title: titulo,
-                DocumentNo: numeroDocumento,
-                Nationality: nacionalidad,
-                Birthday: fechaNacimiento, // Debe ser un objeto Date o un string en formato 'YYYY-MM-DD'
-                Id_Sex: sexoSeleccionado,
-                Address: direccion,
-                Neighborhood: barrio,
-                City_Id: ciudadSeleccionado, // Asegúrate de que coincida con el ID de la ciudad
-                District: distrito,
-                Department: departamento,
-                PhoneNumber: telefono,
-                CellPhoneNumber: celular,
-                SupportWhatsapp: soportaWhatsapp ? "1" : "0", // Para mantener la coherencia con la tabla
-                Email: correo,
-                BloodType: tipoSangre,
-                RHFactor: factorRH,
-                MaritalStatus_Id: estadoCivilSeleccionado,
-                MedicalDiagnosis: diagnosticoMedico,
-                MedicalInsurance: seguroMedico,
-                DeathDate: fechaFallecimiento || null,
-                DeathCause: causaFallecimiento,
-                DeathPlace: lugarFallecimiento,
-                DeathCertificateNumber: numeroCertificadoDefuncion,
-                Notes: notas,
-                Allergies: alergias
-            };
 
 
             if (modo === 'crear') {
                 // Crear un nuevo paciente
-                await clienteAxios.post('api/crearpacientes', userData, {
+                await clienteAxios.post('api/crearpersonas', formData, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -369,9 +373,10 @@ export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPa
                 toast.success('Paciente creado exitosamente.');
             } else {
                 // Editar paciente existente
-                await clienteAxios.put(`api/editarpacientes/${paciente.id}`, userData, {
+                await clienteAxios.post(`api/editarpersonas/${paciente.id}`, formData, {
                     headers: {
-                        Authorization: `Bearer ${token}`
+                        Authorization: `Bearer ${token}`,
+                        'X-HTTP-Method-Override': 'PUT'
                     }
                 });
                 toast.success('Paciente actualizado exitosamente.');

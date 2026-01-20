@@ -105,11 +105,6 @@ return new class extends Migration
                 $column->collation('Modern_Spanish_CI_AS');
             }
 
-            $column = $table->char('MaritalStatus', 1)->nullable();
-            if ($isSqlsrv) {
-                $column->collation('Modern_Spanish_CI_AS');
-            }
-
             $column = $table->string('MedicalInsurance', 500)->nullable();
             if ($isSqlsrv) {
                 $column->collation('Modern_Spanish_CI_AS');

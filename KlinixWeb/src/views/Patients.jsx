@@ -67,7 +67,8 @@ export default function Pacientes() {
         try {
 
             // Realizar la solicitud a la API
-            const tipoPaciente = 1;
+            // Solo pacientes
+            const tipoPaciente = 2;
             const { data } = await clienteAxios.get(
                 `api/personas?page=${page}&search=${encodeURIComponent(search)}&id_type_people=${tipoPaciente}`,
                 {
@@ -295,7 +296,7 @@ export default function Pacientes() {
                                                         </span>
                                                     </td>
                                                     <td>{p.BloodType}</td>
-                                                    <td>{p.RHFactor}</td>
+                                                    <td>{p.RhFactor}</td>
                                                     <td>
                                                         <span className="block max-w-[160px] truncate" title={p.MaritalStatus || ''}>
                                                             {p.MaritalStatus}
