@@ -107,9 +107,11 @@ export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPa
     const [celular, setCelular] = useState(paciente.CellPhoneNumber || '');
     const [soportaWhatsapp, setSoportaWhatsapp] = useState(paciente.SupportWhatsapp === "1");
     const [correo, setCorreo] = useState(paciente.Email || '');
+    const [notas, setNotas] = useState(paciente.Notes || '');
+    const [factorRH, setFactorRH] = useState(paciente.RHFactor || '');
+    const [alergias, setAlergias] = useState(paciente.Allergies || '');
 
     const [tipoSangre, setTipoSangre] = useState(paciente.BloodType || '');
-    const [factorRH, setFactorRH] = useState(paciente.RHFactor || '');
 
     const [estadoCiviles, setEstadoCiviles] = useState([]);
     const [estadoCivilSeleccionado, setEstadoCivilSeleccionado] = useState(paciente.MaritalStatus_Id || '');
@@ -313,6 +315,8 @@ export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPa
             setLugarFallecimiento(paciente.DeathPlace || '');
             setNumeroCertificadoDefuncion(paciente.DeathCertificateNumber || '');
             setEdad(calcularEdad(birthdayIso));
+            setNotas(paciente.Notes || '');
+            setAlergias(paciente.Allergies || '');
         }
 
     }, [paciente, modo]); // Dependencia en 'paciente' y 'modo'
@@ -349,7 +353,9 @@ export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPa
                 DeathDate: fechaFallecimiento || null,
                 DeathCause: causaFallecimiento,
                 DeathPlace: lugarFallecimiento,
-                DeathCertificateNumber: numeroCertificadoDefuncion
+                DeathCertificateNumber: numeroCertificadoDefuncion,
+                Notes: notas,
+                Allergies: alergias
             };
 
 
@@ -593,7 +599,25 @@ export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPa
                             {errores.City_Id && <p className="text-red-500 text-sm">{errores.City_Id[0]}</p>}
                         </div>
 
+                        {/* Barrio */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Barrio</label>
+                            <input type="text"
+                                className={`w-full px-3 py-2 border ${errores.Neighborhood ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                value={barrio}
+                                onChange={(e) => setBarrio(e.target.value)} />
+                            {errores.Neighborhood && <p className="text-red-500 text-sm">{errores.Neighborhood[0]}</p>}
+                        </div>
 
+                        {/* Distrito */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Distrito</label>
+                            <input type="text"
+                                className={`w-full px-3 py-2 border ${errores.District ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                value={distrito}
+                                onChange={(e) => setDistrito(e.target.value)} />
+                            {errores.District && <p className="text-red-500 text-sm">{errores.District[0]}</p>}
+                        </div>
 
                         {/* Teléfono */}
                         <div>
@@ -628,25 +652,19 @@ export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPa
                             {errores.email && <p className="text-red-500 text-sm">{errores.email[0]}</p>}
                         </div>
 
-                        
 
-
-                        
-
-                       
-
-                       
-
-                        {/* Foto 
+                        {/* Notas */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Foto</label>
-                            <input type="file"
-                                className={`w-full px-3 py-2 border ${errores.Photo ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                                onChange={handleFileChange} />
-                            {errores.Photo && <p className="text-red-500 text-sm">{errores.Photo[0]}</p>}
-                        </div>*/}
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Notas</label>
+                            <input type="text"
+                                className={`w-full px-3 py-2 border ${errores.Notes ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                value={notas}
+                                onChange={(e) => setNotas(e.target.value)} />
+                            {errores.Notes && <p className="text-red-500 text-sm">{errores.Notes[0]}</p>}
+                        </div>
 
-                        {/* Datos adicionales */}
+                        
+                        {/* Grupo sanguineo */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Tipo de Sangre</label>
                             <input type="text"
@@ -656,6 +674,18 @@ export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPa
                             {errores.BloodType && <p className="text-red-500 text-sm">{errores.BloodType[0]}</p>}
                         </div>
 
+
+                        {/* Factor RH */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Factor RH</label>
+                            <input type="text"
+                                className={`w-full px-3 py-2 border ${errores.RHFactor ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                value={factorRH}
+                                onChange={(e) => setFactorRH(e.target.value)} />
+                            {errores.RHFactor && <p className="text-red-500 text-sm">{errores.RHFactor[0]}</p>}
+                        </div>
+                        
+                        {/* Diagnóstico Médico */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Diagnóstico Médico</label>
                             <textarea
@@ -663,6 +693,27 @@ export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPa
                                 value={diagnosticoMedico}
                                 onChange={(e) => setDiagnosticoMedico(e.target.value)} />
                             {errores.MedicalDiagnosis && <p className="text-red-500 text-sm">{errores.MedicalDiagnosis[0]}</p>}
+                        </div>
+
+
+                        {/*Seguro Médico*/}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Seguro Médico</label>
+                            <textarea
+                                className={`w-full px-3 py-2 border ${errores.MedicalInsurance ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                value={seguroMedico}
+                                onChange={(e) => setSeguroMedico(e.target.value)} />
+                            {errores.MedicalInsurance && <p className="text-red-500 text-sm">{errores.MedicalInsurance[0]}</p>}
+                        </div>
+
+                        {/*Alergias*/}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Alergias</label>
+                            <textarea
+                                className={`w-full px-3 py-2 border ${errores.Allergies ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                value={alergias}
+                                onChange={(e) => setAlergias(e.target.value)} />
+                            {errores.Allergies && <p className="text-red-500 text-sm">{errores.Allergies[0]}</p>}
                         </div>
 
                         {/* Fecha de Muerte */}
@@ -730,6 +781,16 @@ export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPa
                                 value={numeroCertificadoDefuncion}
                                 onChange={(e) => setNumeroCertificadoDefuncion(e.target.value)}/>
                             {errores.DeathCertificate && <p className="text-red-500 text-sm">{errores.DeathCertificate[0]}</p>}
+                        </div>
+
+                        {/*Lugar de fallecimiento*/}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Lugar de fallecimiento</label>
+                            <textarea
+                                className={`w-full px-3 py-2 border ${errores.PlaceOfDeath ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                value={lugarFallecimiento}
+                                onChange={(e) => setLugarFallecimiento(e.target.value)} />
+                            {errores.PlaceOfDeath && <p className="text-red-500 text-sm">{errores.PlaceOfDeath[0]}</p>}
                         </div>
                     </div>
                     <div className="flex justify-end space-x-3 mt-4">
