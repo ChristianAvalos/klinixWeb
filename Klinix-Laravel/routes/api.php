@@ -7,10 +7,12 @@ use App\Http\Controllers\PaisController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\CiudadController;
 use App\Http\Controllers\DoctorController;
-use App\Http\Controllers\ReportController;
 use App\Http\Controllers\PeopleController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\DepartamentoController;
 use App\Http\Controllers\OrganizacionController;
+use App\Http\Controllers\MaritalStatusController;
 
 
 /*
@@ -64,6 +66,9 @@ Route::middleware('auth:sanctum')->group(function() {
     //Ciudades
     Route::get('/ciudades',[CiudadController::class,'index']);
 
+    //Departamentos
+    Route::get('/departamentos',[DepartamentoController::class,'index']);
+
     //Doctores
     Route::get('/doctores',[DoctorController::class,'index']);
     Route::post('/creardoctores',[DoctorController::class,'create']);
@@ -75,6 +80,12 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::post('/crearpersonas',[PeopleController::class,'create']);
     Route::put('/editarpersonas/{id}',[PeopleController::class,'update']);
     Route::delete('/persona/{id}', [PeopleController::class, 'DeletePersona']);
+
+    //estado civil 
+    Route::get('/estadocivil',[MaritalStatusController::class,'index']);
+    Route::post('/crearestadocivil',[MaritalStatusController::class,'create']);
+    Route::put('/editarestadocivil/{id}',[MaritalStatusController::class,'update']);
+    Route::delete('/estadocivil/{id}', [MaritalStatusController::class, 'DeleteEstadoCivil']);
 
 });
 

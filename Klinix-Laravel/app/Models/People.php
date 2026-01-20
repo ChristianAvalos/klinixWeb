@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use App\Models\Ciudad;
 use Carbon\Carbon;
+use App\Models\Ciudad;
+use App\Models\TypePeople;
+use App\Models\Departamento;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -43,7 +45,7 @@ class People extends Model
         'District',
         'Neighborhood',
         'PatientCode',
-        'Department',
+        'Id_Department',
         'MRTDs',
         'PeopleNo',
         'Id_Type_People',
@@ -74,6 +76,11 @@ class People extends Model
         {
             return $this->belongsTo(TypePeople::class, 'Id_Type_People');
         }
-    
+
+        //relacion con departamentos 
+        public function departamento()
+        {
+            return $this->belongsTo(Departamento::class, 'Id_Department');
+        }
 
 }

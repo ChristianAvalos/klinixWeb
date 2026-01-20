@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use App\Models\Ciudad;
 use Carbon\Carbon;
+use App\Models\Ciudad;
+use App\Models\People;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -35,5 +36,10 @@ class Departamento extends Model
     public function ciudades()
     {
         return $this->hasMany(Ciudad::class, 'departamento_id');
+    }
+
+    public function peoples()
+    {
+        return $this->hasMany(People::class, 'Id_Department');
     }
 }

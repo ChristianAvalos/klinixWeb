@@ -10,7 +10,7 @@ class DepartamentoController extends Controller
     public function index()
     {
         $departamentos = Departamento::with('ciudades')->get();
-        return view('departamentos.index', compact('departamentos'));
+        return response()->json($departamentos);
     }
 
     public function create()
