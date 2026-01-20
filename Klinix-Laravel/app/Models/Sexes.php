@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use App\Models\People;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class TypePeople extends Model
+class Sexes extends Model
 {
     use HasFactory;
+    protected $table = 'sexes';
     protected $fillable = [
         'name'
     ];
@@ -27,6 +29,6 @@ class TypePeople extends Model
 
     public function people()
     {
-        return $this->hasMany(People::class, 'Id_Type_People');
+        return $this->hasMany(People::class, 'Id_Sex');
     }
 }

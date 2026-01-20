@@ -19,7 +19,7 @@ class PeopleController extends Controller
         $idTypePeople = $request->input('id_type_people');
         $likeOperator = DB::connection()->getDriverName() === 'pgsql' ? 'ilike' : 'like';
 
-        $baseQuery = People::with(['ciudad'])
+        $baseQuery = People::with(['ciudad','sexes','maritalStatus'])
             ->when($idTypePeople, function ($query, $idTypePeople) {
                 return $query->where('Id_Type_People', $idTypePeople);
             });

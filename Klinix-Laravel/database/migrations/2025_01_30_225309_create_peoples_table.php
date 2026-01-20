@@ -44,7 +44,7 @@ return new class extends Migration
 
             $table->dateTime('Birthday')->nullable();
 
-            $column = $table->char('Sex', 1)->nullable();
+            $column = $table->bigInteger('Id_Sex')->nullable();
             if ($isSqlsrv) {
                 $column->collation('Modern_Spanish_CI_AS');
             }
@@ -177,6 +177,7 @@ return new class extends Migration
 
             $table->foreign('Id_Type_People')->references('id')->on('type_people');
             $table->foreign('Id_Department')->references('id')->on('departamento');
+            $table->foreign('Id_Sex')->references('id')->on('sexes');
         });
         //DB::statement('ALTER TABLE peoples ADD UrevCalc AS (ISNULL(UrevUsuario, \'\') + \' - \' + ISNULL(FORMAT(UrevFechaHora, \'dd/MM/yyyy HH:mm\'), \'\'))');
     }

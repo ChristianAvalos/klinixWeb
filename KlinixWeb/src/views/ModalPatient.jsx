@@ -5,7 +5,9 @@ import {formatearMiles}from "../helpers/HelpersNumeros";
 
 function isoADmy(iso) {
     if (!iso) return '';
-    const [yyyy, mm, dd] = String(iso).split('-');
+    const cleaned = String(iso).trim();
+    const isoDate = /^\d{4}-\d{2}-\d{2}/.test(cleaned) ? cleaned.slice(0, 10) : cleaned;
+    const [yyyy, mm, dd] = String(isoDate).split('-');
     if (!yyyy || !mm || !dd) return '';
     return `${dd.padStart(2, '0')}/${mm.padStart(2, '0')}/${yyyy}`;
 }
@@ -40,6 +42,25 @@ function enmascararDmy(raw) {
     return out;
 }
 
+function normalizarFechaISO(valor) {
+    if (!valor) return '';
+
+    if (valor instanceof Date && !Number.isNaN(valor.getTime())) {
+        return valor.toISOString().slice(0, 10);
+    }
+
+    const s = String(valor).trim();
+    if (!s) return '';
+
+    // "1990-01-01", "1990-01-01T00:00:00...", "1990-01-01 00:00:00.000"
+    if (/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0, 10);
+
+    // "01/01/1990"
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(s)) return dmyAIso(s);
+
+    return '';
+}
+
 function calcularEdad(fechaNacimientoISO) {
     if (!fechaNacimientoISO) return '';
 
@@ -56,40 +77,53 @@ function calcularEdad(fechaNacimientoISO) {
 }
 
 export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPacientes }) {
+    const birthdayIsoInicial = normalizarFechaISO(paciente.Birthday);
+    const deathIsoInicial = normalizarFechaISO(paciente.DeathDate);
+
     const [codigoPaciente, setCodigoPaciente] = useState(paciente.PatientCode || '');
     const [nombre, setNombre] = useState(paciente.FirstName || '');
     const [apellido, setApellido] = useState(paciente.LastName || '');
     const [titulo, setTitulo] = useState(paciente.Title || '');
     const [numeroDocumento, setNumeroDocumento] = useState(paciente.DocumentNo || '');
     const [nacionalidad, setNacionalidad] = useState(paciente.Nationality || '');
-    const [fechaNacimiento, setFechaNacimiento] = useState(paciente.Birthday ? paciente.Birthday.split('T')[0] : '');
-    const [fechaNacimientoInput, setFechaNacimientoInput] = useState(isoADmy(paciente.Birthday ? paciente.Birthday.split('T')[0] : ''));
-    const [sexo, setSexo] = useState(paciente.Sex || '');
+
+    const [fechaNacimiento, setFechaNacimiento] = useState(birthdayIsoInicial);
+    const [fechaNacimientoInput, setFechaNacimientoInput] = useState(isoADmy(birthdayIsoInicial));
+
+    const [sexos, setSexos] = useState([]);
+    const [sexoSeleccionado, setSexoSeleccionado] = useState(paciente.Id_Sex || '');
+
     const [direccion, setDireccion] = useState(paciente.Address || '');
     const [barrio, setBarrio] = useState(paciente.Neighborhood || '');
+
     const [ciudadSeleccionado, setCiudadSeleccionado] = useState(paciente.City_Id || '');
     const [ciudades, setCiudades] = useState([]);
     const [departamentos, setDepartamentos] = useState([]);
     const [departamentoSeleccionado, setDepartamentoSeleccionado] = useState('');
     const [distrito, setDistrito] = useState(paciente.District || '');
     const [departamento, setDepartamento] = useState(paciente.Department || '');
+
     const [telefono, setTelefono] = useState(paciente.PhoneNumber || '');
     const [celular, setCelular] = useState(paciente.CellPhoneNumber || '');
     const [soportaWhatsapp, setSoportaWhatsapp] = useState(paciente.SupportWhatsapp === "1");
     const [correo, setCorreo] = useState(paciente.Email || '');
+
     const [tipoSangre, setTipoSangre] = useState(paciente.BloodType || '');
     const [factorRH, setFactorRH] = useState(paciente.RHFactor || '');
+
     const [estadoCiviles, setEstadoCiviles] = useState([]);
     const [estadoCivilSeleccionado, setEstadoCivilSeleccionado] = useState(paciente.MaritalStatus_Id || '');
+
     const [diagnosticoMedico, setDiagnosticoMedico] = useState(paciente.MedicalDiagnosis || '');
     const [seguroMedico, setSeguroMedico] = useState(paciente.MedicalInsurance || '');
-    const [fechaFallecimiento, setFechaFallecimiento] = useState(paciente.DeathDate ? paciente.DeathDate.split('T')[0] : '');
-    const [fechaFallecimientoInput, setFechaFallecimientoInput] = useState(isoADmy(paciente.DeathDate ? paciente.DeathDate.split('T')[0] : ''));
+
+    const [fechaFallecimiento, setFechaFallecimiento] = useState(deathIsoInicial);
+    const [fechaFallecimientoInput, setFechaFallecimientoInput] = useState(isoADmy(deathIsoInicial));
     const [causaFallecimiento, setCausaFallecimiento] = useState(paciente.DeathCause || '');
     const [lugarFallecimiento, setLugarFallecimiento] = useState(paciente.DeathPlace || '');
     const [numeroCertificadoDefuncion, setNumeroCertificadoDefuncion] = useState(paciente.DeathCertificateNumber || '');
-    const [edad, setEdad] = useState(paciente.Age || '');
 
+    const [edad, setEdad] = useState(paciente.Age || '');
 
     const [errores, setErrores] = useState({});
 
@@ -205,6 +239,28 @@ export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPa
         fetchEstadosCiviles();
     }, []);
 
+
+    // Cargar los sexos
+    useEffect(() => {
+        const fetchSexos = async () => {
+            try {
+
+                const { data } = await clienteAxios.get('api/sexos', {
+                    headers: {
+                        Authorization: `Bearer ${token}` // Configurar el token en los headers
+                    }
+                });
+                setSexos(Array.isArray(data) ? data : []);
+            } catch (error) {
+                console.error("Error al cargar los sexos", error);
+                setSexos([]);
+            }
+        };
+
+        fetchSexos();
+    }, []);
+
+
     // Edad referencial: recalcular cuando cambie la fecha de nacimiento
     useEffect(() => {
         setEdad(calcularEdad(fechaNacimiento));
@@ -224,15 +280,18 @@ export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPa
     // Actualizar el estado del formulario cuando cambie el paciente
     useEffect(() => {
         if (modo === 'editar') {
+            const birthdayIso = normalizarFechaISO(paciente.Birthday);
+            const deathIso = normalizarFechaISO(paciente.DeathDate);
+
             setCodigoPaciente(paciente.PatientCode || '');
             setNombre(paciente.FirstName || '');
             setApellido(paciente.LastName || '');
             setTitulo(paciente.Title || '');
             setNumeroDocumento(paciente.DocumentNo || '');
             setNacionalidad(paciente.Nationality || '');
-            setFechaNacimiento(paciente.Birthday ? paciente.Birthday.split('T')[0] : '');
-            setFechaNacimientoInput(isoADmy(paciente.Birthday ? paciente.Birthday.split('T')[0] : ''));
-            setSexo(paciente.Sex || '');
+            setFechaNacimiento(birthdayIso);
+            setFechaNacimientoInput(isoADmy(birthdayIso));
+            setSexoSeleccionado(paciente.Id_Sex || '');
             setDireccion(paciente.Address || '');
             setBarrio(paciente.Neighborhood || '');
             setCiudadSeleccionado(paciente.City_Id || '');
@@ -248,12 +307,12 @@ export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPa
             setEstadoCivilSeleccionado(paciente.MaritalStatus_Id || '');
             setDiagnosticoMedico(paciente.MedicalDiagnosis || '');
             setSeguroMedico(paciente.MedicalInsurance || '');
-            setFechaFallecimiento(paciente.DeathDate ? paciente.DeathDate.split('T')[0] : '');
-            setFechaFallecimientoInput(isoADmy(paciente.DeathDate ? paciente.DeathDate.split('T')[0] : ''));
+            setFechaFallecimiento(deathIso);
+            setFechaFallecimientoInput(isoADmy(deathIso));
             setCausaFallecimiento(paciente.DeathCause || '');
             setLugarFallecimiento(paciente.DeathPlace || '');
             setNumeroCertificadoDefuncion(paciente.DeathCertificateNumber || '');
-            setEdad(calcularEdad(paciente.Birthday ? paciente.Birthday.split('T')[0] : ''));
+            setEdad(calcularEdad(birthdayIso));
         }
 
     }, [paciente, modo]); // Dependencia en 'paciente' y 'modo'
@@ -272,7 +331,7 @@ export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPa
                 DocumentNo: numeroDocumento,
                 Nationality: nacionalidad,
                 Birthday: fechaNacimiento, // Debe ser un objeto Date o un string en formato 'YYYY-MM-DD'
-                Sex: sexo,
+                Id_Sex: sexoSeleccionado,
                 Address: direccion,
                 Neighborhood: barrio,
                 City_Id: ciudadSeleccionado, // Asegúrate de que coincida con el ID de la ciudad
@@ -287,7 +346,7 @@ export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPa
                 MaritalStatus_Id: estadoCivilSeleccionado,
                 MedicalDiagnosis: diagnosticoMedico,
                 MedicalInsurance: seguroMedico,
-                DeathDate: fechaFallecimiento ? new Date(fechaFallecimiento).toISOString().split('T')[0] : null,
+                DeathDate: fechaFallecimiento || null,
                 DeathCause: causaFallecimiento,
                 DeathPlace: lugarFallecimiento,
                 DeathCertificateNumber: numeroCertificadoDefuncion
@@ -410,14 +469,15 @@ export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPa
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Sexo</label>
                             <select
-                                className={`w-full px-3 py-2 border ${errores.Sex ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                                value={sexo}
-                                onChange={(e) => setSexo(e.target.value)}>
-                                <option value="">Seleccione una opción</option>
-                                <option value="M">Masculino</option>
-                                <option value="F">Femenino</option>
+                                className={`w-full px-3 py-2 border ${errores.Id_Sex ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                value={sexoSeleccionado}
+                                onChange={(e) => setSexoSeleccionado(e.target.value)}>
+                                <option value="">Seleccione el sexo</option>
+                                {sexos.map((sexo) => (
+                                    <option key={sexo.id} value={sexo.id}>{sexo.name}</option>
+                                ))}
                             </select>
-                            {errores.Sex && <p className="text-red-500 text-sm">{errores.Sex[0]}</p>}
+                            {errores.Id_Sex && <p className="text-red-500 text-sm">{errores.Id_Sex[0]}</p>}
                         </div>
 
                          {/* Fecha de nacimiento */}

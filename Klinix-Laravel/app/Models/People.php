@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use App\Models\Sexes;
 use App\Models\Ciudad;
 use App\Models\TypePeople;
 use App\Models\Departamento;
+use App\Models\MaritalStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -83,4 +85,15 @@ class People extends Model
             return $this->belongsTo(Departamento::class, 'Id_Department');
         }
 
+        // Relacion con Sexes
+        public function sexes()
+        {
+            return $this->belongsTo(Sexes::class, 'Id_Sex');
+        }
+
+        // Relacion con MaritalStatus
+        public function maritalStatus()
+        {
+            return $this->belongsTo(MaritalStatus::class, 'Id_Marital_Status');
+        }
 }

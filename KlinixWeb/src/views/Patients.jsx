@@ -233,7 +233,7 @@ export default function Pacientes() {
                                                             })()
                                                             : "" /*retorno vacio si no hay fecha de nacimiento*/}
                                                     </td>
-                                                    <td>{paciente.Sex}</td>
+                                                    <td>{paciente.sexes ? paciente.sexes.name : 'Sin sexo seleccionado'}</td>
                                                     <td>{paciente.Address}</td>
                                                     <td>{paciente.Neighborhood}</td>
                                                     <td>{paciente.City_Id ? paciente.ciudad.nombre : 'Sin ciudad seleccionada'}</td>

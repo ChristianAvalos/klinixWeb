@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PaisController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SexesController;
 use App\Http\Controllers\CiudadController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\PeopleController;
@@ -86,6 +87,12 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::post('/crearestadocivil',[MaritalStatusController::class,'create']);
     Route::put('/editarestadocivil/{id}',[MaritalStatusController::class,'update']);
     Route::delete('/estadocivil/{id}', [MaritalStatusController::class, 'DeleteEstadoCivil']);
+
+    //sexos
+    Route::get('/sexos',[SexesController::class,'index']);
+    Route::post('/crearsexos',[SexesController::class,'create']);
+    Route::put('/editarsexos/{id}',[SexesController::class,'update']);
+    Route::delete('/sexos/{id}', [SexesController::class, 'DeleteSexo']);
 
 });
 

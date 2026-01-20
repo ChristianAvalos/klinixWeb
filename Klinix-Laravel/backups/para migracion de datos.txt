@@ -11,7 +11,7 @@ SELECT
   d.email,
   'Admin - Migracion',
   now()
-FROM "Doctor" d;
+FROM "doctor" d;
 
 
 
@@ -23,7 +23,7 @@ INSERT INTO public.peoples
   "DocumentNo",
   "Nationality",
   "Birthday",
-  "Sex",
+  "Id_Sex",
   "Photo",
   "Address",
   "City",
@@ -46,7 +46,7 @@ INSERT INTO public.peoples
   "District",
   "Neighborhood",
   "PatientCode",
-  "Department",
+  "Id_Department",
   "MRTDs",
   "PeopleNo",
   "Id_Type_People",
@@ -62,7 +62,10 @@ SELECT
   p.documentno,
   p.nationality,
   p.birthday::timestamp(0),
-  p.sex,
+  CASE 
+    WHEN p.sex = 'F' THEN 1
+    ELSE 2
+  END AS "Id_Sex",
   p.photo,
   p.address,
   p.city,
@@ -85,11 +88,11 @@ SELECT
   p.district,
   p.neighborhood,
   p.patientcode,
-  p.department,
+  1,
   NULL,
   NULL,
   1,
   'Admin - Migracion'::varchar(255) AS "UrevUsuario",
   now()::timestamp(0) AS "UrevFechaHora"
-from "Patient" p;
+from "patient" p;
 
