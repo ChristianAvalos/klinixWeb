@@ -156,7 +156,7 @@ export default function SideNav() {
                     {hasPermission('Visitas') && (
                       <li className="nav-item">
                         <Link to="/scanvisit" className="nav-link flex items-center gap-2 text-white font-bold rounded-md hover:bg-cyan-800/30 transition-colors">
-                          <i className="far fa-address-card mr-1"></i>
+                          <img src="/img/Icon/access-card.png" alt="Organigrama" className="w-5 h-5 mr-2" />
                           <p className="ml-2 m-0">Escanear visitas</p>
                         </Link>
                       </li>
@@ -165,7 +165,7 @@ export default function SideNav() {
                     {hasPermission('Visitas') && (
                       <li className="nav-item">
                         <Link to="/visit" className="nav-link flex items-center gap-2 text-white font-bold rounded-md hover:bg-cyan-800/30 transition-colors">
-                          <i className="fas fa-users mr-1"></i>
+                          <img src="/img/Icon/user-group-men.png" alt="Organigrama" className="w-5 h-5 mr-2" />
                           <p className="ml-2 m-0">Fichero de visitas</p>
                         </Link>
                       </li>
@@ -174,7 +174,7 @@ export default function SideNav() {
                     {hasPermission('Doctores') && (
                       <li className="nav-item">
                         <Link to="/doctor" className="nav-link flex items-center gap-2 text-white font-bold rounded-md hover:bg-cyan-800/30 transition-colors">
-                          <i className="fas fa-user-md mr-1"></i>
+                          <img src="/img/Icon/people_doctor.png" alt="Organigrama" className="w-5 h-5 mr-2" />
                           <p className="ml-2 m-0">Fichero de doctores</p>
                         </Link>
                       </li>
@@ -192,7 +192,7 @@ export default function SideNav() {
                     {hasPermission('Consultorios') && (
                       <li className="nav-item">
                         <Link to="/consultorios" className="nav-link flex items-center gap-2 text-white font-bold rounded-md hover:bg-cyan-800/30 transition-colors">
-                          <i className="fas fa-hospital-user mr-1"></i>
+                          <img src="/img/Icon/pharmacy.png" alt="Organigrama" className="w-5 h-5 mr-2" />
                           <p className="ml-2 m-0">Fichero de consultorios</p>
                         </Link>
                       </li>

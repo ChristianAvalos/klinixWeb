@@ -11,7 +11,7 @@ SELECT
   d.email,
   'Admin - Migracion',
   now()
-FROM doctor d;
+FROM "Doctor" d;
 
 
 
@@ -88,8 +88,8 @@ SELECT
   p.department,
   NULL,
   NULL,
-  1
+  1,
   'Admin - Migracion'::varchar(255) AS "UrevUsuario",
   now()::timestamp(0) AS "UrevFechaHora"
-FROM public.patient p;
+from "Patient" p;
 
