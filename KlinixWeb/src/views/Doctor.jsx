@@ -158,10 +158,10 @@ export default function Doctores() {
 
 
                         <div className="card-body">
-                            <div className="overflow-x-auto">
-                                <table className="table table-bordered table-striped w-full">
-                                    <thead>
-                                        <tr className="font-bold bg-gradient-to-br from-blue-900 to-cyan-900 text-white rounded text-center">
+                            <div className="overflow-auto max-h-[70vh] relative">
+                                <table className="table table-bordered w-full bg-white">
+                                    <thead className="[&>tr>th]:sticky [&>tr>th]:top-0 [&>tr>th]:z-30 [&>tr>th]:bg-gradient-to-br [&>tr>th]:from-blue-900 [&>tr>th]:to-cyan-900 [&>tr>th]:text-white [&>tr>th:last-child]:right-0 [&>tr>th:last-child]:z-40">
+                                        <tr className="font-bold rounded text-center">
                                             <th>ID</th>
                                             <th>Apellido(s)</th>
                                             <th>Nombre(s)</th>
@@ -175,7 +175,7 @@ export default function Doctores() {
                                             <th>Utilidades</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody className="[&>tr>td:last-child]:sticky [&>tr>td:last-child]:right-0 [&>tr>td:last-child]:z-20 [&>tr>td:last-child]:whitespace-nowrap [&>tr>td:last-child]:bg-inherit">
                                         {doctor.length === 0 ? (
                                             <tr>
                                                 <td colSpan={11} className="text-center text-gray-600 py-6">
@@ -184,7 +184,7 @@ export default function Doctores() {
                                             </tr>
                                         ) : (
                                             doctor.map((doctor) => (
-                                                <tr key={doctor.id}>
+                                                <tr key={doctor.id} className="odd:bg-white even:bg-gray-50 hover:bg-gray-100">
                                                     <td>{doctor.id}</td>
                                                     <td>{doctor.LastName}</td>
                                                     <td>{doctor.FirstName}</td>

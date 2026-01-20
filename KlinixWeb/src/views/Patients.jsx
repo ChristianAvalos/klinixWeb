@@ -1,10 +1,40 @@
 import clienteAxios from "../config/axios";
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { toast } from "react-toastify";
 import AlertaModal from "../components/AlertaModal";
 import SearchBar from "../components/SearchBar";
 import ModalPatient from './ModalPatient';
 import {formatearMiles}from "../helpers/HelpersNumeros";
+
+function isoADmy(iso) {
+    if (!iso) return '';
+    const cleaned = String(iso).trim();
+    const isoDate = /^\d{4}-\d{2}-\d{2}/.test(cleaned) ? cleaned.slice(0, 10) : cleaned;
+    const [yyyy, mm, dd] = String(isoDate).split('-');
+    if (!yyyy || !mm || !dd) return '';
+    return `${dd.padStart(2, '0')}/${mm.padStart(2, '0')}/${yyyy}`;
+}
+
+function normalizarFechaISO(valor) {
+    if (!valor) return '';
+    if (valor instanceof Date && !Number.isNaN(valor.getTime())) return valor.toISOString().slice(0, 10);
+    const s = String(valor).trim();
+    if (!s) return '';
+    // "1990-01-01", "1990-01-01T00:00:00...", "1990-01-01 00:00:00.000"
+    if (/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0, 10);
+    return '';
+}
+
+function calcularEdad(fechaNacimientoISO) {
+    if (!fechaNacimientoISO) return '';
+    const nacimiento = new Date(`${fechaNacimientoISO}T00:00:00`);
+    if (Number.isNaN(nacimiento.getTime())) return '';
+    const hoy = new Date();
+    let edad = hoy.getFullYear() - nacimiento.getFullYear();
+    const m = hoy.getMonth() - nacimiento.getMonth();
+    if (m < 0 || (m === 0 && hoy.getDate() < nacimiento.getDate())) edad -= 1;
+    return edad >= 0 ? String(edad) : '';
+}
 
 
 export default function Pacientes() {
@@ -78,6 +108,22 @@ export default function Pacientes() {
     //apertura del modal
     const [isModalOpen, setModalOpen] = useState(false);
     const [modalMode, setModalMode] = useState('crear');
+
+    const pacientesRender = useMemo(() => {
+        if (!Array.isArray(paciente)) return [];
+
+        return paciente.map((p) => {
+            const birthdayIso = normalizarFechaISO(p?.Birthday);
+            const deathIso = normalizarFechaISO(p?.DeathDate);
+
+            return {
+                ...p,
+                __birthdayDmy: isoADmy(birthdayIso),
+                __deathDmy: isoADmy(deathIso),
+                __age: calcularEdad(birthdayIso),
+            };
+        });
+    }, [paciente]);
 
     const openModal = (modo, pacienteSeleccionado = {}) => {
         setModalMode(modo);
@@ -163,10 +209,10 @@ export default function Pacientes() {
 
 
                         <div className="card-body">
-                            <div className="overflow-x-auto">
-                                <table className="table table-bordered table-striped w-full">
-                                    <thead>
-                                        <tr className="font-bold bg-gradient-to-br from-blue-900 to-cyan-900 text-white rounded text-center">
+                            <div className="overflow-auto max-h-[70vh] relative">
+                                <table className="table table-bordered w-full bg-white">
+                                    <thead className="[&>tr>th]:sticky [&>tr>th]:top-0 [&>tr>th]:z-30 [&>tr>th]:bg-gradient-to-br [&>tr>th]:from-blue-900 [&>tr>th]:to-cyan-900 [&>tr>th]:text-white [&>tr>th:last-child]:right-0 [&>tr>th:last-child]:z-40">
+                                        <tr className="font-bold rounded text-center">
                                             <th>ID</th>
                                             <th>Codigo del paciente</th>
                                             <th>Apellido(s)</th>
@@ -199,71 +245,100 @@ export default function Pacientes() {
                                             <th>Utilidades</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        {paciente.length === 0 ? (
+                                    <tbody className="[&>tr>td:last-child]:sticky [&>tr>td:last-child]:right-0 [&>tr>td:last-child]:z-20 [&>tr>td:last-child]:whitespace-nowrap [&>tr>td:last-child]:bg-inherit">
+                                        {pacientesRender.length === 0 ? (
                                             <tr>
                                                 <td colSpan={30} className="text-center text-gray-600 py-6">
                                                     No existen pacientes.
                                                 </td>
                                             </tr>
                                         ) : (
-                                            paciente.map((paciente) => (
-                                                <tr key={paciente.id}>
-                                                    <td>{paciente.id}</td>
-                                                    <td>{paciente.PatientCode}</td>
-                                                    <td>{paciente.LastName}</td>
-                                                    <td>{paciente.FirstName}</td>
-                                                    <td>{paciente.Title}</td>
-                                                    <td>{formatearMiles(paciente.DocumentNo)}</td>
-                                                    <td>{paciente.Nationality}</td>
-                                                    <td>{paciente.Birthday ? new Date(paciente.Birthday).toISOString().split('T')[0] : ''}</td>
+                                            pacientesRender.map((p) => (
+                                                <tr key={p.id} className="odd:bg-white even:bg-gray-50 hover:bg-gray-100">
+                                                    <td>{p.id}</td>
+                                                    <td>{p.PatientCode}</td>
+                                                    <td>{p.LastName}</td>
+                                                    <td>{p.FirstName}</td>
+                                                    <td>{p.Title}</td>
+                                                    <td>{formatearMiles(p.DocumentNo)}</td>
+                                                    <td>{p.Nationality}</td>
+                                                    <td>{p.__birthdayDmy}</td>
+                                                    <td>{p.__age}</td>
+                                                    <td>{p.sexes ? p.sexes.name : 'Sin sexo seleccionado'}</td>
                                                     <td>
-                                                        {paciente.Birthday
-                                                            ? (() => {
-                                                                const birthDate = new Date(paciente.Birthday);
-                                                                if (isNaN(birthDate)) return ""; // Manejo de fechas inválidas
-
-                                                                const today = new Date();
-                                                                let age = today.getFullYear() - birthDate.getFullYear();
-                                                                const monthDiff = today.getMonth() - birthDate.getMonth();
-                                                                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-                                                                    age--;
-                                                                }
-                                                                return age;
-                                                            })()
-                                                            : "" /*retorno vacio si no hay fecha de nacimiento*/}
+                                                        <span className="block max-w-[220px] truncate" title={p.Address || ''}>
+                                                            {p.Address}
+                                                        </span>
                                                     </td>
-                                                    <td>{paciente.sexes ? paciente.sexes.name : 'Sin sexo seleccionado'}</td>
-                                                    <td>{paciente.Address}</td>
-                                                    <td>{paciente.Neighborhood}</td>
-                                                    <td>{paciente.City_Id ? paciente.ciudad.nombre : 'Sin ciudad seleccionada'}</td>
-                                                    <td>{paciente.District}</td>
-                                                    <td>{paciente.Department}</td>
-                                                    <td>{paciente.PhoneNumber}</td>
-                                                    <td>{paciente.CellPhoneNumber}</td>
-                                                    <td>{paciente.SupportWhatsapp === "1" ? "Sí" : "No"}</td>
-                                                    <td>{paciente.Email}</td>
-                                                    <td>{paciente.BloodType}</td>
-                                                    <td>{paciente.RHFactor}</td>
-                                                    <td>{paciente.MaritalStatus}</td>
-                                                    <td>{paciente.MedicalDiagnosis}</td>
-                                                    <td>{paciente.MedicalInsurance}</td>
-                                                    <td>{paciente.DeathDate ? new Date(paciente.DeathDate).toISOString().split('T')[0] : ''}</td>
-                                                    <td>{paciente.DeathCause}</td>
-                                                    <td>{paciente.DeathPlace}</td>
-                                                    <td>{paciente.DeathCertificateNumber}</td>
-                                                    <td>{paciente.UrevCalc}</td>
+                                                    <td>
+                                                        <span className="block max-w-[160px] truncate" title={p.Neighborhood || ''}>
+                                                            {p.Neighborhood}
+                                                        </span>
+                                                    </td>
+                                                    <td>{p.City_Id ? p.ciudad?.nombre : 'Sin ciudad seleccionada'}</td>
+                                                    <td>
+                                                        <span className="block max-w-[160px] truncate" title={p.District || ''}>
+                                                            {p.District}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <span className="block max-w-[180px] truncate" title={p.Department || ''}>
+                                                            {p.Department}
+                                                        </span>
+                                                    </td>
+                                                    <td>{p.PhoneNumber}</td>
+                                                    <td>{p.CellPhoneNumber}</td>
+                                                    <td>{p.SupportWhatsapp === "1" ? "Sí" : "No"}</td>
+                                                    <td>
+                                                        <span className="block max-w-[220px] truncate" title={p.Email || ''}>
+                                                            {p.Email}
+                                                        </span>
+                                                    </td>
+                                                    <td>{p.BloodType}</td>
+                                                    <td>{p.RHFactor}</td>
+                                                    <td>
+                                                        <span className="block max-w-[160px] truncate" title={p.MaritalStatus || ''}>
+                                                            {p.MaritalStatus}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <span className="block max-w-[240px] truncate" title={p.MedicalDiagnosis || ''}>
+                                                            {p.MedicalDiagnosis}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <span className="block max-w-[240px] truncate" title={p.MedicalInsurance || ''}>
+                                                            {p.MedicalInsurance}
+                                                        </span>
+                                                    </td>
+                                                    <td>{p.__deathDmy}</td>
+                                                    <td>
+                                                        <span className="block max-w-[180px] truncate" title={p.DeathCause || ''}>
+                                                            {p.DeathCause}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <span className="block max-w-[220px] truncate" title={p.DeathPlace || ''}>
+                                                            {p.DeathPlace}
+                                                        </span>
+                                                    </td>
+                                                    <td>{p.DeathCertificateNumber}</td>
+                                                    <td>
+                                                        <span className="block max-w-[180px] truncate" title={p.UrevCalc || ''}>
+                                                            {p.UrevCalc}
+                                                        </span>
+                                                    </td>
                                                     <td>
                                                         <div className="flex space-x-2">
                                                             <button
-                                                                onClick={() => openModal('editar', paciente)}
+                                                                onClick={() => openModal('editar', p)}
                                                                 className="flex items-center rounded hover:bg-gray-200 focus:outline-none p-1"
                                                                 type="button"
                                                             >
                                                                 <img src="/img/Icon/edit.png" alt="Edit Paciente" />
                                                             </button>
                                                             <button
-                                                                onClick={() => handleDelete(paciente.id)}
+                                                                onClick={() => handleDelete(p.id)}
                                                                 className="flex items-center rounded hover:bg-gray-200 focus:outline-none p-1"
                                                                 type="button"
                                                             >
