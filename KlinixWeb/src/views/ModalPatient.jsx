@@ -399,9 +399,10 @@ export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPa
     };
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center z-50">
-            <div className="bg-gray-800 opacity-75 absolute inset-0" onClick={onClose}></div>
-            <div className="bg-white rounded-lg shadow-lg z-10 p-6 w-full max-w-2xl">
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+            <div className="bg-gray-800/75 fixed inset-0" onClick={onClose}></div>
+            <div className="min-h-full flex items-center justify-center p-4">
+                <div className="bg-white rounded-lg shadow-lg z-10 w-full max-w-6xl max-h-[92vh] overflow-y-auto p-6">
                 <h2 className="text-xl font-bold mb-4 text-gray-800">
                     {modo === 'crear' ? 'Crear paciente' : 'Editar paciente'}
                 </h2>
@@ -798,6 +799,7 @@ export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPa
                         <button type="submit" className="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600">{modo === 'crear' ? 'Crear Paciente' : 'Guardar Cambios'}</button>
                     </div>
                 </form>
+                </div>
             </div>
         </div>
     );
