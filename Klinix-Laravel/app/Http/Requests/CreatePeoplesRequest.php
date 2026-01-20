@@ -22,6 +22,7 @@ class CreatePeoplesRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'Id_Type_People' => ['required', 'exists:type_people,id'],
             'FirstName' => ['required', 'string', 'max:150'],
             'LastName' => ['required', 'string', 'max:150'],
             'DocumentNo' => ['required', 'string', 'max:30'],
@@ -62,6 +63,8 @@ class CreatePeoplesRequest extends FormRequest
     public function messages()
     {
         return [
+            'Id_Type_People.required' => 'El tipo de persona es obligatorio.',
+            'Id_Type_People.exists' => 'El tipo de persona seleccionado no es válido.',
             'FirstName.required' => 'El nombre es obligatorio.',
             'LastName.required' => 'El apellido es obligatorio.',
             'DocumentNo.required' => 'El número de documento es obligatorio.',

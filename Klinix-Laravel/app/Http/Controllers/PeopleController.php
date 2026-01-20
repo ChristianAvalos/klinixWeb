@@ -99,8 +99,7 @@ class PeopleController extends Controller
             'DeathPlace' => $data['DeathPlace'] ?? null,
             'DeathCertificateNumber' => $data['DeathCertificateNumber'] ?? null,
 
-            // Forzar tipo persona desde este modal
-            'Id_Type_People' => 2,
+            'Id_Type_People' => $data['Id_Type_People'],
 
             'UrevUsuario' => 'Registrado - ' . ($usuarioActual ? $usuarioActual->name : 'Desconocido'),
             'UrevFechaHora' => Carbon::now(),
@@ -178,8 +177,7 @@ class PeopleController extends Controller
             'DeathPlace' => $data['DeathPlace'] ?? null,
             'DeathCertificateNumber' => $data['DeathCertificateNumber'] ?? null,
 
-            // Forzar tipo persona desde este modal
-            'Id_Type_People' => 2,
+            'Id_Type_People' => $data['Id_Type_People'],
 
             'UrevUsuario' => 'Actualizado - ' . ($usuarioActual ? $usuarioActual->name : 'Desconocido'),
             'UrevFechaHora' => Carbon::now(),
