@@ -72,10 +72,10 @@ function UserReport() {
                 </button>
             </div>
 
-            <div className="overflow-x-auto">
-                <table className="w-full border border-gray-200 rounded-lg">
-                    <thead>
-                        <tr className="bg-gray-100">
+            <div className="overflow-auto max-h-[70vh] relative">
+                <table className="w-full border border-gray-200 rounded-lg bg-white">
+                    <thead className="[&>tr>th]:sticky [&>tr>th]:top-0 [&>tr>th]:z-30 [&>tr>th]:bg-gray-100">
+                        <tr>
                             <th className="px-4 py-2 border-b-2 border-gray-200 text-left text-sm font-semibold text-gray-600">Usuario</th>
                             <th className="px-4 py-2 border-b-2 border-gray-200 text-left text-sm font-semibold text-gray-600">Roles</th>
                             <th className="px-4 py-2 border-b-2 border-gray-200 text-left text-sm font-semibold text-gray-600">Permisos</th>
@@ -83,8 +83,12 @@ function UserReport() {
                     </thead>
                     <tbody>
                         {filteredUsers.map(user => (
-                            <tr key={user.id} className="odd:bg-white even:bg-gray-50">
-                                <td className="px-4 py-2 border-b border-gray-200 text-gray-700">{user.name}</td>
+                            <tr key={user.id} className="odd:bg-white even:bg-gray-50 hover:bg-gray-100">
+                                <td className="px-4 py-2 border-b border-gray-200 text-gray-700">
+                                    <span className="block max-w-[220px] truncate" title={user.name || ''}>
+                                        {user.name}
+                                    </span>
+                                </td>
                                 <td className="px-4 py-2 border-b border-gray-200 text-gray-700">{user.role ? user.role.name : 'SIN ROL'}</td>
                                 <td className="px-4 py-2 border-b border-gray-200 text-gray-700">
                                 <ul className="list-disc list-inside text-gray-700">

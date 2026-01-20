@@ -160,10 +160,10 @@ export default function Roles() {
                             onAdd={handleAdd}
                         />
                         <div className="card-body">
-                            <div className="overflow-x-auto">
-                                <table className="table table-bordered table-striped w-full">
-                                    <thead>
-                                        <tr className="font-bold bg-gradient-to-br from-blue-900 to-cyan-900 text-white rounded text-center">
+                            <div className="overflow-auto max-h-[70vh] relative">
+                                <table className="table table-bordered w-full bg-white">
+                                    <thead className="[&>tr>th]:sticky [&>tr>th]:top-0 [&>tr>th]:z-30 [&>tr>th]:bg-gradient-to-br [&>tr>th]:from-blue-900 [&>tr>th]:to-cyan-900 [&>tr>th]:text-white">
+                                        <tr className="font-bold rounded text-center">
                                             <th>ID</th>
                                             <th>Rol</th>
                                             <th>Utilidades</th>
@@ -174,7 +174,7 @@ export default function Roles() {
                                             <NoExistenDatos colSpan={3} mensaje="No existen roles." />  
                                         ) : (
                                         roles.map((roles) => (
-                                            <tr key={roles.id}>
+                                            <tr key={roles.id} className="odd:bg-white even:bg-gray-50 hover:bg-gray-100">
                                                 <td>{roles.id}</td>
                                                 <td>{roles.name}</td>
                                                 <td>

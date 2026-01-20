@@ -201,10 +201,10 @@ export default function Organizacion() {
 
 
                         <div className="card-body">
-                            <div className="overflow-x-auto">
-                                <table className="table table-bordered table-striped w-full">
-                                    <thead>
-                                        <tr className="font-bold bg-gradient-to-br from-blue-900 to-cyan-900 text-white rounded text-center">
+                            <div className="overflow-auto max-h-[70vh] relative">
+                                <table className="table table-bordered w-full bg-white">
+                                    <thead className="[&>tr>th]:sticky [&>tr>th]:top-0 [&>tr>th]:z-30 [&>tr>th]:bg-gradient-to-br [&>tr>th]:from-blue-900 [&>tr>th]:to-cyan-900 [&>tr>th]:text-white">
+                                        <tr className="font-bold rounded text-center">
                                             <th>ID</th>
                                             <th>Razón social</th>
                                             <th>RUC</th>
@@ -224,18 +224,34 @@ export default function Organizacion() {
                                             <NoExistenDatos colSpan={12} mensaje="No existen organizaciones registradas." />
                                         ) : (
                                             organizacion.map((organizacion) => (
-                                                <tr key={organizacion.id}>
+                                                <tr key={organizacion.id} className="odd:bg-white even:bg-gray-50 hover:bg-gray-100">
                                                     <td>{organizacion.id}</td>
-                                                    <td>{organizacion.RazonSocial}</td>
+                                                    <td>
+                                                        <span className="block max-w-[260px] truncate" title={organizacion.RazonSocial || ''}>
+                                                            {organizacion.RazonSocial}
+                                                        </span>
+                                                    </td>
                                                     <td>{organizacion.RUC}</td>
-                                                    <td>{organizacion.Direccion}</td>
+                                                    <td>
+                                                        <span className="block max-w-[280px] truncate" title={organizacion.Direccion || ''}>
+                                                            {organizacion.Direccion}
+                                                        </span>
+                                                    </td>
                                                     <td>{organizacion.ciudad ? organizacion.ciudad.nombre : 'Sin ciudad seleccionada'}</td>
                                                     <td>{organizacion.pais ? organizacion.pais.Name : 'Sin pais seleccionado'}</td>
                                                     <td>{organizacion.Telefono}</td>
                                                     <td>{organizacion.Fax}</td>
-                                                    <td>{organizacion.Email}</td>
+                                                    <td>
+                                                        <span className="block max-w-[240px] truncate" title={organizacion.Email || ''}>
+                                                            {organizacion.Email}
+                                                        </span>
+                                                    </td>
                                                     <td>{organizacion.Sigla}</td>
-                                                    <td>{organizacion.SitioWeb}</td>
+                                                    <td>
+                                                        <span className="block max-w-[220px] truncate" title={organizacion.SitioWeb || ''}>
+                                                            {organizacion.SitioWeb}
+                                                        </span>
+                                                    </td>
                                                     <td>
                                                         <div className="flex space-x-2">
                                                             <button

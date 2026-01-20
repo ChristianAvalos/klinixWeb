@@ -222,10 +222,10 @@ export default function Usuarios() {
                         />
                         {/* Aqui comienza la tabla  */}
                         <div className="card-body">
-                            <div className="overflow-x-auto">
-                                <table className="table table-bordered table-striped w-full">
-                                    <thead>
-                                        <tr className="font-bold bg-gradient-to-br from-blue-900 to-cyan-900 text-white rounded text-center">
+                            <div className="overflow-auto max-h-[70vh] relative">
+                                <table className="table table-bordered w-full bg-white">
+                                    <thead className="[&>tr>th]:sticky [&>tr>th]:top-0 [&>tr>th]:z-30 [&>tr>th]:bg-gradient-to-br [&>tr>th]:from-blue-900 [&>tr>th]:to-cyan-900 [&>tr>th]:text-white">
+                                        <tr className="font-bold rounded text-center">
                                             <th>ID</th>
                                             <th>Nombre del Usuario</th>
                                             <th>Correo</th>
@@ -239,12 +239,24 @@ export default function Usuarios() {
                                             <NoExistenDatos colSpan={6} mensaje="No existen usuarios registrados." />
                                         ) : (
                                         usuarios.map((usuario) => (
-                                            <tr key={usuario.id}>
+                                            <tr key={usuario.id} className="odd:bg-white even:bg-gray-50 hover:bg-gray-100">
                                                 <td>{usuario.id}</td>
-                                                <td>{usuario.name}</td>
-                                                <td>{usuario.email}</td>
+                                                <td>
+                                                    <span className="block max-w-[220px] truncate" title={usuario.name || ''}>
+                                                        {usuario.name}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span className="block max-w-[260px] truncate" title={usuario.email || ''}>
+                                                        {usuario.email}
+                                                    </span>
+                                                </td>
                                                 <td>{usuario.role ? usuario.role.name : 'Sin rol'}</td>
-                                                <td>{usuario.organizacion ? usuario.organizacion.RazonSocial : 'Sin organización'}</td>
+                                                <td>
+                                                    <span className="block max-w-[260px] truncate" title={usuario.organizacion?.RazonSocial || ''}>
+                                                        {usuario.organizacion ? usuario.organizacion.RazonSocial : 'Sin organización'}
+                                                    </span>
+                                                </td>
                                                 <td>
                                                     <div className="flex space-x-2">
                                                         <button onClick={() => openModal('editar', usuario)} className="flex items-center  rounded hover:bg-gray-200 focus:outline-none">
