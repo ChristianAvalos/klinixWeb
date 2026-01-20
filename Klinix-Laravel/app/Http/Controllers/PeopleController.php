@@ -24,7 +24,8 @@ class PeopleController extends Controller
         $baseQuery = People::with(['ciudad','sexes','maritalStatus'])
             ->when($idTypePeople, function ($query, $idTypePeople) {
                 return $query->where('Id_Type_People', $idTypePeople);
-            });
+            })
+            ->orderByDesc('id');
 
         if ($request->query('all')) {
             $pacientes = $baseQuery->get();
@@ -40,7 +41,7 @@ class PeopleController extends Controller
                 ->paginate(10);
         }
 
-return response()->json($pacientes);
+    return response()->json($pacientes);
     }
 
     public function DeletePersona($id)
