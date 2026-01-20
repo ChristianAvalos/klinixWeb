@@ -689,8 +689,8 @@ export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPa
                         {/* Diagnóstico Médico */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Diagnóstico Médico</label>
-                            <textarea
-                                className={`w-full px-3 py-2 border ${errores.MedicalDiagnosis ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                            <input type='text'
+                                className={`w-full h-10 px-3 py-2 border ${errores.MedicalDiagnosis ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                 value={diagnosticoMedico}
                                 onChange={(e) => setDiagnosticoMedico(e.target.value)} />
                             {errores.MedicalDiagnosis && <p className="text-red-500 text-sm">{errores.MedicalDiagnosis[0]}</p>}
@@ -700,8 +700,8 @@ export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPa
                         {/*Seguro Médico*/}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Seguro Médico</label>
-                            <textarea
-                                className={`w-full px-3 py-2 border ${errores.MedicalInsurance ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                            <input type='text'
+                                className={`w-full h-10 px-3 py-2 border ${errores.MedicalInsurance ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                 value={seguroMedico}
                                 onChange={(e) => setSeguroMedico(e.target.value)} />
                             {errores.MedicalInsurance && <p className="text-red-500 text-sm">{errores.MedicalInsurance[0]}</p>}
@@ -710,8 +710,8 @@ export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPa
                         {/*Alergias*/}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Alergias</label>
-                            <textarea
-                                className={`w-full px-3 py-2 border ${errores.Allergies ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                            <input type='text'
+                                className={`w-full h-10 px-3 py-2 border ${errores.Allergies ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                 value={alergias}
                                 onChange={(e) => setAlergias(e.target.value)} />
                             {errores.Allergies && <p className="text-red-500 text-sm">{errores.Allergies[0]}</p>}
@@ -787,8 +787,8 @@ export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPa
                         {/*Lugar de fallecimiento*/}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Lugar de fallecimiento</label>
-                            <textarea
-                                className={`w-full px-3 py-2 border ${errores.PlaceOfDeath ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                            <input type='text'
+                                className={`w-full h-10 px-3 py-2 border ${errores.PlaceOfDeath ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                 value={lugarFallecimiento}
                                 onChange={(e) => setLugarFallecimiento(e.target.value)} />
                             {errores.PlaceOfDeath && <p className="text-red-500 text-sm">{errores.PlaceOfDeath[0]}</p>}
