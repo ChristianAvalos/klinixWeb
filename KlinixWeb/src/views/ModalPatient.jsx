@@ -404,15 +404,34 @@ export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPa
     };
 
     return (
-        <div className="fixed inset-0 z-50 overflow-y-auto">
-            <div className="bg-gray-800/75 fixed inset-0" onClick={onClose}></div>
-            <div className="min-h-full flex items-center justify-center p-4">
-                <div className="bg-white rounded-lg shadow-lg z-10 w-full max-w-6xl max-h-[92vh] overflow-y-auto p-6">
-                <h2 className="text-xl font-bold mb-4 text-gray-800">
-                    {modo === 'crear' ? 'Crear paciente' : 'Editar paciente'}
-                </h2>
-                <form onSubmit={handleSubmit}>
-                    <div className="grid grid-cols-3 gap-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose}></div>
+
+            <div className="relative z-10 w-full max-w-6xl max-h-[92vh] overflow-y-auto rounded-2xl bg-white shadow-2xl ring-1 ring-black/5">
+                <div className="flex items-start justify-between gap-4 px-6 pt-6 md:px-8 md:pt-8">
+                    <div>
+                        <h2 className="text-2xl font-semibold tracking-tight text-slate-900">
+                            {modo === 'crear' ? 'Crear paciente' : 'Editar paciente'}
+                        </h2>
+                        <p className="mt-1 text-sm text-slate-500">
+                            Completa la información y guarda los cambios.
+                        </p>
+                    </div>
+
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        className="inline-flex h-10 w-10 items-center justify-center rounded-full text-slate-500 hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                        aria-label="Cerrar"
+                    >
+                        <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5" aria-hidden="true">
+                            <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                        </svg>
+                    </button>
+                </div>
+
+                <form onSubmit={handleSubmit} className="px-6 pb-6 md:px-8 md:pb-8">
+                    <div className="mt-6 grid grid-cols-3 gap-4">
                         {/* Documento */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Documento Nº</label>
@@ -799,12 +818,22 @@ export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPa
                             {errores.PlaceOfDeath && <p className="text-red-500 text-sm">{errores.PlaceOfDeath[0]}</p>}
                         </div>
                     </div>
-                    <div className="flex justify-end space-x-3 mt-4">
-                        <button onClick={onClose} className="bg-red-500 text-white rounded px-4 py-2 hover:bg-red-600">Cancelar</button>
-                        <button type="submit" className="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600">{modo === 'crear' ? 'Crear Paciente' : 'Guardar Cambios'}</button>
+                    <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="inline-flex items-center justify-center rounded-lg border border-red-200 bg-red-500 px-4 py-2 font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-200"
+                        >
+                            Cancelar
+                        </button>
+                        <button
+                            type="submit"
+                            className="inline-flex items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-cyan-900 px-4 py-2 font-semibold text-white shadow-sm hover:from-blue-800 hover:to-cyan-800 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                        >
+                            {modo === 'crear' ? 'Crear Paciente' : 'Guardar Cambios'}
+                        </button>
                     </div>
                 </form>
-                </div>
             </div>
         </div>
     );

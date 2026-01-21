@@ -7,6 +7,22 @@ import ModalResource from './ModalResource';
 
 
 export default function Resource() {
+    const extractHHMM = (value) => {
+        if (!value) return '';
+        const str = String(value);
+        const match = str.match(/(\d{2}:\d{2})/);
+        return match ? match[1] : str;
+    };
+
+    const intToHexColor = (value) => {
+        if (value === null || value === undefined || value === '') return null;
+        const n = Number(value);
+        if (Number.isNaN(n)) return null;
+        const unsigned = n >>> 0; 
+        const rgb = unsigned & 0xFFFFFF; 
+        return `#${rgb.toString(16).padStart(6, '0').toUpperCase()}`;
+    };
+
     //grilla del consultorio
     const [resources, setResources,] = useState([]);
     const [resourceSeleccionado, setresourceSeleccionado] = useState(null);
@@ -185,13 +201,26 @@ export default function Resource() {
                                             resources.map((resource) => (
                                                 <tr key={resource.id} className="odd:bg-white even:bg-gray-50 hover:bg-gray-100">
                                                     <td>{resource.id}</td>
-                                                    <td>{resource.ResourceColor}</td>
+                                                    <td>
+                                                        {(() => {
+                                                            const hex = intToHexColor(resource.ResourceColor);
+                                                            return (
+                                                                <div className="flex items-center justify-center">
+                                                                    <span
+                                                                        className="inline-block h-7 w-7 rounded-full border border-gray-300 shadow-sm"
+                                                                        style={{ backgroundColor: hex ?? '#E5E7EB' }}
+                                                                        title={hex ? `${hex} (${resource.ResourceColor})` : String(resource.ResourceColor ?? '')}
+                                                                    />
+                                                                </div>
+                                                            );
+                                                        })()}
+                                                    </td>
                                                     <td>{resource.ResourceNumber}</td>
                                                     <td>{resource.ResourceName}</td>
                                                     <td>{resource.ResourceVisible === "1" ? "Sí" : "No"}</td>
                                                     <td>{`${resource.doctor?.FirstName ?? ''} ${resource.doctor?.LastName ?? ''}`.trim()}</td>
-                                                    <td>{resource.ResourceWorkStart}</td>  
-                                                    <td>{resource.ResourceWorkFinish}</td>
+                                                    <td>{extractHHMM(resource.ResourceWorkStart)}</td>
+                                                    <td>{extractHHMM(resource.ResourceWorkFinish)}</td>
                                                     <td>{resource.UrevCalc}</td>
 
                                                     <td>
@@ -285,8 +314,8 @@ export default function Resource() {
             {/* Renderizar el modal */}
             {isModalOpen && (
                 <ModalResource
-                    refrescarRecursos={fetchResource}
-                    recurso={resourceSeleccionado}
+                    refrescarResources={fetchResource}
+                    resource={resourceSeleccionado}
                     modo={modalMode}
                     onClose={closeModal}
                 />

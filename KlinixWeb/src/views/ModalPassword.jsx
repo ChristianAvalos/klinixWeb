@@ -66,11 +66,30 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
 
     return (
         isOpen && (
-            <div className="fixed inset-0 flex items-center justify-center z-50">
-                <div className="fixed inset-0 bg-black opacity-50" onClick={onClose}></div>
-                <div className="bg-white rounded-lg shadow-lg w-96 p-6 z-10">
-                    <h2 className="text-lg font-bold mb-4">Cambiar Contraseña</h2>
-                    <form onSubmit={handleChangePassword}>
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose}></div>
+
+                <div className="relative z-10 w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-black/5">
+                    <div className="flex items-start justify-between gap-4 px-6 pt-6 md:px-8 md:pt-8">
+                        <div>
+                            <h2 className="text-2xl font-semibold tracking-tight text-slate-900">Cambiar Contraseña</h2>
+                            <p className="mt-1 text-sm text-slate-500">Completa la información y guarda los cambios.</p>
+                        </div>
+
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-slate-500 hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                            aria-label="Cerrar"
+                        >
+                            <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5" aria-hidden="true">
+                                <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <form onSubmit={handleChangePassword} className="px-6 pb-6 md:px-8 md:pb-8">
+                        <div className="mt-6">
                         <div className="mb-4">
                             <label className="block text-sm font-medium mb-1" htmlFor="currentPassword">Contraseña Actual</label>
                             <input
@@ -107,17 +126,18 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
                             />
                             {errores.repeatPassword && <p className="text-red-500 text-sm">{errores.repeatPassword[0]}</p>}
                         </div>
-                        <div className="flex justify-between">
+                        </div>
+                        <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
                             <button
                                 type="button"
                                 onClick={onClose}
-                                className="text-gray-500 hover:text-gray-700"
+                                className="inline-flex items-center justify-center rounded-lg border border-red-200 bg-red-500 px-4 py-2 font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-200"
                             >
                                 Cancelar
                             </button>
                             <button
                                 type="submit"
-                                className="bg-blue-500 text-white rounded-lg px-4 py-2 hover:bg-blue-600"
+                                className="inline-flex items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-cyan-900 px-4 py-2 font-semibold text-white shadow-sm hover:from-blue-800 hover:to-cyan-800 focus:outline-none focus:ring-2 focus:ring-cyan-400"
                             >
                                 Cambiar
                             </button>
