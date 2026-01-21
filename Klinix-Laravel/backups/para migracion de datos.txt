@@ -92,7 +92,7 @@ SELECT
   1,
   NULL,
   NULL,
-  1,
+  2,
   'Admin - Migracion'::varchar(255) AS "UrevUsuario",
   now()::timestamp(0) AS "UrevFechaHora"
 from "patient" p;
