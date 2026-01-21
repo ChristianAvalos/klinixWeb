@@ -94,4 +94,13 @@ class ResourceController extends Controller
     {
         //
     }
+    public function DeleteConsultorio($id)
+    {      
+        //Busco el resource
+        $resource = Resource::findOrFail($id);
+        //Elimino el resource
+        $resource->delete();
+        //Retorno un mensaje de confirmación
+        return response()->json(['message' => 'Resource eliminado correctamente.'],200);
+    }
 }
