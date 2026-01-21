@@ -32,14 +32,17 @@ class Departamento extends Model
     }
 
 
-
+    // Relación con el modelo Ciudad
     public function ciudades()
     {
         return $this->hasMany(Ciudad::class, 'departamento_id');
     }
 
+    // Relación con el modelo People
     public function peoples()
     {
         return $this->hasMany(People::class, 'Id_Department');
     }
+
+
 }

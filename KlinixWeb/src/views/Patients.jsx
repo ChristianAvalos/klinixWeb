@@ -283,8 +283,8 @@ export default function Pacientes() {
                                                         </span>
                                                     </td>
                                                     <td>
-                                                        <span className="block max-w-[180px] truncate" title={p.Department || ''}>
-                                                            {p.Department}
+                                                        <span className="block max-w-[180px] truncate" title={p.departamento?.nombre || ''}>
+                                                            {p.departamento?.nombre ?? 'Sin departamento seleccionado'}
                                                         </span>
                                                     </td>
                                                     <td>{p.PhoneNumber}</td>
@@ -298,8 +298,8 @@ export default function Pacientes() {
                                                     <td>{p.BloodType}</td>
                                                     <td>{p.RhFactor}</td>
                                                     <td>
-                                                        <span className="block max-w-[160px] truncate" title={p.MaritalStatus || ''}>
-                                                            {p.MaritalStatus}
+                                                        <span className="block max-w-[160px] truncate" title={p.marital_status?.name || ''}>
+                                                            {p.marital_status?.name ?? 'Sin estado civil seleccionado'}
                                                         </span>
                                                     </td>
                                                     <td>
