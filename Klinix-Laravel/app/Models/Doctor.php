@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use App\Models\Ciudad;
 use Carbon\Carbon;
+use App\Models\Ciudad;
+use App\Models\Resource;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -44,6 +45,12 @@ class Doctor extends Model
     public function ciudad()
     {
         return $this->belongsTo(Ciudad::class, 'City_Id');
+    }
+
+    //relacion con consultorios
+    public function consultorios()
+    {
+        return $this->hasMany(Resource::class, 'Id_Doctor');
     }
 
 }

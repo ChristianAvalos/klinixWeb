@@ -18,6 +18,8 @@ class PeopleController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
+        $searchNormalized = is_string($search) ? preg_replace('/\s+/', ' ', trim($search)) : null;
+        $searchTerms = $searchNormalized ? preg_split('/\s+/', $searchNormalized, -1, PREG_SPLIT_NO_EMPTY) : [];
         $idTypePeople = $request->input('id_type_people');
         $likeOperator = DB::connection()->getDriverName() === 'pgsql' ? 'ilike' : 'like';
 
@@ -31,11 +33,19 @@ class PeopleController extends Controller
             $pacientes = $baseQuery->get();
         } else {
             $pacientes = $baseQuery
-                ->when($search, function ($query, $search) use ($likeOperator) {
-                    return $query->where(function ($q) use ($search, $likeOperator) {
-                        $q->where('LastName', $likeOperator, '%' . $search . '%')
-                            ->orWhere('FirstName', $likeOperator, '%' . $search . '%')
-                            ->orWhere('DocumentNo', $likeOperator, '%' . $search . '%');
+                ->when($searchTerms, function ($query, $searchTerms) use ($likeOperator) {
+                    return $query->where(function ($q) use ($searchTerms, $likeOperator) {
+                        foreach ($searchTerms as $term) {
+                            $like = '%' . $term . '%';
+                            $q->where(function ($qq) use ($like, $likeOperator) {
+                            $qq->where('LastName', $likeOperator, $like)
+                                ->orWhere('FirstName', $likeOperator, $like)
+                                ->orWhere('DocumentNo', $likeOperator, $like)
+                                ->orWhereRaw('concat_ws(\' \', "FirstName", "LastName") ILIKE ?', [$like])
+                            ->orWhereRaw('concat_ws(\' \', "LastName", "FirstName") ILIKE ?', [$like]);
+                        });
+                        }
+
                     });
                 })
                 ->paginate(10);

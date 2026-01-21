@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Resource;
+use Illuminate\Http\Request;
 use App\Http\Requests\StoreResourceRequest;
 use App\Http\Requests\UpdateResourceRequest;
 
@@ -11,9 +12,37 @@ class ResourceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+         $search = $request->input('search');
+         $searchNormalized = is_string($search) ? preg_replace('/\s+/', ' ', trim($search)) : null;
+         $searchTerms = $searchNormalized ? preg_split('/\s+/', $searchNormalized, -1, PREG_SPLIT_NO_EMPTY) : [];
+         $baseQuery = Resource::with(['doctor'])
+            ->orderByDesc('id');
+
+        if ($request->query('all')) {
+            $resources = $baseQuery->get();
+        } else {
+            $resources = $baseQuery
+                ->when(!empty($searchTerms), function ($query) use ($searchTerms) {
+                    return $query->where(function ($q) use ($searchTerms) {
+                        foreach ($searchTerms as $term) {
+                            $like = '%' . $term . '%';
+                            $q->where(function ($qq) use ($like) {
+                                $qq->where('LastName', 'ilike', $like)
+                                    ->orWhere('FirstName', 'ilike', $like)
+                                    ->orWhere('DocumentNo', 'ilike', $like)
+                                    ->orWhere('ResourceName', 'ilike', $like)
+                                    ->orWhereRaw('concat_ws(\' \", "FirstName", "LastName") ILIKE ?', [$like])
+                                    ->orWhereRaw('concat_ws(\' \", "LastName", "FirstName") ILIKE ?', [$like]);
+                            });
+                        }
+                    });
+                })
+                ->paginate(10);
+        }
+
+    return response()->json($resources);
     }
 
     /**
