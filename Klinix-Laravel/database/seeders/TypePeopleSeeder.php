@@ -15,7 +15,7 @@ class TypePeopleSeeder extends Seeder
     public function run(): void
     {
         TypePeople::insert([
-            ['name' => 'Acompañante',            
+            ['name' => 'Visitantes',            
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             'UrevUsuario' => 'Admin', 

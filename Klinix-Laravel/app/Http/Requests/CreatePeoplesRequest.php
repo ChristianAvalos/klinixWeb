@@ -30,7 +30,7 @@ class CreatePeoplesRequest extends FormRequest
             'Department_Id' => ['required', 'exists:departamento,id'],
             'City_Id' => ['required', 'exists:ciudad,id'],
 
-            'PatientCode' => ['nullable', 'string', 'max:10'],
+            'PatientCode' => ['required','unique:peoples,PatientCode', 'string', 'max:10'],
             'Title' => ['nullable', 'string', 'max:30'],
             'Nationality' => ['nullable', 'string', 'max:100'],
             'Birthday' => ['nullable', 'date'],
@@ -74,7 +74,10 @@ class CreatePeoplesRequest extends FormRequest
             'Department_Id.exists' => 'El departamento seleccionado no es válido.',
             'City_Id.required' => 'La ciudad es obligatoria.',
             'City_Id.exists' => 'La ciudad seleccionada no es válida.',
-
+            'PatientCode.required' => 'El código de paciente es obligatorio.',
+            'PatientCode.unique' => 'El código de paciente ya está en uso.',
+            'PatientCode.string' => 'El código de paciente debe ser una cadena de texto.',
+            'PatientCode.max' => 'El código de paciente no debe exceder los 10 caracteres.',
             'MaritalStatus_Id.exists' => 'El estado civil seleccionado no es válido.',
         ];
     }

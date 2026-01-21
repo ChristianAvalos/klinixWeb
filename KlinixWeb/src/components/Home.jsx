@@ -22,8 +22,8 @@ export default function Home() {
   //Cantidad de pacientes registrados
   const [cantidadPacientes, setCantidadPacientes] = useState(0);
 
-  //Cantidad de acompañantes registrados
-  const [cantidadAcompanantes, setCantidadAcompanantes] = useState(0);
+  //Cantidad de visitas registrados
+  const [cantidadVisitas, setCantidadVisitas] = useState(0);
 
   //Cantidad de roles registrados
   const [cantidadRoles, setCantidadRoles] = useState(0);
@@ -101,10 +101,10 @@ export default function Home() {
       }
 
       try {
-        const acompañantes = await obtenerPersonas(1, "", 1);
-        setCantidadAcompanantes(acompañantes.total);
+        const visitas = await obtenerPersonas(1, "", 1);
+        setCantidadVisitas(visitas.total);
       } catch (error) {
-        console.error('Error al cargar los acompañantes:', error);
+        console.error('Error al cargar los visitas:', error);
       }
     };
   
@@ -138,8 +138,8 @@ export default function Home() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
             <div className="bg-sky-500 rounded-lg shadow-md p-5 flex flex-col justify-between min-h-[140px] transition-transform hover:-translate-y-0.5 hover:shadow-lg">
               <div>
-                <h3 className="text-white text-3xl font-bold">{cantidadAcompanantes}</h3>
-                <p className="text-white/90 text-lg">Acompañantes</p>
+                <h3 className="text-white text-3xl font-bold">{cantidadVisitas}</h3>
+                <p className="text-white/90 text-lg">Visitas</p>
               </div>
               <div className="flex items-center justify-between mt-4">
                 <div className="h-10 w-10 rounded-full bg-white/15 flex items-center justify-center" aria-hidden>
