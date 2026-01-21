@@ -17,15 +17,24 @@ class DoctorController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
+        $searchNormalized = is_string($search) ? preg_replace('/\s+/', ' ', trim($search)) : null;
+        $searchTerms = $searchNormalized ? preg_split('/\s+/', $searchNormalized, -1, PREG_SPLIT_NO_EMPTY) : [];
 
         if ($request->query('all')) {
             $doctores = Doctor::with(['ciudad'])->get();
         } else {
             $doctores = Doctor::with(['ciudad'])
-                ->when($search, function ($query, $search) {
-                    return $query->where(function ($q) use ($search) {
-                        $q->where('LastName', 'ilike', '%' . $search . '%')
-                            ->orWhere('FirstName', 'ilike', '%' . $search . '%');
+                ->when($searchTerms, function ($query, $searchTerms) {
+                    return $query->where(function ($q) use ($searchTerms) {
+                        foreach ($searchTerms as $term) {
+                            $like = '%' . $term . '%';
+                            $q->where(function ($qq) use ($like) {
+                            $qq->where('LastName', 'ilike', $like)
+                                ->orWhere('FirstName', 'ilike', $like)
+                                ->orWhereRaw('concat_ws(\' \', "FirstName", "LastName") ILIKE ?', [$like])
+                                ->orWhereRaw('concat_ws(\' \', "LastName", "FirstName") ILIKE ?', [$like]);
+                            });
+                        }
                     });
                 })
                 ->paginate(10);
