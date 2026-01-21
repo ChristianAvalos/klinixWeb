@@ -1,3 +1,4 @@
+--Migracion de doctores
 INSERT INTO doctors
   ("LastName", "FirstName", "Address", "City_Id", "PhoneNumber", "CellPhoneNumber", "SupportWhatsapp", "Email","UrevUsuario","UrevFechaHora")
 SELECT
@@ -14,7 +15,7 @@ SELECT
 FROM "doctor" d;
 
 
-
+--Migracion de pacientes
 INSERT INTO public.peoples
 (
   "LastName",
@@ -36,7 +37,7 @@ INSERT INTO public.peoples
   "BloodType",
   "RhFactor",
   "Allergies",
-  "MaritalStatus",
+  "Id_Marital_Status",
   "MedicalInsurance",
   "DeathDate",
   "DeathCause",
@@ -78,7 +79,7 @@ SELECT
   p.bloodtype,
   p.rhfactor,
   p.allergies,
-  p.maritalstatus,
+  1,
   p.medicalinsurance,
   p.deathdate::timestamp(0),
   p.deathcause,
@@ -95,4 +96,28 @@ SELECT
   'Admin - Migracion'::varchar(255) AS "UrevUsuario",
   now()::timestamp(0) AS "UrevFechaHora"
 from "patient" p;
+
+
+--migracion para consultorios 
+INSERT INTO public.resources
+("ResourceColor", 
+"ResourceNumber", 
+"ResourceName",
+"ResourceVisible", 
+"Id_Doctor",
+"ResourceWorkStart", 
+"ResourceWorkFinish", 
+"UrevUsuario", 
+"UrevFechaHora")
+select  
+ResourceColor, 
+null, 
+ResourceName,
+1, 
+1,
+ResourceWorkStart, 
+ResourceWorkFinish, 
+'Admin - Migracion', 
+now()
+from resource r ;
 

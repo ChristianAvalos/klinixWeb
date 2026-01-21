@@ -16,7 +16,7 @@ import Visit from "./views/Visit";
 import Doctor from "./views/Doctor";
 import Patients from "./views/Patients";
 import ScanVisit from "./views/ScanVisit";
-import Consultorios from "./views/Consultorios";
+import Resource from "./views/Resource";
 
 
 const router = createBrowserRouter ([
@@ -119,7 +119,7 @@ const router = createBrowserRouter ([
                 
                 element: (
                 <ProtectedRoute permission="Consultorios">
-                    <Consultorios/>
+                    <Resource/>
                 </ProtectedRoute>
                 )
             },

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 import { useEffect, useState } from 'react';
-import { obtenerUsuarios, obtenerRoles, obtenerDoctores,obtenerPersonas } from '../helpers/HelpersUsuarios';
+import { obtenerUsuarios, obtenerRoles, obtenerDoctores,obtenerPersonas,obtenerConsultorios } from '../helpers/HelpersUsuarios';
 import ModalUsuarios from '../views/ModalUsuarios';
 import ModalRol from '../views/ModalRol';
 
@@ -18,6 +18,9 @@ export default function Home() {
 
   //Cantidad de doctores registrados
   const [cantidadDoctores, setCantidadDoctores] = useState(0);
+
+  //Cantidad de consultorios registrados 
+  const [cantidadConsultorios, setCantidadConsultorios] = useState(0);
 
   //Cantidad de pacientes registrados
   const [cantidadPacientes, setCantidadPacientes] = useState(0);
@@ -90,6 +93,22 @@ export default function Home() {
 
     cantidadDoctoresRegistrados();
   }, []);
+
+  //cantidad de consultorios registrados 
+  const cantidadConsultoriosRegistrados = async () => {
+    try {
+      const consultorios = await obtenerConsultorios();
+      setCantidadConsultorios(consultorios.total);
+    } catch (error) {
+      console.error('Error al cargar los consultorios:', error);
+    }
+  };
+
+  useEffect(() => {
+
+    cantidadConsultoriosRegistrados();
+  }, []);
+
 
     //obtener la cantidad de pacientes registrados
     const cantidadPersonasRegistrados = async () => {
@@ -177,7 +196,7 @@ export default function Home() {
 
              <div className="bg-purple-400 rounded-lg shadow-md p-5 flex flex-col justify-between min-h-[140px] transition-transform hover:-translate-y-0.5 hover:shadow-lg">
               <div>
-                <h3 className="text-white text-3xl font-bold">12</h3>
+                <h3 className="text-white text-3xl font-bold">{cantidadConsultorios}</h3>
                 <p className="text-white/90 text-lg">Consultorios</p>
               </div>
               <div className="flex items-center justify-between mt-4">

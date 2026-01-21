@@ -29,12 +29,14 @@ class ResourceController extends Controller
                         foreach ($searchTerms as $term) {
                             $like = '%' . $term . '%';
                             $q->where(function ($qq) use ($like) {
-                                $qq->where('LastName', 'ilike', $like)
-                                    ->orWhere('FirstName', 'ilike', $like)
-                                    ->orWhere('DocumentNo', 'ilike', $like)
-                                    ->orWhere('ResourceName', 'ilike', $like)
-                                    ->orWhereRaw('concat_ws(\' \", "FirstName", "LastName") ILIKE ?', [$like])
-                                    ->orWhereRaw('concat_ws(\' \", "LastName", "FirstName") ILIKE ?', [$like]);
+                                $qq->where('ResourceName', 'ilike', $like)
+                                    ->orWhere('ResourceNumber', 'ilike', $like)
+                                    ->orWhereHas('doctor', function ($dq) use ($like) {
+                                        $dq->where('FirstName', 'ilike', $like)
+                                            ->orWhere('LastName', 'ilike', $like)
+                                            ->orWhereRaw("concat_ws(' ', \"FirstName\", \"LastName\") ILIKE ?", [$like])
+                                            ->orWhereRaw("concat_ws(' ', \"LastName\", \"FirstName\") ILIKE ?", [$like]);
+                                    });
                             });
                         }
                     });

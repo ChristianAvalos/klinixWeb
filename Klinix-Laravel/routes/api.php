@@ -10,6 +10,7 @@ use App\Http\Controllers\CiudadController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\PeopleController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\DepartamentoController;
 use App\Http\Controllers\OrganizacionController;
@@ -93,6 +94,12 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::post('/crearsexos',[SexesController::class,'create']);
     Route::put('/editarsexos/{id}',[SexesController::class,'update']);
     Route::delete('/sexos/{id}', [SexesController::class, 'DeleteSexo']);
+
+    //consultorios
+    Route::get('/consultorios',[ResourceController::class,'index']);
+    Route::post('/crearconsultorios',[ResourceController::class,'create']);
+    Route::put('/editarconsultorios/{id}',[ResourceController::class,'update']);
+    Route::delete('/consultorios/{id}', [ResourceController::class, 'DeleteConsultorio']);
 
 });
 
