@@ -33,10 +33,10 @@ class OrganizacionController extends Controller
         $organizacion = Organizacion::findOrFail($id);
 
         // Eliminar la imagen si está presente
-        if ($organizacion->Imagen) {
+        if (!empty($organizacion->Imagen)) {
             $path = public_path('img/' . $organizacion->Imagen);
 
-            if (file_exists($path)) {
+            if (is_file($path)) {
                 unlink($path);
             }
         }
@@ -69,7 +69,7 @@ class OrganizacionController extends Controller
                     // Eliminar la imagen anterior
                     $path = public_path('img/' . $fileName);
 
-                    if (file_exists($path)) {
+                    if (is_file($path)) {
                         unlink($path);
                     }
         
@@ -162,7 +162,7 @@ class OrganizacionController extends Controller
                 // Eliminar la imagen anterior
                 $path = public_path('img/' . $organizacion->Imagen);
 
-                if (file_exists($path)) {
+                if (!empty($organizacion->Imagen) && is_file($path)) {
                     unlink($path);
                 }
     

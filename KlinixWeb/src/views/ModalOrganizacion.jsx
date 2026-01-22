@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState,useRef } from 'react';
 import clienteAxios from "../config/axios";
 import { toast } from "react-toastify";
 export default function ModalOrganizacion({ onClose, modo, refrescarOrganizacion, organizacion = {} }) {
@@ -20,16 +20,23 @@ export default function ModalOrganizacion({ onClose, modo, refrescarOrganizacion
     const [Imagen, setImagen] = useState(null);
     const baseURL = clienteAxios.defaults.baseURL;
     const [ImagenURL, setImagenURL] = useState("");
-    const [previewImage, setPreviewImage] = useState(null); 
+    const [previewImage, setPreviewImage] = useState(null);
+    const nombreRef = useRef(null);
     // Obtener el token de autenticación
     const token = localStorage.getItem('AUTH_TOKEN');
 
+    // Enfocar el campo de razón social al abrir el modal
+    useEffect(() => {
+        if (nombreRef.current) {
+            nombreRef.current.focus();
+        }
+    }, []);
 
     // Actualizar el estado de la URL de la imagen al cambiar la organización
     useEffect(() => {
         if (organizacion.Imagen) {
             const timestamp = new Date().getTime(); // Generar un timestamp único
-            setImagenURL(`${baseURL}img/${organizacion.Imagen}?t=${timestamp}`);
+            setImagenURL(`${baseURL}/img/${organizacion.Imagen}?t=${timestamp}`);
         } else {
             setImagenURL(""); // Resetear si no hay imagen
         }
@@ -145,7 +152,10 @@ export default function ModalOrganizacion({ onClose, modo, refrescarOrganizacion
 
             } else {
                 // Editar organizacion existente
-                // console.log(formData)
+                // console.log('Contenido de formData:');
+                // for (let pair of formData.entries()) {
+                //     console.log(pair[0] + ':', pair[1]);
+                // }
                 await clienteAxios.post(`api/update_organizacion/${organizacion.id}`, formData, {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -183,44 +193,31 @@ export default function ModalOrganizacion({ onClose, modo, refrescarOrganizacion
         if (file) {
             // Crear un nuevo nombre de archivo basado en la razón social
             const extension = file.name.split('.').pop(); // Obtener la extensión del archivo
-            const newFileName = `${RazonSocial.replace(/\s+/g, '_')}.${extension}`; // Renombrar archivo
+            const razonLimpia = RazonSocial.trim().replace(/\.+$/, '').replace(/\s+/g, '_'); // Limpiar y formatear la razón social
+            const newFileName = `${razonLimpia.replace(/\s+/g, '_')}.${extension}`; // Renombrar archivo
             const renamedFile = new File([file], newFileName, { type: file.type }); // Crear un nuevo archivo con el nombre cambiado
-
             setImagen(renamedFile); // Guardar el archivo renombrado
             setPreviewImage(URL.createObjectURL(file));
         }
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose}></div>
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+            {/* Fondo oscuro */}
+            <div
+                className="bg-gray-800 opacity-75 absolute inset-0"
+                onClick={onClose}
+            ></div>
 
-            <div className="relative z-10 w-full max-w-4xl overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-black/5">
-                <div className="flex items-start justify-between gap-4 px-6 pt-6 md:px-8 md:pt-8">
-                    <div>
-                        <h2 className="text-2xl font-semibold tracking-tight text-slate-900">
-                            {modo === "crear" ? "Crear Organización" : "Editar Organización"}
-                        </h2>
-                        <p className="mt-1 text-sm text-slate-500">
-                            Completa la información y guarda los cambios.
-                        </p>
-                    </div>
+            {/* Contenido del modal */}
+            <div className="bg-white rounded-lg shadow-lg z-10 p-6 w-full max-w-4xl border border-red-500">
+                <h2 className="text-2xl font-bold mb-4 text-gray-800">
+                    {modo === "crear" ? "Crear Organización" : "Editar Organización"}
+                </h2>
 
-                    <button
-                        type="button"
-                        onClick={onClose}
-                        className="inline-flex h-10 w-10 items-center justify-center rounded-full text-slate-500 hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-400"
-                        aria-label="Cerrar"
-                    >
-                        <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5" aria-hidden="true">
-                            <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                        </svg>
-                    </button>
-                </div>
-
-                <form onSubmit={handleSubmit} className="px-6 pb-6 md:px-8 md:pb-8">
+                <form onSubmit={handleSubmit}>
                     {/* Estructura del formulario */}
-                    <div className="mt-6 grid grid-cols-1 sm:grid-cols-4 gap-4 max-h-[80vh] overflow-y-auto">
+                    <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 max-h-[80vh] overflow-y-auto">
                         {/* Campos del formulario */}
                         <div className="col-span-3 grid grid-cols-2 sm:grid-cols-3 gap-4">
                             {/* Razón Social */}
@@ -228,6 +225,7 @@ export default function ModalOrganizacion({ onClose, modo, refrescarOrganizacion
                                 <label className="block text-sm font-medium text-gray-700">Razón Social</label>
                                 <input
                                     type="text"
+                                    ref={nombreRef}
                                     className={`w-full px-3 py-2 border ${errores.name ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                     placeholder="Razón Social"
                                     value={RazonSocial}
@@ -390,7 +388,7 @@ export default function ModalOrganizacion({ onClose, modo, refrescarOrganizacion
                         <div className="col-span-1 flex flex-col items-center justify-center border-l-2 border-gray-200">
                             <div>
                                 <img
-                                    src={previewImage || ImagenURL || `${baseURL}img/${organizacion.Imagen}`}
+                                    src={previewImage ||  (organizacion.Imagen ? `${baseURL}/img/${organizacion.Imagen}` : '/img/Icon/factory.png')}
                                     alt={`Imagen de ${organizacion.RazonSocial}`}
                                     className="max-w-full h-auto rounded"
                                 />
@@ -407,17 +405,16 @@ export default function ModalOrganizacion({ onClose, modo, refrescarOrganizacion
                     </div>
 
                     {/* Botones */}
-                    <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                    <div className="flex justify-end space-x-3 mt-4">
                         <button
-                            type="button"
                             onClick={onClose}
-                            className="inline-flex items-center justify-center rounded-lg border border-red-200 bg-red-500 px-4 py-2 font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-200"
+                            className="bg-red-500 text-white rounded px-4 py-2 hover:bg-red-600 transition"
                         >
                             Cancelar
                         </button>
                         <button
                             type="submit"
-                            className="inline-flex items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-cyan-900 px-4 py-2 font-semibold text-white shadow-sm hover:from-blue-800 hover:to-cyan-800 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                            className="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600 transition"
                         >
                             {modo === "crear" ? "Crear" : "Guardar"}
                         </button>
