@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Resource extends Model
 {
     use HasFactory;
+    protected $table = 'resources';
+    public $timestamps = false;
     protected $fillable = [
         'ResourceColor',
         'ResourceNumber',

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateResourceRequest extends FormRequest
+class CreateResourceRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,8 +28,8 @@ class UpdateResourceRequest extends FormRequest
 
             'ResourceColor' => ['nullable', 'integer'],
             'ResourceVisible' => ['nullable', 'in:0,1'],
-            'ResourceWorkStart' => ['nullable', 'date_format:Y-m-d H:i:s'],
-            'ResourceWorkFinish' => ['nullable', 'date_format:Y-m-d H:i:s'],
+            'ResourceWorkStart' => ['required', 'date_format:Y-m-d H:i:s'],
+            'ResourceWorkFinish' => ['required', 'date_format:Y-m-d H:i:s'],
         ];
     }
 
@@ -51,6 +51,9 @@ class UpdateResourceRequest extends FormRequest
 
             'ResourceWorkStart.date_format' => 'La hora de inicio no tiene un formato válido.',
             'ResourceWorkFinish.date_format' => 'La hora de fin no tiene un formato válido.',
+            'ResourceWorkStart.required' => 'La hora de inicio es obligatoria.',
+            'ResourceWorkFinish.required' => 'La hora de fin es obligatoria.',
+
         ];
     }
 }

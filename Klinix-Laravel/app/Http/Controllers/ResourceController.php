@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Resource;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreResourceRequest;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\CreateResourceRequest;
 use App\Http\Requests\UpdateResourceRequest;
 
 class ResourceController extends Controller
@@ -50,17 +52,35 @@ class ResourceController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(CreateResourceRequest $request)
     {
-        //
+        $data = $request->validated();
+
+        // Obtener el usuario autenticado
+        $usuarioActual = Auth::user();
+
+        $resource = Resource::create([
+            'ResourceName' => $data['ResourceName'],
+            'ResourceNumber' => $data['ResourceNumber'],
+            'Id_Doctor' => $data['Id_Doctor'],
+            'ResourceColor' => $data['ResourceColor'] ?? null,
+            'ResourceVisible' => $data['ResourceVisible'] ?? '1',
+            'ResourceWorkStart' => $data['ResourceWorkStart'] ?? null,
+            'ResourceWorkFinish' => $data['ResourceWorkFinish'] ?? null,
+            'UrevUsuario' => 'Registrado - ' . ($usuarioActual ? $usuarioActual->name : 'Desconocido'),
+            'UrevFechaHora' => Carbon::now(),
+        ]);
+
+        return response()->json($resource, 201);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreResourceRequest $request)
+    public function store(CreateResourceRequest $request)
     {
-        //
+        // Mantener compatibilidad con rutas tipo resource (si se usan)
+        return $this->create($request);
     }
 
     /**
@@ -82,9 +102,29 @@ class ResourceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateResourceRequest $request, Resource $resource)
+    public function update(UpdateResourceRequest $request, $id)
     {
-        //
+        $data = $request->validated();
+
+        // Obtener el usuario autenticado
+        $usuarioActual = Auth::user();
+
+        // Encontrar el consultorio por su ID
+        $resource = Resource::findOrFail($id);
+
+        $resource->update([
+            'ResourceName' => $data['ResourceName'],
+            'ResourceNumber' => $data['ResourceNumber'],
+            'Id_Doctor' => $data['Id_Doctor'],
+            'ResourceColor' => $data['ResourceColor'] ?? null,
+            'ResourceVisible' => $data['ResourceVisible'] ?? $resource->ResourceVisible,
+            'ResourceWorkStart' => $data['ResourceWorkStart'] ?? null,
+            'ResourceWorkFinish' => $data['ResourceWorkFinish'] ?? null,
+            'UrevUsuario' => 'Actualizado - ' . ($usuarioActual ? $usuarioActual->name : 'Desconocido'),
+            'UrevFechaHora' => Carbon::now(),
+        ]);
+
+        return response()->json($resource, 200);
     }
 
     /**
