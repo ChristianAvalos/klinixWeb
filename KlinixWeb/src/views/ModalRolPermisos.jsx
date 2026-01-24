@@ -5,6 +5,7 @@ import clienteAxios from "../config/axios";
 const ModalRolPermisos = ({ roleId, onClose, refrescarRoles }) => {
     const [permissions, setPermissions] = useState([]);
     const [rolePermissions, setRolePermissions] = useState([]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const token = localStorage.getItem('AUTH_TOKEN');
 
     useEffect(() => {
@@ -38,18 +39,27 @@ const ModalRolPermisos = ({ roleId, onClose, refrescarRoles }) => {
         setRolePermissions([]);
     };
 
-    const handleSave = () => {
-        clienteAxios.post(`/api/roles/${roleId}/permisos`, { permissions: rolePermissions }, {
-            headers: {
-                Authorization: `Bearer ${token}` // Configurar el token en los headers
-            }
-        })
-            .then(() => refrescarRoles());
+    const handleSave = async () => {
+        if (isSubmitting) return; // Evita doble click / doble submit
+        setIsSubmitting(true);
 
-        //Muestro el mensaje de guardado 
-        toast.success('Operación exitosa');
-        //guardo y cierro 
-        onClose();
+        try {
+            await clienteAxios.post(`/api/roles/${roleId}/permisos`, { permissions: rolePermissions }, {
+                headers: {
+                    Authorization: `Bearer ${token}` // Configurar el token en los headers
+                }
+            });
+
+            refrescarRoles?.();
+
+            toast.success('Operación exitosa');
+            onClose();
+        } catch (error) {
+            console.error('Error al guardar permisos', error);
+            toast.error('Error al guardar permisos');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -75,12 +85,14 @@ const ModalRolPermisos = ({ roleId, onClose, refrescarRoles }) => {
                     </button>
                 </div>
 
-                <div className="px-6 pb-6 md:px-8 md:pb-8">
+                <div className="px-6 pb-6 md:px-8 md:pb-8" aria-busy={isSubmitting}>
+                    <fieldset disabled={isSubmitting} className="contents">
                     <div className="mt-6">
 
                 {/* Botones de seleccionar todo y desmarcar todo */}
                 <div className="flex justify-between mb-3 border-b pb-2">
                     <button
+                        type="button"
                         onClick={handleSelectAll}
                         className="flex items-center bg-green-500 text-white text-sm px-3 py-1 rounded hover:bg-green-600 transition duration-200"
                     >
@@ -89,6 +101,7 @@ const ModalRolPermisos = ({ roleId, onClose, refrescarRoles }) => {
                     </button>
 
                     <button
+                        type="button"
                         onClick={handleDeselectAll}
                         className="flex items-center bg-red-500 text-white text-sm px-3 py-1 rounded hover:bg-red-600 transition duration-200"
                     >
@@ -119,19 +132,20 @@ const ModalRolPermisos = ({ roleId, onClose, refrescarRoles }) => {
                     <button
                         onClick={handleSave}
                         type="button"
-                        className="inline-flex items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-cyan-900 px-4 py-2 font-semibold text-white shadow-sm hover:from-blue-800 hover:to-cyan-800 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                        className={`inline-flex items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-cyan-900 px-4 py-2 font-semibold text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-400 ${isSubmitting ? 'opacity-60 cursor-not-allowed' : 'hover:from-blue-800 hover:to-cyan-800'}`}
                     >
-                        Guardar
+                        {isSubmitting ? 'Guardando...' : 'Guardar'}
                     </button>
                     <button
                         onClick={onClose}
                         type="button"
-                        className="inline-flex items-center justify-center rounded-lg border border-red-200 bg-red-500 px-4 py-2 font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-200"
+                        className={`inline-flex items-center justify-center rounded-lg border border-red-200 bg-red-500 px-4 py-2 font-medium text-white focus:outline-none focus:ring-2 focus:ring-red-200 ${isSubmitting ? 'opacity-60 cursor-not-allowed' : 'hover:bg-red-600'}`}
                     >
                         Cerrar
                     </button>
                 </div>
                     </div>
+                    </fieldset>
                 </div>
             </div>
         </div>

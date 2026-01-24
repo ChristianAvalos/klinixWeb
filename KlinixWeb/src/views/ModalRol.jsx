@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 export default function ModalRol({ onClose, modo, rol = {}, refrescarRoles }) {
     const [nombre, setNombre] = useState(rol.name || '');
     const [errores, setErrores] = useState({});
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const nombreRef = useRef(null);
     // Obtener el token de autenticación
     const token = localStorage.getItem('AUTH_TOKEN');
@@ -33,7 +34,10 @@ export default function ModalRol({ onClose, modo, rol = {}, refrescarRoles }) {
     // Función para manejar la creación o edición del rol
     const handleSubmit = async (e) => {
         e.preventDefault(); // Prevenir el comportamiento por defecto del formulario
+        if (isSubmitting) return; // Evita doble click / doble submit
+
         setErrores({}); // Resetear errores antes de la validación
+        setIsSubmitting(true);
 
         try {
             const rolData = {
@@ -77,6 +81,8 @@ export default function ModalRol({ onClose, modo, rol = {}, refrescarRoles }) {
                 console.error('Error al guardar el rol', error);
                 toast.error('Error al guardar el rol'); // Mostrar mensaje de error genérico
             }
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -107,7 +113,8 @@ export default function ModalRol({ onClose, modo, rol = {}, refrescarRoles }) {
                     </button>
                 </div>
 
-                <form onSubmit={handleSubmit} className="px-6 pb-6 md:px-8 md:pb-8">
+                <form onSubmit={handleSubmit} className="px-6 pb-6 md:px-8 md:pb-8" aria-busy={isSubmitting}>
+                    <fieldset disabled={isSubmitting} className="contents">
                     <div className="mt-6">
                     {/* Campo para Nombre */}
                     <div className="mb-4">
@@ -129,17 +136,18 @@ export default function ModalRol({ onClose, modo, rol = {}, refrescarRoles }) {
                         <button
                             type="button"
                             onClick={onClose}
-                            className="inline-flex items-center justify-center rounded-lg border border-red-200 bg-red-500 px-4 py-2 font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-200"
+                            className={`inline-flex items-center justify-center rounded-lg border border-red-200 bg-red-500 px-4 py-2 font-medium text-white focus:outline-none focus:ring-2 focus:ring-red-200 ${isSubmitting ? 'opacity-60 cursor-not-allowed' : 'hover:bg-red-600'}`}
                         >
                             Cancelar
                         </button>
                         <button
                             type="submit"
-                            className="inline-flex items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-cyan-900 px-4 py-2 font-semibold text-white shadow-sm hover:from-blue-800 hover:to-cyan-800 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                            className={`inline-flex items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-cyan-900 px-4 py-2 font-semibold text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-400 ${isSubmitting ? 'opacity-60 cursor-not-allowed' : 'hover:from-blue-800 hover:to-cyan-800'}`}
                         >
-                            {modo === 'crear' ? 'Crear Rol' : 'Guardar Cambios'}
+                            {isSubmitting ? 'Guardando...' : (modo === 'crear' ? 'Crear Rol' : 'Guardar Cambios')}
                         </button>
                     </div>
+                    </fieldset>
                 </form>
             </div>
         </div>

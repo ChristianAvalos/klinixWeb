@@ -63,6 +63,8 @@ export default function ModalResource({ onClose, modo, resource = {}, refrescarR
 
     const nombreRef = useRef(null);
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const [errores, setErrores] = useState({});
     // Obtener el token de autenticación
     const token = localStorage.getItem('AUTH_TOKEN');
@@ -117,7 +119,10 @@ export default function ModalResource({ onClose, modo, resource = {}, refrescarR
     // Función para manejar la creación o edición de los consultorios
     const handleSubmit = async (e) => {
         e.preventDefault(); // Prevenir el comportamiento por defecto del formulario
+        if (isSubmitting) return; // Evita doble click / doble submit
+
         setErrores({}); // Resetear errores antes de la validación
+        setIsSubmitting(true);
 
         try {
             const userData = {
@@ -166,6 +171,8 @@ export default function ModalResource({ onClose, modo, resource = {}, refrescarR
                 console.error('Error al guardar el consultorio', error);
                 toast.error('Error al guardar el consultorio'); // Mostrar mensaje de error genérico
             }
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -195,7 +202,8 @@ export default function ModalResource({ onClose, modo, resource = {}, refrescarR
                     </button>
                 </div>
 
-                <form onSubmit={handleSubmit} className="px-6 pb-6 md:px-8 md:pb-8">
+                <form onSubmit={handleSubmit} className="px-6 pb-6 md:px-8 md:pb-8" aria-busy={isSubmitting}>
+                    <fieldset disabled={isSubmitting} className="contents">
                     <div className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-2">
                         {/* nombre de consultorio */}
                         <div>
@@ -327,17 +335,18 @@ export default function ModalResource({ onClose, modo, resource = {}, refrescarR
                         <button
                             type="button"
                             onClick={onClose}
-                            className="inline-flex items-center justify-center rounded-lg border border-red-200 bg-red-500 px-4 py-2 font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-200"
+                            className={`inline-flex items-center justify-center rounded-lg border border-red-200 bg-red-500 px-4 py-2 font-medium text-white focus:outline-none focus:ring-2 focus:ring-red-200 ${isSubmitting ? 'opacity-60 cursor-not-allowed' : 'hover:bg-red-600'}`}
                         >
                             Cancelar
                         </button>
                         <button
                             type="submit"
-                            className="inline-flex items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-cyan-900 px-4 py-2 font-semibold text-white shadow-sm hover:from-blue-800 hover:to-cyan-800 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                            className={`inline-flex items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-cyan-900 px-4 py-2 font-semibold text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-400 ${isSubmitting ? 'opacity-60 cursor-not-allowed' : 'hover:from-blue-800 hover:to-cyan-800'}`}
                         >
-                            {modo === 'crear' ? 'Crear consultorio' : 'Guardar cambios'}
+                            {isSubmitting ? 'Guardando...' : (modo === 'crear' ? 'Crear consultorio' : 'Guardar cambios')}
                         </button>
                     </div>
+                    </fieldset>
                 </form>
             </div>
         </div>

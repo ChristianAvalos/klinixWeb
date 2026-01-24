@@ -8,6 +8,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
     const [newPassword, setNewPassword] = useState('');
     const [repeatPassword, setRepeatPassword] = useState('');
     const [errores, setErrores] = useState({});
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const { logout} = useAuth({ middleware: 'auth' })
     // Obtener el token de autenticación
     const token = localStorage.getItem('AUTH_TOKEN');
@@ -15,13 +16,14 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
 
     const handleChangePassword =  async (e) => {
         e.preventDefault();
+        if (isSubmitting) return; // Evita doble click / doble submit
                 // Validar que las contraseñas coincidan
                 if (newPassword !== repeatPassword) {
                     setErrores({}); 
                     toast.warning('Las contraseñas no coinciden');
                     return;
                 }
-        
+        setIsSubmitting(true);
 
         try {       
             const data = {
@@ -58,7 +60,8 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
                 console.error('Ocurrió un error al cambiar la contraseña', error);
                 toast.error('Ocurrió un error al cambiar la contraseña');
             }
-            
+        } finally {
+            setIsSubmitting(false);
         }
 
         
@@ -88,7 +91,8 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
                         </button>
                     </div>
 
-                    <form onSubmit={handleChangePassword} className="px-6 pb-6 md:px-8 md:pb-8">
+                    <form onSubmit={handleChangePassword} className="px-6 pb-6 md:px-8 md:pb-8" aria-busy={isSubmitting}>
+                        <fieldset disabled={isSubmitting} className="contents">
                         <div className="mt-6">
                         <div className="mb-4">
                             <label className="block text-sm font-medium mb-1" htmlFor="currentPassword">Contraseña Actual</label>
@@ -131,17 +135,18 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
                             <button
                                 type="button"
                                 onClick={onClose}
-                                className="inline-flex items-center justify-center rounded-lg border border-red-200 bg-red-500 px-4 py-2 font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-200"
+                                className={`inline-flex items-center justify-center rounded-lg border border-red-200 bg-red-500 px-4 py-2 font-medium text-white focus:outline-none focus:ring-2 focus:ring-red-200 ${isSubmitting ? 'opacity-60 cursor-not-allowed' : 'hover:bg-red-600'}`}
                             >
                                 Cancelar
                             </button>
                             <button
                                 type="submit"
-                                className="inline-flex items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-cyan-900 px-4 py-2 font-semibold text-white shadow-sm hover:from-blue-800 hover:to-cyan-800 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                                className={`inline-flex items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-cyan-900 px-4 py-2 font-semibold text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-400 ${isSubmitting ? 'opacity-60 cursor-not-allowed' : 'hover:from-blue-800 hover:to-cyan-800'}`}
                             >
-                                Cambiar
+                                {isSubmitting ? 'Cambiando...' : 'Cambiar'}
                             </button>
                         </div>
+                        </fieldset>
                     </form>
                 </div>
             </div>

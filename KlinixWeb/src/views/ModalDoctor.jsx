@@ -14,6 +14,8 @@ export default function ModalDoctor({ onClose, modo, doctor = {}, refrescarDocto
     const [ciudades, setCiudades] = useState([]);
     const nombreRef = useRef(null);
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const [errores, setErrores] = useState({});
     // Obtener el token de autenticación
     const token = localStorage.getItem('AUTH_TOKEN');
@@ -64,7 +66,10 @@ export default function ModalDoctor({ onClose, modo, doctor = {}, refrescarDocto
     // Función para manejar la creación o edición de los doctores
     const handleSubmit = async (e) => {
         e.preventDefault(); // Prevenir el comportamiento por defecto del formulario
+        if (isSubmitting) return; // Evita doble click / doble submit
+
         setErrores({}); // Resetear errores antes de la validación
+        setIsSubmitting(true);
 
         try {
             const userData = {
@@ -114,6 +119,8 @@ export default function ModalDoctor({ onClose, modo, doctor = {}, refrescarDocto
                 console.error('Error al guardar al doctor', error);
                 toast.error('Error al guardar al doctor'); // Mostrar mensaje de error genérico
             }
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -143,12 +150,13 @@ export default function ModalDoctor({ onClose, modo, doctor = {}, refrescarDocto
                     </button>
                 </div>
 
-                <form onSubmit={handleSubmit} className="px-6 pb-6 md:px-8 md:pb-8">
+                <form onSubmit={handleSubmit} className="px-6 pb-6 md:px-8 md:pb-8" aria-busy={isSubmitting}>
                     <div className="mt-6 grid grid-cols-2 gap-4">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Nombre(s)</label>
                             <input type="text" 
                             ref={nombreRef}
+                            disabled={isSubmitting}
                             className={`w-full px-3 py-2 border ${errores.FirstName ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
                             value={nombre} 
                             onChange={(e) => setNombre(e.target.value)} />
@@ -157,6 +165,7 @@ export default function ModalDoctor({ onClose, modo, doctor = {}, refrescarDocto
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Apellido(s)</label>
                             <input type="text" 
+                            disabled={isSubmitting}
                             className={`w-full px-3 py-2 border ${errores.LastName ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
                             value={apellido} 
                             onChange={(e) => setApellido(e.target.value)} />
@@ -165,6 +174,7 @@ export default function ModalDoctor({ onClose, modo, doctor = {}, refrescarDocto
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Dirección</label>
                             <input type="text"
+                            disabled={isSubmitting}
                             className={`w-full px-3 py-2 border ${errores.Address ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`} 
                             value={direccion} 
                             onChange={(e) => setDireccion(e.target.value)} />
@@ -173,6 +183,7 @@ export default function ModalDoctor({ onClose, modo, doctor = {}, refrescarDocto
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
                             <input type="text" 
+                            disabled={isSubmitting}
                             className={`w-full px-3 py-2 border ${errores.PhoneNumber ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
                             value={telefono} 
                             onChange={(e) => setTelefono(e.target.value)} />
@@ -182,9 +193,10 @@ export default function ModalDoctor({ onClose, modo, doctor = {}, refrescarDocto
                             <label className="block text-sm font-medium text-gray-700 mb-1">Celular</label>
                             <div className="flex items-center gap-2">
                                 <input type="text" 
+                                disabled={isSubmitting}
                                 className={`px-3 py-2 border ${errores.CellPhoneNumber ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                 value={celular} onChange={(e) => setCelular(e.target.value)} />
-                                <input type="checkbox" id="whatsapp" className="h-5 w-5" checked={soportaWhatsapp} onChange={(e) => setSoportaWhatsapp(e.target.checked)} />
+                                <input type="checkbox" id="whatsapp" className="h-5 w-5" checked={soportaWhatsapp} disabled={isSubmitting} onChange={(e) => setSoportaWhatsapp(e.target.checked)} />
                                 <label htmlFor="whatsapp" className="text-sm text-gray-700">¿Soporta WhatsApp?</label>
                             </div>
                             {errores.CellPhoneNumber && <p className="text-red-500 text-sm">{errores.CellPhoneNumber[0]}</p>}
@@ -193,6 +205,7 @@ export default function ModalDoctor({ onClose, modo, doctor = {}, refrescarDocto
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Correo</label>
                             <input type="email" 
+                            disabled={isSubmitting}
                             className={`w-full px-3 py-2 border ${errores.email ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`} 
                             value={correo} 
                             onChange={(e) => setCorreo(e.target.value)} />
@@ -201,6 +214,7 @@ export default function ModalDoctor({ onClose, modo, doctor = {}, refrescarDocto
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Ciudad</label>
                             <select 
+                            disabled={isSubmitting}
                             className={`w-full px-3 py-2 border ${errores.City_Id ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`} 
                             value={ciudadSeleccionado} 
                             onChange={(e) => setCiudadSeleccionado(e.target.value)}>
@@ -216,15 +230,17 @@ export default function ModalDoctor({ onClose, modo, doctor = {}, refrescarDocto
                         <button
                             type="button"
                             onClick={onClose}
-                            className="inline-flex items-center justify-center rounded-lg border border-red-200 bg-red-500 px-4 py-2 font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-200"
+                            disabled={isSubmitting}
+                            className={`inline-flex items-center justify-center rounded-lg border border-red-200 bg-red-500 px-4 py-2 font-medium text-white focus:outline-none focus:ring-2 focus:ring-red-200 ${isSubmitting ? 'opacity-60 cursor-not-allowed' : 'hover:bg-red-600'}`}
                         >
                             Cancelar
                         </button>
                         <button
                             type="submit"
-                            className="inline-flex items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-cyan-900 px-4 py-2 font-semibold text-white shadow-sm hover:from-blue-800 hover:to-cyan-800 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                            disabled={isSubmitting}
+                            className={`inline-flex items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-cyan-900 px-4 py-2 font-semibold text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-400 ${isSubmitting ? 'opacity-60 cursor-not-allowed' : 'hover:from-blue-800 hover:to-cyan-800'}`}
                         >
-                            {modo === 'crear' ? 'Crear Doctor' : 'Guardar Cambios'}
+                            {isSubmitting ? 'Guardando...' : (modo === 'crear' ? 'Crear Doctor' : 'Guardar Cambios')}
                         </button>
                     </div>
                 </form>

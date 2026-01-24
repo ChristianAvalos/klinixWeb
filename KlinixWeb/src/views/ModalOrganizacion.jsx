@@ -17,6 +17,7 @@ export default function ModalOrganizacion({ onClose, modo, refrescarOrganizacion
     const [Paises, setPaises] = useState([]);
     const [Ciudades, setCiudades] = useState([]);
     const [errores, setErrores] = useState({});
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [Imagen, setImagen] = useState(null);
     const baseURL = clienteAxios.defaults.baseURL;
     const [ImagenURL, setImagenURL] = useState("");
@@ -102,7 +103,10 @@ export default function ModalOrganizacion({ onClose, modo, refrescarOrganizacion
     // Función para manejar la creación o edición la organizacion 
     const handleSubmit = async (e) => {
         e.preventDefault(); // Prevenir el comportamiento por defecto del formulario
+        if (isSubmitting) return; // Evita doble click / doble submit
+
         setErrores({}); // Resetear errores antes de la validación
+        setIsSubmitting(true);
 
         const formData = new FormData();
         formData.append("name", RazonSocial);
@@ -183,6 +187,8 @@ export default function ModalOrganizacion({ onClose, modo, refrescarOrganizacion
                 console.error('Error al guardar la organizacion', error);
                 toast.error('Error al guardar la organizacion'); // Mostrar mensaje de error genérico
             }
+        } finally {
+            setIsSubmitting(false);
         }
 
 
@@ -215,7 +221,8 @@ export default function ModalOrganizacion({ onClose, modo, refrescarOrganizacion
                     {modo === "crear" ? "Crear Organización" : "Editar Organización"}
                 </h2>
 
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} aria-busy={isSubmitting}>
+                    <fieldset disabled={isSubmitting} className="contents">
                     {/* Estructura del formulario */}
                     <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 max-h-[80vh] overflow-y-auto">
                         {/* Campos del formulario */}
@@ -407,18 +414,20 @@ export default function ModalOrganizacion({ onClose, modo, refrescarOrganizacion
                     {/* Botones */}
                     <div className="flex justify-end space-x-3 mt-4">
                         <button
+                            type="button"
                             onClick={onClose}
-                            className="bg-red-500 text-white rounded px-4 py-2 hover:bg-red-600 transition"
+                            className={`bg-red-500 text-white rounded px-4 py-2 transition ${isSubmitting ? 'opacity-60 cursor-not-allowed' : 'hover:bg-red-600'}`}
                         >
                             Cancelar
                         </button>
                         <button
                             type="submit"
-                            className="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600 transition"
+                            className={`bg-blue-500 text-white rounded px-4 py-2 transition ${isSubmitting ? 'opacity-60 cursor-not-allowed' : 'hover:bg-blue-600'}`}
                         >
-                            {modo === "crear" ? "Crear" : "Guardar"}
+                            {isSubmitting ? 'Guardando...' : (modo === "crear" ? "Crear" : "Guardar")}
                         </button>
                     </div>
+                    </fieldset>
                 </form>
             </div>
         </div>
