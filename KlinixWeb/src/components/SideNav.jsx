@@ -201,7 +201,7 @@ export default function SideNav() {
                     {hasPermission('Agenda') && (
                       <li className="nav-item">
                         <Link to="/agenda" className="nav-link flex items-center gap-2 text-white font-bold rounded-md hover:bg-cyan-800/30 transition-colors">
-                          <img src="/img/Icon/pharmacy.png" alt="Organigrama" className="w-5 h-5 mr-2" />
+                          <img src="/img/Icon/calendar2.png" alt="Organigrama" className="w-5 h-5 mr-2" />
                           <p className="ml-2 m-0">Agendamientos</p>
                         </Link>
                       </li>
