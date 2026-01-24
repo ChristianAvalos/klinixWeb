@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Ajustes para react-big-calendar dentro de AdminLTE/Tailwind */
+.rbc-event {
+	min-height: 18px;
+	padding: 2px 6px;
+	border-radius: 6px;
+}
+
+/* Línea horizontal = indicador de hora actual */
+.rbc-current-time-indicator {
+	background-color: #ef4444; /* rojo */
+	height: 2px;
+}
+
+.rbc-toolbar button,
+.rbc-btn-group button {
+	cursor: pointer;
+}

@@ -11,7 +11,7 @@ class UpdateAppointmentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,17 @@ class UpdateAppointmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'EventType' => ['nullable', 'integer'],
+            'Start' => ['required', 'date'],
+            'Finish' => ['required', 'date', 'after:Start'],
+            'Caption' => ['nullable', 'string', 'max:255'],
+            'Id_Patient' => ['required', 'integer', 'exists:peoples,id'],
+            'Id_Doctor' => ['required', 'integer', 'exists:doctors,id'],
+            'Id_Resource' => ['nullable', 'exists:resources,id'],
+            'Location' => ['nullable', 'string', 'max:255'],
+            'MessageText' => ['nullable', 'string', 'max:255'],
+            'State' => ['nullable', 'integer'],
+            'LabelColor' => ['nullable', 'integer'],
         ];
     }
 }

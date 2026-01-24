@@ -15,7 +15,7 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\DepartamentoController;
 use App\Http\Controllers\OrganizacionController;
 use App\Http\Controllers\MaritalStatusController;
-
+use App\Http\Controllers\AppointmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -100,6 +100,8 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::post('/crearconsultorios',[ResourceController::class,'create']);
     Route::put('/editarconsultorios/{id}',[ResourceController::class,'update']);
     Route::delete('/consultorios/{id}', [ResourceController::class, 'DeleteConsultorio']);
+
+    Route::apiResource('appointments', AppointmentController::class);
 
 });
 
