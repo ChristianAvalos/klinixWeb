@@ -43,6 +43,7 @@ class AuthController extends Controller
         $user = User::create(
             [
                 'name' => $data['name'],
+                'nameUser' => $data['nameUser'],
                 'email' => $data['email'],
                 'password' => Hash::make($data['password']),
                 'rol_id' => 2, //por defecto se crea como usuario
@@ -69,6 +70,7 @@ class AuthController extends Controller
         $user = User::create(
             [
                 'name' => $data['name'],
+                'nameUser' => $data['nameUser'],
                 'email' => $data['email'],
                 'password' => Hash::make('123456'),
                 'rol_id' => $data['rol_id'],
@@ -98,6 +100,7 @@ class AuthController extends Controller
 
         // Actualizar los datos del usuario con los nuevos valores
         $usuario->name = $data['name'];
+        $usuario->nameUser = $data['nameUser'];
         $usuario->email = $data['email'];
         $usuario->rol_id = $data['rol_id'];
         $usuario->id_organizacion = $data['id_organizacion'];
@@ -123,7 +126,7 @@ class AuthController extends Controller
         //Revisar el password 
         if (!Auth::attempt($data)) {
             return response([
-                'errors' => ['El correo o la contraseña no son correctas']
+                'errors' => ['El nombre de usuario o la contraseña no son correctas']
             ], 422);
         }
 

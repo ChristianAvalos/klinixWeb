@@ -227,6 +227,7 @@ export default function Usuarios() {
                                     <thead className="[&>tr>th]:sticky [&>tr>th]:top-0 [&>tr>th]:z-30 [&>tr>th]:bg-gradient-to-br [&>tr>th]:from-blue-900 [&>tr>th]:to-cyan-900 [&>tr>th]:text-white">
                                         <tr className="font-bold rounded text-center">
                                             <th>ID</th>
+                                            <th>Nombre</th>
                                             <th>Nombre del Usuario</th>
                                             <th>Correo</th>
                                             <th>Rol</th>
@@ -244,6 +245,11 @@ export default function Usuarios() {
                                                 <td>
                                                     <span className="block max-w-[220px] truncate" title={usuario.name || ''}>
                                                         {usuario.name}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span className="block max-w-[220px] truncate" title={usuario.nameUser || ''}>
+                                                        {usuario.nameUser}
                                                     </span>
                                                 </td>
                                                 <td>

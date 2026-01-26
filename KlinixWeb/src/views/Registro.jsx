@@ -7,7 +7,7 @@ import { useAuth } from "../hooks/useAuth";
 export default function Registro() {
 
     const nameRef = createRef();
-    const emailRef = createRef();
+    const nameUserRef = createRef();
     const passwordRef = createRef();
     const passwordConfirmationRef = createRef();
 
@@ -19,7 +19,7 @@ export default function Registro() {
 
         const datos = {
             name: nameRef.current.value,
-            email: emailRef.current.value,
+            nameUser: nameUserRef.current.value,
             password: passwordRef.current.value, 
             password_confirmation: passwordConfirmationRef.current.value
 
@@ -52,6 +52,17 @@ export default function Registro() {
                             name="name"
                             placeholder="Tu nombre"
                             ref={nameRef}/>
+                </div>
+                <div className="mb-4">
+                    <label className="text-slate-800" htmlFor="nameUser">
+                        Usuario nombre:
+                    </label>
+                    <input type="text"
+                            id="nameUser"
+                            className="mt-2 w-full p-3 bg-gray-50"
+                            name="nameUser"
+                            placeholder="Tu usuario"
+                            ref={nameUserRef}/>
                 </div>
                 <div className="mb-4">
                     <label className="text-slate-800" htmlFor="email">

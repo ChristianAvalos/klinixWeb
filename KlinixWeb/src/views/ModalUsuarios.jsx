@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 
 export default function ModalUsuarios({ onClose, modo, usuario = {}, refrescarUsuarios, ocultarRolesYOrganizaciones }) {
     const [nombre, setNombre] = useState(usuario.name || '');
+    const [nombreUsuario,setNombreUsuario] = useState(usuario.nameUser || '');
     const [correo, setCorreo] = useState(usuario.email || '');
     const [rolSeleccionado, setRolSeleccionado] = useState(usuario.rol_id || '');
     const [roles, setRoles] = useState([]);
@@ -56,6 +57,7 @@ export default function ModalUsuarios({ onClose, modo, usuario = {}, refrescarUs
     useEffect(() => {
         if (modo === 'editar') {
             setNombre(usuario.name || '');
+            setNombreUsuario(usuario.nameUser || '');
             setCorreo(usuario.email || '');
             setRolSeleccionado(usuario.rol_id || '');
             setorganizacionSeleccionada(usuario.id_organizacion || '');
@@ -73,6 +75,7 @@ export default function ModalUsuarios({ onClose, modo, usuario = {}, refrescarUs
         try {
             const userData = {
                 name: nombre,
+                nameUser: nombreUsuario,
                 email: correo,
                 rol_id: rolSeleccionado,
                 id_organizacion: organizacionSeleccionada
@@ -166,6 +169,22 @@ export default function ModalUsuarios({ onClose, modo, usuario = {}, refrescarUs
                         />
                         {errores.name && <p className="text-red-500 text-sm">{errores.name[0]}</p>}
                     </div>
+
+                    {/* Campo para Nombre de usuario*/}
+                    {/* Combo para seleccionar Rol */}
+                    {!ocultarRolesYOrganizaciones && (
+                    <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Nombre de usuario</label>
+                        <input
+                            type="text"
+                            className={`w-full px-3 py-2 border ${errores.nameUser ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                            placeholder="Introduce el nombre de usuario"
+                            value={nombreUsuario}
+                            onChange={(e) => setNombreUsuario(e.target.value)}
+                        />
+                        {errores.nameUser && <p className="text-red-500 text-sm">{errores.nameUser[0]}</p>}
+                    </div>
+                    )}
 
                     {/* Campo para Correo */}
                     <div className="mb-4">

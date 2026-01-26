@@ -23,6 +23,7 @@ class CreateUserRequest extends FormRequest
     {
         return [
             'name' => ['required','string'],
+            'nameUser' => ['required','string'],
             'email' => ['required','email','unique:users,email'],
             'rol_id' => ['required', 'exists:roles,id'],
             'id_organizacion' => ['required', 'exists:organizacion,id']
@@ -32,6 +33,8 @@ class CreateUserRequest extends FormRequest
     {
         return [
             'name' => 'El nombre es obligatorio',
+            'name.required' => 'El nombre es obligatorio',
+            'nameUser.required' => 'El nombre de usuario es obligatorio',
             'email.required' => 'El correo es obligatorio',
             'email.email' => 'El correo no es valido',
             'email.unique' => 'El correo ingresado ya existe',

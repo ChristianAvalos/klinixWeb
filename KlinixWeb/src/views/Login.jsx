@@ -5,7 +5,7 @@ import { useAuth } from "../hooks/useAuth";
 import Spinner from "../components/Spinner";
 
 export default function Login() {
-    const emailRef = createRef();
+    const nameUserRef = createRef();
     const passwordRef = createRef();
     const [errores, setErrores] = useState([]);
     const [cargando, setCargando] = useState(false);
@@ -19,7 +19,7 @@ export default function Login() {
     const handleSubmit = async e => {
         e.preventDefault();
         const datos = {
-            email: emailRef.current.value,
+            nameUser: nameUserRef.current.value,
             password: passwordRef.current.value,
         }
         setErrores([]);
@@ -46,7 +46,7 @@ export default function Login() {
                 <form onSubmit={handleSubmit} noValidate>
                     {errores && errores.map((error, i) => <Alerta key={i}>{error}</Alerta>)}
                     <div className="mb-4">
-                        <label className="sr-only" htmlFor="email">Email</label>
+                        <label className="sr-only" htmlFor="nameUser">Usuario</label>
                         <div className="relative">
                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
                                 {/* Heroicon: Envelope */}
@@ -55,12 +55,12 @@ export default function Login() {
                                 </svg>
                             </span>
                             <input
-                                type="email"
-                                id="email"
+                                type="text"
+                                id="nameUser"
                                 className="pl-10 pr-3 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-gray-50"
-                                name="email"
-                                placeholder="Email"
-                                ref={emailRef}
+                                name="nameUser"
+                                placeholder="Usuario"
+                                ref={nameUserRef}
                             />
                         </div>
                     </div>
@@ -90,11 +90,11 @@ export default function Login() {
                     />
                     {cargando && errores.length === 0 && <Spinner />}
                 </form>
-                <nav className="mt-6 text-center">
+                {/* <nav className="mt-6 text-center">
                     <Link to="/auth/registro" className="text-blue-600 hover:underline">
                         ¿No tienes cuenta? <span className="font-semibold">Crear una</span>
                     </Link>
-                </nav>
+                </nav> */}
             </div>
         </div>
     )

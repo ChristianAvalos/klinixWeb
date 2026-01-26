@@ -17,6 +17,7 @@ class UserAdministrador extends Seeder
     {
         DB::table('users')->insert([
             'name' => 'Administrador',
+            'nameUser' => 'admin',
             'email' => 'admin@admin.com.py',
             'password' => Hash::make('#admin#'),
             'created_at' => Carbon::now(),
