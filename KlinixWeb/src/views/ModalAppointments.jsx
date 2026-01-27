@@ -140,66 +140,80 @@ export default function AppointmentModal({
 		if (isOpen && captionRef.current) captionRef.current.focus()
 	}, [isOpen])
 
-	const handleSubmit = async (e) => {
-		e.preventDefault()
-		if (isSubmitting) return
+	 const handleSubmit = async (e) => {
+		 e.preventDefault();
+		 if (isSubmitting) return;
 
-		setIsSubmitting(true)
-		setErrores({})
+		 setIsSubmitting(true);
+		 setErrores({});
 
-		try {
-			const startDt = fromDatetimeLocalValue(startValue)
-			const endDt = fromDatetimeLocalValue(endValue)
-			if (!startDt || !endDt) {
-				toast.error('Debes seleccionar fecha/hora de inicio y fin.')
-				return
-			}
-			if (endDt <= startDt) {
-				toast.error('La hora fin debe ser mayor que la hora inicio.')
-				return
-			}
+		 // Validación manual
+		 const nuevosErrores = {};
+		 if (!patientId) {
+			 nuevosErrores.Id_Patient = ['Selecciona un paciente.'];
+		 }
+		 if (!doctorId) {
+			 nuevosErrores.Id_Doctor = ['Selecciona un doctor.'];
+		 }
+		 if (!resourceId) {
+			 nuevosErrores.Id_Resource = ['Selecciona un consultorio.'];
+		 }
+		 const startDt = fromDatetimeLocalValue(startValue);
+		 const endDt = fromDatetimeLocalValue(endValue);
+		 if (!startDt) {
+			 nuevosErrores.Start = ['Selecciona la fecha y hora de inicio.'];
+		 }
+		 if (!endDt) {
+			 nuevosErrores.Finish = ['Selecciona la fecha y hora de fin.'];
+		 }
+		 if (startDt && endDt && endDt <= startDt) {
+			 nuevosErrores.Finish = ['La hora fin debe ser mayor que la hora inicio.'];
+		 }
 
-			const payload = {
-				Caption: caption,
-				Id_Patient: patientId ? Number(patientId) : null,
-				Id_Doctor: doctorId ? Number(doctorId) : null,
-				Id_Resource: resourceId ? String(resourceId) : null,
-				// Enviar sin zona horaria (evita desfase UTC)
-				Start: toApiDateTime(startValue),
-				Finish: toApiDateTime(endValue),
-			}
+		 if (Object.keys(nuevosErrores).length > 0) {
+			 setErrores(nuevosErrores);
+			 setIsSubmitting(false);
+			 toast.error('Revisa los campos del formulario.');
+			 return;
+		 }
 
-			if (!payload.Id_Patient || !payload.Id_Doctor) {
-				toast.error('Selecciona paciente y doctor.')
-				return
-			}
+		 try {
+			 const payload = {
+				 Caption: caption,
+				 Id_Patient: patientId ? Number(patientId) : null,
+				 Id_Doctor: doctorId ? Number(doctorId) : null,
+				 Id_Resource: resourceId ? String(resourceId) : null,
+				 // Enviar sin zona horaria (evita desfase UTC)
+				 Start: toApiDateTime(startValue),
+				 Finish: toApiDateTime(endValue),
+			 };
 
-			if (mode === 'crear') {
-				const { data } = await clienteAxios.post('api/appointments', payload, {
-					headers: { Authorization: `Bearer ${token}` },
-				})
-				toast.success('Cita creada correctamente.')
-				onSaved?.(data)
-			} else {
-				const { data } = await clienteAxios.put(`api/appointments/${initial?.id}`, payload, {
-					headers: { Authorization: `Bearer ${token}` },
-				})
-				toast.success('Cita actualizada correctamente.')
-				onSaved?.(data)
-			}
-			onClose()
-		} catch (error) {
-			if (error?.response?.status === 422) {
-				setErrores(error.response.data?.errors ?? {})
-				toast.error('Revisa los campos del formulario.')
-			} else {
-				console.error('Error al guardar la cita', error)
-				toast.error('Error al guardar la cita.')
-			}
-		} finally {
-			setIsSubmitting(false)
-		}
-	}
+			 if (mode === 'crear') {
+				 const { data } = await clienteAxios.post('api/appointments', payload, {
+					 headers: { Authorization: `Bearer ${token}` },
+				 });
+				 toast.success('Cita creada correctamente.');
+				 onSaved?.(data);
+			 } else {
+				 const { data } = await clienteAxios.put(`api/appointments/${initial?.id}`, payload, {
+					 headers: { Authorization: `Bearer ${token}` },
+				 });
+				 toast.success('Cita actualizada correctamente.');
+				 onSaved?.(data);
+			 }
+			 onClose();
+		 } catch (error) {
+			 if (error?.response?.status === 422) {
+				 setErrores(error.response.data?.errors ?? {});
+				 toast.error('Revisa los campos del formulario.');
+			 } else {
+				 console.error('Error al guardar la cita', error);
+				 toast.error('Error al guardar la cita.');
+			 }
+		 } finally {
+			 setIsSubmitting(false);
+		 }
+	 };
 
 	 const handleDelete = () => {
 		 setAccionConfirmadaModal('delete');
@@ -297,17 +311,16 @@ export default function AppointmentModal({
 									 <div className="text-xs text-gray-500 mb-1">Escribe mínimo 2 letras para buscar.</div>
 									 {patientLoading && <div className="text-xs text-gray-500 mb-1">Buscando…</div>}
 									 <select
-										 className={`w-full h-11 px-3 border ${errores.Id_Patient ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
-										 value={patientId}
-										 onChange={(e) => setPatientId(e.target.value)}
-										 required
+									   className={`w-full h-11 px-3 border ${errores.Id_Patient ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
+									   value={patientId}
+									   onChange={(e) => setPatientId(e.target.value)}
 									 >
-										 <option value="">Seleccione</option>
-										 {patientResults.map((p) => (
-											 <option key={p.id} value={p.id}>
-												 {(p.LastName ?? '').trim()} {(p.FirstName ?? '').trim()} {p.DocumentNo ? `- ${p.DocumentNo}` : ''}
-											 </option>
-										 ))}
+									   <option value="">Seleccione</option>
+									   {patientResults.map((p) => (
+									     <option key={p.id} value={p.id}>
+									       {(p.LastName ?? '').trim()} {(p.FirstName ?? '').trim()} {p.DocumentNo ? `- ${p.DocumentNo}` : ''}
+									     </option>
+									   ))}
 									 </select>
 									 {errores.Id_Patient && <p className="text-red-500 text-sm">{errores.Id_Patient[0]}</p>}
 								 </div>
@@ -315,17 +328,16 @@ export default function AppointmentModal({
 								 <div>
 									 <label className="block text-sm font-medium text-gray-700 mb-1">Doctor</label>
 									 <select
-										 className={`w-full h-11 px-3 border ${errores.Id_Doctor ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
-										 value={doctorId}
-										 onChange={(e) => setDoctorId(e.target.value)}
-										 required
+									   className={`w-full h-11 px-3 border ${errores.Id_Doctor ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
+									   value={doctorId}
+									   onChange={(e) => setDoctorId(e.target.value)}
 									 >
-										 <option value="">Seleccione</option>
-										 {doctors.map((d) => (
-											 <option key={d.id} value={d.id}>
-												 {(d.LastName ?? '').trim()} {(d.FirstName ?? '').trim()}
-											 </option>
-										 ))}
+									   <option value="">Seleccione</option>
+									   {doctors.map((d) => (
+									     <option key={d.id} value={d.id}>
+									       {(d.LastName ?? '').trim()} {(d.FirstName ?? '').trim()}
+									     </option>
+									   ))}
 									 </select>
 									 {errores.Id_Doctor && <p className="text-red-500 text-sm">{errores.Id_Doctor[0]}</p>}
 								 </div>
@@ -337,7 +349,7 @@ export default function AppointmentModal({
 										 value={resourceId}
 										 onChange={(e) => setResourceId(e.target.value)}
 									 >
-										 <option value="">Sin consultorio</option>
+										 <option value="">Seleccione un consultorio</option>
 										 {resources.map((r) => (
 											 <option key={r.id} value={r.id}>
 												 {r.ResourceNumber ? `#${r.ResourceNumber} - ` : ''}{r.ResourceName}
