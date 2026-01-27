@@ -50,7 +50,6 @@ INSERT INTO public.patients
   "Id_Department",
   "MRTDs",
   "PatientNo",
-  "Id_Type_People",
 
 
   "UrevUsuario",
@@ -92,7 +91,6 @@ SELECT
   1,
   NULL,
   NULL,
-  2,
   'Admin - Migracion'::varchar(255) AS "UrevUsuario",
   now()::timestamp(0) AS "UrevFechaHora"
 from "patient" p;

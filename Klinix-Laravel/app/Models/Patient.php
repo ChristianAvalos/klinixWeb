@@ -5,7 +5,6 @@ namespace App\Models;
 use Carbon\Carbon;
 use App\Models\Sexes;
 use App\Models\Ciudad;
-use App\Models\TypePeople;
 use App\Models\Departamento;
 use App\Models\MaritalStatus;
 use Illuminate\Database\Eloquent\Model;
@@ -51,7 +50,6 @@ class Patient extends Model
         'Id_Department',
         'MRTDs',
         'PatientNo',
-        'Id_Type_People',
         'UrevUsuario',
         'UrevFechaHora'
     ];
@@ -72,12 +70,6 @@ class Patient extends Model
         public function ciudad()
         {
             return $this->belongsTo(Ciudad::class, 'City_Id');
-        }
-
-        //Relacion con tipo persona
-        public function typePeople()
-        {
-            return $this->belongsTo(TypePeople::class, 'Id_Type_People');
         }
 
         //relacion con departamentos 

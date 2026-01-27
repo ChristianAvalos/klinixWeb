@@ -162,15 +162,10 @@ return new class extends Migration
                 $column->collation('Modern_Spanish_CI_AS');
             }
 
-            $column = $table->unsignedBigInteger('Id_Type_People');
-            if ($isSqlsrv) {
-                $column->collation('Modern_Spanish_CI_AS');
-            }
 
             $table->string('UrevUsuario')->nullable(); 
             $table->dateTime('UrevFechaHora')->nullable();
-
-            $table->foreign('Id_Type_People')->references('id')->on('type_people');
+            
             $table->foreign('Id_Department')->references('id')->on('departamento');
             $table->foreign('Id_Sex')->references('id')->on('sexes');
         });

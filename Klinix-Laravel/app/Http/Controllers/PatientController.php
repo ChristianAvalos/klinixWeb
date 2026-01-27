@@ -20,13 +20,9 @@ class PatientController extends Controller
         $search = $request->input('search');
         $searchNormalized = is_string($search) ? preg_replace('/\s+/', ' ', trim($search)) : null;
         $searchTerms = $searchNormalized ? preg_split('/\s+/', $searchNormalized, -1, PREG_SPLIT_NO_EMPTY) : [];
-        $idTypePeople = $request->input('id_type_people');
         $likeOperator = DB::connection()->getDriverName() === 'pgsql' ? 'ilike' : 'like';
 
         $baseQuery = Patient::with(['ciudad','sexes','maritalStatus','departamento'])
-            ->when($idTypePeople, function ($query, $idTypePeople) {
-                return $query->where('Id_Type_People', $idTypePeople);
-            })
             ->orderByDesc('id');
 
         if ($request->query('all')) {
@@ -54,18 +50,13 @@ class PatientController extends Controller
     return response()->json($pacientes);
     }
 
-    public function DeletePersona($id)
-    {
-        $persona = Patient::findOrFail($id);
-        $persona->delete();
-        return response()->json(['message' => 'Persona eliminada correctamente.'], 200);
-    }
-
-    // Alias por compatibilidad (si alguna vista antigua lo llama)
     public function DeletePaciente($id)
     {
-        return $this->DeletePersona($id);
+        $paciente = Patient::findOrFail($id);
+        $paciente->delete();
+        return response()->json(['message' => 'Paciente eliminado correctamente.'], 200);
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -109,7 +100,6 @@ class PatientController extends Controller
             'DeathPlace' => $data['DeathPlace'] ?? null,
             'DeathCertificateNumber' => $data['DeathCertificateNumber'] ?? null,
 
-            'Id_Type_People' => $data['Id_Type_People'],
 
             'UrevUsuario' => 'Registrado - ' . ($usuarioActual ? $usuarioActual->name : 'Desconocido'),
             'UrevFechaHora' => Carbon::now(),
@@ -187,7 +177,6 @@ class PatientController extends Controller
             'DeathPlace' => $data['DeathPlace'] ?? null,
             'DeathCertificateNumber' => $data['DeathCertificateNumber'] ?? null,
 
-            'Id_Type_People' => $data['Id_Type_People'],
 
             'UrevUsuario' => 'Actualizado - ' . ($usuarioActual ? $usuarioActual->name : 'Desconocido'),
             'UrevFechaHora' => Carbon::now(),
