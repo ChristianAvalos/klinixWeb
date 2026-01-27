@@ -5,7 +5,7 @@ import { usePermisos } from "../context/PermisosContext";
 export default function SideNav() {
 
 
-  const { permissions, hasPermission } = usePermisos();
+  const { permissions, hasPermission, loading } = usePermisos();
 
   // Estado para el término de búsqueda y los ítems del menú
   const [searchTerm, setSearchTerm] = useState('');
@@ -39,6 +39,13 @@ export default function SideNav() {
         const newItems = items.filter(item => !prevItems.some(prev => prev.text === item.text));
         return [...prevItems, ...newItems];
       });
+        if (loading) {
+          return (
+            <div className="sidebar bg-gradient-to-br from-blue-900 to-cyan-900 w-64 min-h-screen fixed !z-[1] shadow-xl border-r border-cyan-800/40 overflow-y-auto flex items-center justify-center">
+              <span className="text-white font-bold">Cargando menú...</span>
+            </div>
+          );
+        }
     });
 
     // Observar cambios en el contenedor principal de la barra lateral
