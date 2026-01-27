@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 import { useEffect, useState } from 'react';
-import { obtenerUsuarios, obtenerRoles, obtenerDoctores,obtenerPacientes,obtenerConsultorios,obtenerVisitas } from '../helpers/HelpersUsuarios';
+import { obtenerContadoresDashboard } from '../helpers/HelpersUsuarios';
 import ModalUsuarios from '../views/ModalUsuarios';
 import ModalRol from '../views/ModalRol';
 
@@ -13,22 +13,13 @@ export default function Home() {
   //para los tipos de vistas 
   const [isModalVista, setModalVista] = useState('');
 
-  //Cantidad de usuarios registrados
+
+  // Estados para los contadores
   const [cantidadUsuarios, setCantidadUsuarios] = useState(0);
-
-  //Cantidad de doctores registrados
   const [cantidadDoctores, setCantidadDoctores] = useState(0);
-
-  //Cantidad de consultorios registrados 
   const [cantidadConsultorios, setCantidadConsultorios] = useState(0);
-
-  //Cantidad de pacientes registrados
   const [cantidadPacientes, setCantidadPacientes] = useState(0);
-
-  //Cantidad de visitas registrados
   const [cantidadVisitas, setCantidadVisitas] = useState(0);
-
-  //Cantidad de roles registrados
   const [cantidadRoles, setCantidadRoles] = useState(0);
 
   //para abrir el modal
@@ -49,88 +40,26 @@ export default function Home() {
     setModalOpen(false);
   };
 
-  //obtener la cantidad de usuarios registrados
-  const cantidadRegistrados = async () => {
+
+
+  // Cargar todos los contadores desde el endpoint único
+  const cargarContadores = async () => {
     try {
-      const usuarios = await obtenerUsuarios();
-      setCantidadUsuarios(usuarios.usuarios.total);
+      const data = await obtenerContadoresDashboard();
+      setCantidadUsuarios(data.usuarios || 0);
+      setCantidadRoles(data.roles || 0);
+      setCantidadDoctores(data.doctores || 0);
+      setCantidadConsultorios(data.consultorios || 0);
+      setCantidadPacientes(data.pacientes || 0);
+      setCantidadVisitas(data.visitas || 0);
     } catch (error) {
-      console.error('Error al cargar los usuarios:', error);
+      console.error('Error al cargar los contadores:', error);
     }
   };
 
   useEffect(() => {
-
-    cantidadRegistrados();
+    cargarContadores();
   }, []);
-
-  //obtener la cantidad de roles registrados
-  const cantidadRolesRegistrados = async () => {
-    try {
-      const roles = await obtenerRoles();
-      setCantidadRoles(roles.total);
-    } catch (error) {
-      console.error('Error al cargar los roles:', error);
-    }
-  };
-
-  useEffect(() => {
-
-    cantidadRolesRegistrados();
-  }, []);
-
-  //obtener la cantidad de doctores registrados
-  const cantidadDoctoresRegistrados = async () => {
-    try {
-      const doctores = await obtenerDoctores();
-      setCantidadDoctores(doctores.total);
-    } catch (error) {
-      console.error('Error al cargar los doctores:', error);
-    }
-  };
-
-  useEffect(() => {
-
-    cantidadDoctoresRegistrados();
-  }, []);
-
-  //cantidad de consultorios registrados 
-  const cantidadConsultoriosRegistrados = async () => {
-    try {
-      const consultorios = await obtenerConsultorios();
-      setCantidadConsultorios(consultorios.total);
-    } catch (error) {
-      console.error('Error al cargar los consultorios:', error);
-    }
-  };
-
-  useEffect(() => {
-
-    cantidadConsultoriosRegistrados();
-  }, []);
-
-
-    //obtener la cantidad de pacientes registrados
-    const cantidadPacientesRegistrados = async () => {
-      try {
-        const pacientes = await obtenerPacientes(1, "");
-        setCantidadPacientes(pacientes.total);
-      } catch (error) {
-        console.error('Error al cargar los pacientes:', error);
-      }
-
-      try {
-        const visitas = await obtenerVisitas(1, "");
-        setCantidadVisitas(visitas.total);
-      } catch (error) {
-        console.error('Error al cargar los visitas:', error);
-      }
-    };
-  
-    useEffect(() => {
-  
-      cantidadPacientesRegistrados();
-    }, []);
 
 
 
@@ -255,7 +184,7 @@ export default function Home() {
       {/* Renderizado de modal de usuarios  */}
       {isModalOpen && (isModalVista === 'usuarios') && (
         <ModalUsuarios
-          refrescarUsuarios={cantidadRegistrados}
+          refrescarUsuarios={cargarContadores}
           modo={modalMode}
           onClose={closeModal}
         />
@@ -264,7 +193,7 @@ export default function Home() {
       {/* Renderizado de modal de roles  */}
       {isModalOpen && (isModalVista === 'roles') && (
         <ModalRol
-          refrescarRoles={cantidadRolesRegistrados}
+          refrescarRoles={cargarContadores}
           modo={modalMode}
           onClose={closeModal}
         />

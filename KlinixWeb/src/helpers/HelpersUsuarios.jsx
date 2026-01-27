@@ -1,3 +1,21 @@
+// Obtener todos los contadores del dashboard en un solo endpoint
+export const obtenerContadoresDashboard = async () => {
+  try {
+    const token = localStorage.getItem("AUTH_TOKEN");
+    const { data } = await clienteAxios.get(
+      `api/dashboard/contadores`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return data;
+  } catch (error) {
+    console.error("Error al obtener los contadores del dashboard:", error);
+    throw error;
+  }
+};
 import clienteAxios from "../config/axios";
 
 export const obtenerUsuarios = async (page = 1, search = "") => {
