@@ -290,7 +290,7 @@ export default function AppointmentModal({
 												try {
 													const tipoPaciente = 2;
 													const { data } = await clienteAxios.get(
-														`api/Pacientes?search=${encodeURIComponent(inputValue)}&id_type_people=${tipoPaciente}`,
+														`api/pacientes?search=${encodeURIComponent(inputValue)}&id_type_people=${tipoPaciente}`,
 														{ headers: { Authorization: `Bearer ${token}` } }
 													);
 													const items = Array.isArray(data?.data) ? data.data : [];
