@@ -86,7 +86,7 @@ export default function Header() {
 
               {/* Menú desplegable */}
               {dropdownOpen && (
-                <ul className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-20 transition-all duration-200 ease-in-out border border-gray-200">
+                <ul className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-[9999] transition-all duration-200 ease-in-out border border-gray-200">
                   <li>
                     <button
                       onClick={() => openProfileModal('perfil')}

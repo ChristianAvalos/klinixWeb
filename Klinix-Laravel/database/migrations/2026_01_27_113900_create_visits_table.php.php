@@ -14,7 +14,7 @@ return new class extends Migration
     {
         $isSqlsrv = DB::connection()->getDriverName() === 'sqlsrv';
 
-        Schema::create('visitors', function (Blueprint $table) use ($isSqlsrv) {
+        Schema::create('visits', function (Blueprint $table) use ($isSqlsrv) {
             $table->id();
             $table->dateTime('Datetime');
             $column = $table->string('Type_');

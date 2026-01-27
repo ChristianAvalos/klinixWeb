@@ -6,16 +6,17 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PaisController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SexesController;
+use App\Http\Controllers\VisitController;
 use App\Http\Controllers\CiudadController;
 use App\Http\Controllers\DoctorController;
-use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\DepartamentoController;
 use App\Http\Controllers\OrganizacionController;
 use App\Http\Controllers\MaritalStatusController;
-use App\Http\Controllers\AppointmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -82,6 +83,12 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::post('/crearpacientes',[PatientController::class,'create']);
     Route::put('/editarpacientes/{id}',[PatientController::class,'update']);
     Route::delete('/paciente/{id}', [PatientController::class, 'DeletePaciente']);
+
+    //Visitas
+    Route::get('/visitas',[VisitController::class,'index']);
+    Route::post('/crearvisitas',[VisitController::class,'create']);
+    Route::put('/editarvisitas/{id}',[VisitController::class,'update']);
+    Route::delete('/visita/{id}', [VisitController::class, 'DeleteVisita']);
 
     //estado civil 
     Route::get('/estadocivil',[MaritalStatusController::class,'index']);

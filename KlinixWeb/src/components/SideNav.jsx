@@ -93,7 +93,7 @@ export default function SideNav() {
 
 
           {/* SidebarSearch Form */}
-          <div className="form-inline px-3">
+          {/* <div className="form-inline px-3">
             <div className="input-group" data-widget="sidebar-search">
               <input
                 className="form-control form-control-sidebar"
@@ -111,11 +111,11 @@ export default function SideNav() {
                 </button>
               </div>
             </div>
-          </div>
+          </div> */}
 
 
           {/* Mostrar los items filtrados solo si hay término de búsqueda */}
-          {searchTerm && (
+          {/* {searchTerm && (
             <ul className="nav nav-pills nav-sidebar flex-column px-2">
               {filteredMenuItems.length > 0 ? (
                 filteredMenuItems.map((item, index) => (
@@ -130,7 +130,7 @@ export default function SideNav() {
                 <p className="text-white ml-3">No results found</p>
               )}
             </ul>
-          )}
+          )} */}
 
           {/* Sidebar Menu */}
 

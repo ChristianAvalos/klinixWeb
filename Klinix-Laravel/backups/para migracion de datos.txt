@@ -181,3 +181,46 @@ join doctor d on d.iddoctor = a2.iddoctor::integer
 join doctors ds on ds."LastName" = d.lastname and ds."FirstName" = d.firstname 
 join resource r on r.idresource  = a2.idresource::integer
 join  resources r2  on r2."ResourceColor" = r.resourcecolor ;
+
+
+
+--migracion de visitantes
+insert
+	into
+	public.visits 
+	("Datetime",
+	"Type_",
+	"MRTDs",
+	"Angle",
+	"DocumentNo",
+	"Familyname",
+	"Givenname",
+	"Nationality",
+	"Birthday",
+	"PersonalNo",
+	"Sex",
+	"Dateofexpiry",
+	"IssueState",
+	"NativeName",
+	"Checksum",
+	"UrevUsuario",
+	"UrevFechaHora")	
+	select 
+	v.datetime ,
+	v.type_ ,
+	v.mrtds ,
+	v.angle ,
+	v.documentno ,
+	v.familyname ,
+	v.givenname ,
+	v.nationality ,
+	v.birthday ,
+	v.personalno ,
+	v.sex ,
+	v.dateofexpiry ,
+	v.issuestate ,
+	v.nativename ,
+	v.checksum ,
+	'Admin - Migracion',
+	now()
+	from visitor v ;

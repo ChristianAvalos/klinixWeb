@@ -35,12 +35,14 @@ const SearchBar = ({ title, placeholder, buttonLabel, onSearch, onAdd }) => {
                         >
                             Buscar
                         </button>
-                        <button
-                            onClick={onAdd}
-                            className="font-bold btn btn-secondary ml-2"
-                        >
-                            {buttonLabel}
-                        </button>
+                        {onAdd && buttonLabel && (
+                            <button
+                                onClick={onAdd}
+                                className="font-bold btn btn-secondary ml-2"
+                            >
+                                {buttonLabel}
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>
