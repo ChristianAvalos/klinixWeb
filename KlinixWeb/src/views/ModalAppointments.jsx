@@ -280,45 +280,93 @@ export default function AppointmentModal({
 								 {/* ...existing code... */}
 								 <div>
 									 <label className="block text-sm font-medium text-gray-700 mb-1">Paciente</label>
-									 <AsyncSelect
-										 cacheOptions
-										 defaultOptions={false}
-										 value={patientOption}
-										 loadOptions={async (inputValue) => {
-											 if (!inputValue || inputValue.trim().length < 2) return [];
-											 try {
-												 const tipoPaciente = 2;
-												 const { data } = await clienteAxios.get(
-													 `api/personas?search=${encodeURIComponent(inputValue)}&id_type_people=${tipoPaciente}`,
-													 { headers: { Authorization: `Bearer ${token}` } }
-												 );
-												 const items = Array.isArray(data?.data) ? data.data : [];
-												 return items.map((p) => ({
-													 value: p.id,
-													 label: `${(p.LastName ?? '').trim()} ${(p.FirstName ?? '').trim()}${p.DocumentNo ? ' - ' + p.DocumentNo : ''}`,
-													 data: p
-												 }));
-											 } catch (error) {
-												 return [];
-											 }
-										 }}
-										 onChange={option => {
-											 setPatientOption(option);
-											 setPatientId(option ? String(option.value) : '');
-										 }}
-										 placeholder="Buscar paciente por nombre o documento..."
-										 isClearable
-										 classNamePrefix="react-select"
-										 styles={{
-											 control: (base, state) => ({
-												 ...base,
-												 minHeight: '2.75rem',
-												 borderColor: errores.Id_Patient ? '#ef4444' : base.borderColor,
-												 boxShadow: state.isFocused ? '0 0 0 2px #3b82f6' : base.boxShadow
-											 })
-										 }}
-										 noOptionsMessage={() => 'No hay resultados'}
-									 />
+									<div className="relative">
+										<AsyncSelect
+											cacheOptions
+											defaultOptions={false}
+											value={patientOption}
+											loadOptions={async (inputValue) => {
+												if (!inputValue || inputValue.trim().length < 2) return [];
+												try {
+													const tipoPaciente = 2;
+													const { data } = await clienteAxios.get(
+														`api/personas?search=${encodeURIComponent(inputValue)}&id_type_people=${tipoPaciente}`,
+														{ headers: { Authorization: `Bearer ${token}` } }
+													);
+													const items = Array.isArray(data?.data) ? data.data : [];
+													return items.map((p) => ({
+														value: p.id,
+														label: `${(p.LastName ?? '').trim()} ${(p.FirstName ?? '').trim()}${p.DocumentNo ? ' - ' + p.DocumentNo : ''}`,
+														data: p
+													}));
+												} catch (error) {
+													return [];
+												}
+											}}
+											onChange={option => {
+												setPatientOption(option);
+												setPatientId(option ? String(option.value) : '');
+											}}
+											placeholder="Buscar paciente por nombre o documento..."
+											isClearable
+											classNamePrefix="react-select"
+											menuPortalTarget={typeof window !== 'undefined' ? document.body : null}
+											menuPosition="fixed"
+											styles={{
+												control: (base, state) => ({
+													...base,
+													minHeight: '2.75rem',
+													backgroundColor: 'white',
+													borderRadius: '0.375rem',
+													borderColor: errores.Id_Patient ? '#ef4444' : '#d1d5db',
+													boxShadow: state.isFocused ? '0 0 0 2px #3b82f6' : base.boxShadow,
+													fontSize: '1rem',
+													paddingLeft: '0.75rem',
+													paddingRight: '0.75rem',
+												}),
+												menu: (base) => ({
+													...base,
+													zIndex: 99999,
+													fontSize: '1rem',
+													maxHeight: '300px',
+													overflowY: 'auto',
+												}),
+												menuPortal: (base) => ({
+													...base,
+													zIndex: 99999,
+												}),
+												option: (base, state) => ({
+													...base,
+													backgroundColor: state.isSelected ? '#e0f2fe' : state.isFocused ? '#f1f5f9' : 'white',
+													color: '#0f172a',
+													fontSize: '1rem',
+													padding: '0.5rem 1rem',
+												}),
+												singleValue: (base) => ({
+													...base,
+													fontSize: '1rem',
+												}),
+												input: (base) => ({
+													...base,
+													fontSize: '1rem',
+												}),
+												placeholder: (base) => ({
+													...base,
+													fontSize: '1rem',
+													color: '#64748b',
+												}),
+												dropdownIndicator: (base) => ({
+													...base,
+													color: '#64748b',
+												}),
+												clearIndicator: (base) => ({
+													...base,
+													color: '#64748b',
+												}),
+											}}
+											noOptionsMessage={() => 'No hay resultados'}
+										/>
+									</div>
 									 {errores.Id_Patient && <p className="text-red-500 text-sm">{errores.Id_Patient[0]}</p>}
 								 </div>
 
