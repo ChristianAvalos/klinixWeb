@@ -40,4 +40,10 @@ class Resource extends Model
     {
         return $this->belongsTo(Doctor::class, 'Id_Doctor');
     }
+
+    //relacion con la agenda
+    public function agenda()
+    {
+        return $this->hasMany(Appointment::class, 'Id_Resource');
+    }
 }

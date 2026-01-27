@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('Caption', 255)->nullable();
             $table->integer('RecurrenceIndex')->nullable();
             $table->text('RecurrenceInfo')->nullable();
-            $table->string('Id_Resource', 1000)->nullable();
+            $table->unsignedBigInteger('Id_Resource')->nullable();
             $table->string('Location', 255)->nullable();
             $table->string('MessageText', 255)->nullable();
             $table->dateTime('ReminderDate')->nullable();
@@ -36,8 +36,8 @@ return new class extends Migration
             $table->integer('TaskIndex')->nullable();
             $table->text('TaskLinks')->nullable();
             $table->integer('TaskStatus')->nullable();
-            $table->integer('Id_Patient')->nullable();
-            $table->integer('Id_Doctor')->nullable();
+            $table->unsignedBigInteger('Id_Patient')->nullable();
+            $table->unsignedBigInteger('Id_Doctor')->nullable();
             $table->string('UrevUsuario')->nullable(); 
             $table->dateTime('UrevFechaHora')->nullable();
 

@@ -151,7 +151,7 @@ export default function Pacientes() {
 
     const confirmarEliminacion = async () => {
         try {
-            const response = await clienteAxios.delete(`api/persona/${pacienteAEliminar}`, {
+            const response = await clienteAxios.delete(`api/paciente/${pacienteAEliminar}`, {
                 headers: {
                     Authorization: `Bearer ${token}` // Configurar el token en los headers
                 }
