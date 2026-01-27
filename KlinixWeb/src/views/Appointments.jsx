@@ -97,27 +97,34 @@ export default function Appointments() {
   const [modalMode, setModalMode] = useState('crear')
   const [modalInitial, setModalInitial] = useState(null)
 
-  const loadCatalogs = useCallback(async () => {
+  const loadCatalogs = useCallback(async (isMounted, abortController) => {
     setLoading(true)
     try {
+      const currentToken = localStorage.getItem('AUTH_TOKEN');
       const [doctorsRes, resourcesRes] = await Promise.all([
         clienteAxios.get('api/doctores?all=true', {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${currentToken}` },
+          signal: abortController.signal,
         }),
         clienteAxios.get('api/consultorios?all=true', {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${currentToken}` },
+          signal: abortController.signal,
         }),
       ])
-
-      setDoctors(Array.isArray(doctorsRes.data) ? doctorsRes.data : [])
-      setResources(Array.isArray(resourcesRes.data) ? resourcesRes.data : [])
+      if (isMounted.current) {
+        setDoctors(Array.isArray(doctorsRes.data) ? doctorsRes.data : [])
+        setResources(Array.isArray(resourcesRes.data) ? resourcesRes.data : [])
+      }
     } catch (error) {
-      console.error('Error cargando catálogos', error)
-      toast.error('Error cargando doctores/consultorios.')
+      if (abortController.signal.aborted) return;
+      if (isMounted.current) {
+        console.error('Error cargando catálogos', error)
+        toast.error('Error cargando doctores/consultorios.')
+      }
     } finally {
-      setLoading(false)
+      if (isMounted.current) setLoading(false)
     }
-  }, [token])
+  }, [])
 
   const loadAppointments = useCallback(
     async (currentRange) => {
@@ -143,7 +150,13 @@ export default function Appointments() {
   )
 
   useEffect(() => {
-    loadCatalogs()
+    const isMounted = { current: true };
+    const abortController = new AbortController();
+    loadCatalogs(isMounted, abortController);
+    return () => {
+      isMounted.current = false;
+      abortController.abort();
+    };
   }, [loadCatalogs])
 
   useEffect(() => {
