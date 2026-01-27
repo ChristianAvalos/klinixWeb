@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import AsyncSelect from 'react-select/async'
 import { toast } from 'react-toastify'
 import { format } from 'date-fns'
 import clienteAxios from '../config/axios'
@@ -73,68 +74,46 @@ export default function AppointmentModal({
 	const [startValue, setStartValue] = useState('')
 	const [endValue, setEndValue] = useState('')
 
-	const [patientSearch, setPatientSearch] = useState('')
-	const [patientResults, setPatientResults] = useState([])
-	const [patientLoading, setPatientLoading] = useState(false)
+	// Paciente autocomplete
+	const [patientOption, setPatientOption] = useState(null)
 
 	const captionRef = useRef(null)
 
 	const token = localStorage.getItem('AUTH_TOKEN')
 
-	useEffect(() => {
-		if (!isOpen) return
-		setErrores({})
+	 useEffect(() => {
+	   if (!isOpen) return
+	   setErrores({})
 
-		setPatientSearch('')
-		setPatientResults([])
+	   setPatientOption(null)
 
-		setCaption(initial?.Caption ?? '')
-		setDoctorId(initial?.Id_Doctor ? String(initial.Id_Doctor) : (defaultDoctorId ? String(defaultDoctorId) : ''))
-		setPatientId(initial?.Id_Patient ? String(initial.Id_Patient) : '')
-		setResourceId(initial?.Id_Resource ? String(initial.Id_Resource) : (defaultResourceId ? String(defaultResourceId) : ''))
+	   setCaption(initial?.Caption ?? '')
+	   setDoctorId(initial?.Id_Doctor ? String(initial.Id_Doctor) : (defaultDoctorId ? String(defaultDoctorId) : ''))
+	   setPatientId(initial?.Id_Patient ? String(initial.Id_Patient) : '')
+	   setResourceId(initial?.Id_Resource ? String(initial.Id_Resource) : (defaultResourceId ? String(defaultResourceId) : ''))
 
-		setStartValue(toDatetimeLocalValue(initial?.Start ? parseApiDateTime(initial.Start) : initial?.start))
-		setEndValue(toDatetimeLocalValue(initial?.Finish ? parseApiDateTime(initial.Finish) : initial?.end))
-	}, [isOpen, initial, defaultDoctorId, defaultResourceId])
+	   setStartValue(toDatetimeLocalValue(initial?.Start ? parseApiDateTime(initial.Start) : initial?.start))
+	   setEndValue(toDatetimeLocalValue(initial?.Finish ? parseApiDateTime(initial.Finish) : initial?.end))
+	 }, [isOpen, initial, defaultDoctorId, defaultResourceId])
 
-	useEffect(() => {
-		if (!isOpen) return
-		// precargar paciente actual cuando se edita
-		const p = initial?.patient
-		if (p?.id) {
-			setPatientResults((prev) => {
-				if (prev.some((x) => x.id === p.id)) return prev
-				return [p, ...prev]
-			})
-		}
-	}, [isOpen, initial])
+	 useEffect(() => {
+		 if (!isOpen) return
+		 // precargar paciente actual cuando se edita
+		 const p = initial?.patient
+		 if (p?.id) {
+			 setPatientOption({
+				 value: p.id,
+				 label: `${(p.LastName ?? '').trim()} ${(p.FirstName ?? '').trim()}${p.DocumentNo ? ' - ' + p.DocumentNo : ''}`,
+				 data: p
+			 })
+			 setPatientId(String(p.id))
+		 } else {
+			 setPatientOption(null)
+			 setPatientId('')
+		 }
+	 }, [isOpen, initial])
 
-	useEffect(() => {
-		if (!isOpen) return
 
-		const term = patientSearch.trim()
-		if (term.length < 2) return
-
-		const timer = setTimeout(async () => {
-			try {
-				setPatientLoading(true)
-				const tipoPaciente = 2
-				const { data } = await clienteAxios.get(
-					`api/personas?search=${encodeURIComponent(term)}&id_type_people=${tipoPaciente}`,
-					{ headers: { Authorization: `Bearer ${token}` } }
-				)
-				const items = Array.isArray(data?.data) ? data.data : []
-				setPatientResults(items)
-			} catch (error) {
-				console.error('Error buscando pacientes', error)
-				toast.error('Error buscando pacientes.')
-			} finally {
-				setPatientLoading(false)
-			}
-		}, 350)
-
-		return () => clearTimeout(timer)
-	}, [patientSearch, isOpen, token])
 
 	useEffect(() => {
 		if (isOpen && captionRef.current) captionRef.current.focus()
@@ -301,27 +280,45 @@ export default function AppointmentModal({
 								 {/* ...existing code... */}
 								 <div>
 									 <label className="block text-sm font-medium text-gray-700 mb-1">Paciente</label>
-									 <input
-										 type="text"
-										 className="w-full mb-1 h-11 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-										 placeholder="Buscar paciente"
-										 value={patientSearch}
-										 onChange={(e) => setPatientSearch(e.target.value)}
+									 <AsyncSelect
+										 cacheOptions
+										 defaultOptions={false}
+										 value={patientOption}
+										 loadOptions={async (inputValue) => {
+											 if (!inputValue || inputValue.trim().length < 2) return [];
+											 try {
+												 const tipoPaciente = 2;
+												 const { data } = await clienteAxios.get(
+													 `api/personas?search=${encodeURIComponent(inputValue)}&id_type_people=${tipoPaciente}`,
+													 { headers: { Authorization: `Bearer ${token}` } }
+												 );
+												 const items = Array.isArray(data?.data) ? data.data : [];
+												 return items.map((p) => ({
+													 value: p.id,
+													 label: `${(p.LastName ?? '').trim()} ${(p.FirstName ?? '').trim()}${p.DocumentNo ? ' - ' + p.DocumentNo : ''}`,
+													 data: p
+												 }));
+											 } catch (error) {
+												 return [];
+											 }
+										 }}
+										 onChange={option => {
+											 setPatientOption(option);
+											 setPatientId(option ? String(option.value) : '');
+										 }}
+										 placeholder="Buscar paciente por nombre o documento..."
+										 isClearable
+										 classNamePrefix="react-select"
+										 styles={{
+											 control: (base, state) => ({
+												 ...base,
+												 minHeight: '2.75rem',
+												 borderColor: errores.Id_Patient ? '#ef4444' : base.borderColor,
+												 boxShadow: state.isFocused ? '0 0 0 2px #3b82f6' : base.boxShadow
+											 })
+										 }}
+										 noOptionsMessage={() => 'No hay resultados'}
 									 />
-									 <div className="text-xs text-gray-500 mb-1">Escribe mínimo 2 letras para buscar.</div>
-									 {patientLoading && <div className="text-xs text-gray-500 mb-1">Buscando…</div>}
-									 <select
-									   className={`w-full h-11 px-3 border ${errores.Id_Patient ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
-									   value={patientId}
-									   onChange={(e) => setPatientId(e.target.value)}
-									 >
-									   <option value="">Seleccione</option>
-									   {patientResults.map((p) => (
-									     <option key={p.id} value={p.id}>
-									       {(p.LastName ?? '').trim()} {(p.FirstName ?? '').trim()} {p.DocumentNo ? `- ${p.DocumentNo}` : ''}
-									     </option>
-									   ))}
-									 </select>
 									 {errores.Id_Patient && <p className="text-red-500 text-sm">{errores.Id_Patient[0]}</p>}
 								 </div>
 

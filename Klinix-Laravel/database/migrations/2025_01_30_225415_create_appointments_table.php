@@ -40,6 +40,10 @@ return new class extends Migration
             $table->integer('Id_Doctor')->nullable();
             $table->string('UrevUsuario')->nullable(); 
             $table->dateTime('UrevFechaHora')->nullable();
+
+            $table->foreign('Id_Patient')->references('id')->on('patients');
+            $table->foreign('Id_Doctor')->references('id')->on('doctors');
+            $table->foreign('Id_Resource')->references('id')->on('resources');
         });
        // DB::statement('ALTER TABLE appointments ADD UrevCalc AS (ISNULL(UrevUsuario, \'\') + \' - \' + ISNULL(FORMAT(UrevFechaHora, \'dd/MM/yyyy HH:mm\'), \'\'))');
     }
