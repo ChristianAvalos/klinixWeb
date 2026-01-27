@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom"
 import React, { useEffect, useState } from 'react';
-import useAuthPermisos from "../hooks/useAuthPermisos";
+import { usePermisos } from "../context/PermisosContext";
 
 export default function SideNav() {
 
 
-  const { permissions, hasPermission } = useAuthPermisos();
+  const { permissions, hasPermission } = usePermisos();
 
   // Estado para el término de búsqueda y los ítems del menú
   const [searchTerm, setSearchTerm] = useState('');

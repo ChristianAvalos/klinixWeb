@@ -1,10 +1,10 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import useAuthPermisos from "./useAuthPermisos";
+import { usePermisos } from "../context/PermisosContext";
 import Spinner from '../components/Spinner';
 
 const ProtectedRoute = ({ permission, children }) => {
-    const { hasPermission, loading } = useAuthPermisos();
+    const { hasPermission, loading } = usePermisos();
 
 
         // Mostrar spinner mientras se cargan los permisos
