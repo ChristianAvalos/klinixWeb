@@ -88,7 +88,7 @@ export const obtenerConsultorios = async (page = 1, search = "") => {
   }
 };
 
-export const obtenerPersonas = async (page = 1, search = "",tipoPersonaId) => {
+export const obtenerPacientes = async (page = 1, search = "",tipoPersonaId) => {
   try {
     // Obtener el token de autenticación
     const token = localStorage.getItem("AUTH_TOKEN");
@@ -96,7 +96,7 @@ export const obtenerPersonas = async (page = 1, search = "",tipoPersonaId) => {
     // Realizar la solicitud a la API
     const tipoPersona = tipoPersonaId;
     const { data } = await clienteAxios.get(
-      `api/personas?page=${page}&search=${encodeURIComponent(search)}&id_type_people=${tipoPersona}`,
+      `api/Pacientes?page=${page}&search=${encodeURIComponent(search)}&id_type_people=${tipoPersona}`,
       {
         headers: {
           Authorization: `Bearer ${token}`, // Configurar el token en los headers

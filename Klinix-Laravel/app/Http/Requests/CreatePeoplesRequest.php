@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreatePeoplesRequest extends FormRequest
+class CreatePatientsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -30,7 +30,7 @@ class CreatePeoplesRequest extends FormRequest
             'Department_Id' => ['required', 'exists:departamento,id'],
             'City_Id' => ['required', 'exists:ciudad,id'],
 
-            'PatientCode' => ['required','unique:peoples,PatientCode', 'string', 'max:10'],
+            'PatientCode' => ['required','unique:patients,PatientCode', 'string', 'max:10'],
             'Title' => ['nullable', 'string', 'max:30'],
             'Nationality' => ['nullable', 'string', 'max:100'],
             'Birthday' => ['nullable', 'date'],

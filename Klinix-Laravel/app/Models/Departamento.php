@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use App\Models\Ciudad;
-use App\Models\People;
+use App\Models\Patient;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -38,10 +38,10 @@ class Departamento extends Model
         return $this->hasMany(Ciudad::class, 'departamento_id');
     }
 
-    // Relación con el modelo People
-    public function peoples()
+    // Relación con el modelo Patient
+    public function patients()
     {
-        return $this->hasMany(People::class, 'Id_Department');
+        return $this->hasMany(Patient::class, 'Id_Department');
     }
 
 

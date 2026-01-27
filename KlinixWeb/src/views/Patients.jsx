@@ -70,7 +70,7 @@ export default function Pacientes() {
             // Solo pacientes
             const tipoPaciente = 2;
             const { data } = await clienteAxios.get(
-                `api/personas?page=${page}&search=${encodeURIComponent(search)}&id_type_people=${tipoPaciente}`,
+                `api/pacientes?page=${page}&search=${encodeURIComponent(search)}&id_type_people=${tipoPaciente}`,
                 {
                 headers: {
                     Authorization: `Bearer ${token}` // Configurar el token en los headers

@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use App\Models\People;
+use App\Models\Patient;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -27,8 +27,8 @@ class Sexes extends Model
         return "{$this->UrevUsuario} - {$fechaFormateada}";
     }
 
-    public function people()
+    public function Patient()
     {
-        return $this->hasMany(People::class, 'Id_Sex');
+        return $this->hasMany(Patient::class, 'Id_Sex');
     }
 }

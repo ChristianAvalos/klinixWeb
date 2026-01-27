@@ -14,7 +14,7 @@ return new class extends Migration
     {
         $isSqlsrv = DB::connection()->getDriverName() === 'sqlsrv';
 
-        Schema::create('peoples', function (Blueprint $table) use ($isSqlsrv) {
+        Schema::create('patients', function (Blueprint $table) use ($isSqlsrv) {
             $table->id('id');
 
             $column = $table->string('LastName', 150);
@@ -157,7 +157,7 @@ return new class extends Migration
                 $column->collation('Modern_Spanish_CI_AS');
             }
 
-            $column = $table->string('PeopleNo', 100)->nullable();
+            $column = $table->string('PatientNo', 100)->nullable();
             if ($isSqlsrv) {
                 $column->collation('Modern_Spanish_CI_AS');
             }
@@ -174,7 +174,7 @@ return new class extends Migration
             $table->foreign('Id_Department')->references('id')->on('departamento');
             $table->foreign('Id_Sex')->references('id')->on('sexes');
         });
-        //DB::statement('ALTER TABLE peoples ADD UrevCalc AS (ISNULL(UrevUsuario, \'\') + \' - \' + ISNULL(FORMAT(UrevFechaHora, \'dd/MM/yyyy HH:mm\'), \'\'))');
+        //DB::statement('ALTER TABLE patients ADD UrevCalc AS (ISNULL(UrevUsuario, \'\') + \' - \' + ISNULL(FORMAT(UrevFechaHora, \'dd/MM/yyyy HH:mm\'), \'\'))');
     }
 
     /**
@@ -182,6 +182,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('peoples');
+        Schema::dropIfExists('patients');
     }
 };

@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
-use App\Models\People;
+use App\Models\Patient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\CreatePeoplesRequest;
-use App\Http\Requests\UpdatePeoplesRequest;
+use App\Http\Requests\CreatePatientsRequest;
+use App\Http\Requests\UpdatePatientsRequest;
 
-class PeopleController extends Controller
+class PatientController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -23,7 +23,7 @@ class PeopleController extends Controller
         $idTypePeople = $request->input('id_type_people');
         $likeOperator = DB::connection()->getDriverName() === 'pgsql' ? 'ilike' : 'like';
 
-        $baseQuery = People::with(['ciudad','sexes','maritalStatus','departamento'])
+        $baseQuery = Patient::with(['ciudad','sexes','maritalStatus','departamento'])
             ->when($idTypePeople, function ($query, $idTypePeople) {
                 return $query->where('Id_Type_People', $idTypePeople);
             })
@@ -56,7 +56,7 @@ class PeopleController extends Controller
 
     public function DeletePersona($id)
     {
-        $persona = People::findOrFail($id);
+        $persona = Patient::findOrFail($id);
         $persona->delete();
         return response()->json(['message' => 'Persona eliminada correctamente.'], 200);
     }
@@ -70,14 +70,14 @@ class PeopleController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(CreatePeoplesRequest $request)
+    public function create(CreatePatientsRequest $request)
     {
         $data = $request->validated();
 
         // Obtener el usuario autenticado
         $usuarioActual = Auth::user();
 
-        $people = People::create([
+        $patient = Patient::create([
             'PatientCode' => $data['PatientCode'] ?? null,
             'FirstName' => $data['FirstName'],
             'LastName' => $data['LastName'],
@@ -115,7 +115,7 @@ class PeopleController extends Controller
             'UrevFechaHora' => Carbon::now(),
         ]);
 
-        return response()->json($people->load(['ciudad', 'sexes', 'maritalStatus']), 201);
+        return response()->json($patient->load(['ciudad', 'sexes', 'maritalStatus']), 201);
     }
 
     /**
@@ -130,7 +130,7 @@ class PeopleController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(People $people)
+    public function show(Patient $patient)
     {
         //
     }
@@ -138,7 +138,7 @@ class PeopleController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(People $people)
+    public function edit(Patient $patient)
     {
         //
     }
@@ -146,16 +146,16 @@ class PeopleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePeoplesRequest $request, $id)
+    public function update(UpdatePatientsRequest $request, $id)
     {
         $data = $request->validated();
 
         // Obtener el usuario autenticado
         $usuarioActual = Auth::user();
 
-        $people = People::findOrFail($id);
+        $patient = Patient::findOrFail($id);
 
-        $people->update([
+        $patient->update([
             'PatientCode' => $data['PatientCode'] ?? null,
             'FirstName' => $data['FirstName'],
             'LastName' => $data['LastName'],
@@ -193,13 +193,13 @@ class PeopleController extends Controller
             'UrevFechaHora' => Carbon::now(),
         ]);
 
-        return response()->json($people->load(['ciudad', 'sexes', 'maritalStatus']), 200);
+        return response()->json($patient->load(['ciudad', 'sexes', 'maritalStatus']), 200);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(People $people)
+    public function destroy(Patient $patient)
     {
         //
     }

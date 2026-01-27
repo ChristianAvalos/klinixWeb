@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 import { useEffect, useState } from 'react';
-import { obtenerUsuarios, obtenerRoles, obtenerDoctores,obtenerPersonas,obtenerConsultorios } from '../helpers/HelpersUsuarios';
+import { obtenerUsuarios, obtenerRoles, obtenerDoctores,obtenerPacientes,obtenerConsultorios } from '../helpers/HelpersUsuarios';
 import ModalUsuarios from '../views/ModalUsuarios';
 import ModalRol from '../views/ModalRol';
 
@@ -111,16 +111,16 @@ export default function Home() {
 
 
     //obtener la cantidad de pacientes registrados
-    const cantidadPersonasRegistrados = async () => {
+    const cantidadPacientesRegistrados = async () => {
       try {
-        const pacientes = await obtenerPersonas(1, "", 2);
+        const pacientes = await obtenerPacientes(1, "", 2);
         setCantidadPacientes(pacientes.total);
       } catch (error) {
         console.error('Error al cargar los pacientes:', error);
       }
 
       try {
-        const visitas = await obtenerPersonas(1, "", 1);
+        const visitas = await obtenerPacientes(1, "", 1);
         setCantidadVisitas(visitas.total);
       } catch (error) {
         console.error('Error al cargar los visitas:', error);
@@ -129,7 +129,7 @@ export default function Home() {
   
     useEffect(() => {
   
-      cantidadPersonasRegistrados();
+      cantidadPacientesRegistrados();
     }, []);
 
 

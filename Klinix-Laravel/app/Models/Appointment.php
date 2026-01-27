@@ -52,7 +52,7 @@ class Appointment extends Model
 
     public function patient()
     {
-        return $this->belongsTo(People::class, 'Id_Patient');
+        return $this->belongsTo(Patient::class, 'Id_Patient');
     }
 
     public function doctor()

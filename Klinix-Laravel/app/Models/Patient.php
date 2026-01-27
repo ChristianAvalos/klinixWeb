@@ -11,10 +11,10 @@ use App\Models\MaritalStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class People extends Model
+class Patient extends Model
 {
     use HasFactory;
-    protected $table = 'peoples';
+    protected $table = 'patients';
     
     public $timestamps = false;
 
@@ -50,7 +50,7 @@ class People extends Model
         'PatientCode',
         'Id_Department',
         'MRTDs',
-        'PeopleNo',
+        'PatientNo',
         'Id_Type_People',
         'UrevUsuario',
         'UrevFechaHora'

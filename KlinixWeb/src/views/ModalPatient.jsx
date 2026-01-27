@@ -369,7 +369,7 @@ export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPa
 
             if (modo === 'crear') {
                 // Crear un nuevo paciente
-                await clienteAxios.post('api/crearpersonas', formData, {
+                await clienteAxios.post('api/crearpacientes', formData, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -377,7 +377,7 @@ export default function ModalPatient({ onClose, modo, paciente = {}, refrescarPa
                 toast.success('Paciente creado exitosamente.');
             } else {
                 // Editar paciente existente
-                await clienteAxios.post(`api/editarpersonas/${paciente.id}`, formData, {
+                await clienteAxios.post(`api/editarpacientes/${paciente.id}`, formData, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                         'X-HTTP-Method-Override': 'PUT'
