@@ -1,4 +1,5 @@
-import { React, useState,useEffect, useRef }from 'react';
+import { React, useState, useEffect, useRef } from 'react';
+import ReactDOM from 'react-dom';
 import ModalUsuarios from '../views/ModalUsuarios';
 import { useAuth } from "../hooks/useAuth";
 import ChangePasswordModal from '../views/ModalPassword';
@@ -7,6 +8,7 @@ export default function Header() {
   const { logout, user } = useAuth({ middleware: 'auth' })
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const menuRef = useRef(null);
 
   // Función para manejar el cierre de sesión
   const handleLogout = () => {
@@ -19,8 +21,10 @@ export default function Header() {
     setDropdownOpen(!dropdownOpen);
   };
   const handleClickOutside = (event) => {
-    // Verifica si el clic fue fuera del dropdown
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+    // Verifica si el clic fue fuera del botón y del menú
+    const isOutsideDropdown = dropdownRef.current && !dropdownRef.current.contains(event.target);
+    const isOutsideMenu = menuRef.current && !menuRef.current.contains(event.target);
+    if (dropdownOpen && isOutsideDropdown && isOutsideMenu) {
       setDropdownOpen(false);
     }
   };
@@ -84,50 +88,44 @@ export default function Header() {
                 </svg>
               </button>
 
-              {/* Menú desplegable */}
-              {dropdownOpen && (
-                <ul className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-[9999] transition-all duration-200 ease-in-out border border-gray-200">
+              {/* Menú desplegable usando Portal */}
+              {dropdownOpen && ReactDOM.createPortal(
+                <ul ref={menuRef} className="fixed right-4 top-16 w-48 bg-white rounded-lg shadow-lg z-[9999] transition-all duration-200 ease-in-out border border-gray-200">
                   <li>
                     <button
-                      onClick={() => openProfileModal('perfil')}
+                      onClick={() => { setDropdownOpen(false); openProfileModal('perfil'); }}
                       className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-md transition-colors duration-150 ease-in-out"
                     > 
                     <div className='flex items-center'>
                       <img src="/img/Icon/user-man.png" alt="User" className="w-5 h-5 mr-2"  />
-                      {/* <i className="fas fa-user mr-2"></i> */}
                       Mi perfil
                     </div>
-                      
                     </button>
                   </li>
                   <li>
                     <button
                       className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-md transition-colors duration-150 ease-in-out"
-                      onClick={() => setIsModalOpenPassword(true)}
+                      onClick={() => { setDropdownOpen(false); setIsModalOpenPassword(true); }}
                     >
                       <div className='flex items-center'>
                         <img src="/img/Icon/key-user-filled.png" alt="Change Password" className="w-5 h-5 mr-2" />
-                        {/* <i className="fas fa-key mr-2"></i> */}
                         Cambiar contraseña
                       </div>
-                      
                     </button>
                   </li>
                   <li>
                     <button
-                      onClick={handleLogout}
+                      onClick={() => { setDropdownOpen(false); handleLogout(); }}
                       className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-md transition-colors duration-150 ease-in-out"
                     >
                       <div className='flex items-center'>
                         <img src="/img/Icon/exit.png" alt="Logout" className="w-5 h-5 mr-2" />
-                        {/* <i className="fas fa-sign-out-alt mr-2"></i> */}
                         Cerrar sesión
                       </div>
-                      
                     </button>
                   </li>
-
-                </ul>
+                </ul>,
+                document.body
               )}
             </div>
           </li>

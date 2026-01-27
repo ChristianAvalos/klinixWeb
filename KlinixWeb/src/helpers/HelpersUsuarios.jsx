@@ -88,15 +88,14 @@ export const obtenerConsultorios = async (page = 1, search = "") => {
   }
 };
 
-export const obtenerPacientes = async (page = 1, search = "",tipoPersonaId) => {
+export const obtenerPacientes = async (page = 1, search = "") => {
   try {
     // Obtener el token de autenticación
     const token = localStorage.getItem("AUTH_TOKEN");
 
-    // Realizar la solicitud a la API
-    const tipoPersona = tipoPersonaId;
+
     const { data } = await clienteAxios.get(
-      `api/Pacientes?page=${page}&search=${encodeURIComponent(search)}&id_type_people=${tipoPersona}`,
+      `api/pacientes?page=${page}&search=${encodeURIComponent(search)}`,
       {
         headers: {
           Authorization: `Bearer ${token}`, // Configurar el token en los headers
@@ -107,6 +106,28 @@ export const obtenerPacientes = async (page = 1, search = "",tipoPersonaId) => {
     return data;
   } catch (error) {
     console.error("Error al obtener los pacientes:", error);
+    throw error; // Lanza el error para manejarlo donde sea llamado
+  }
+};
+
+export const obtenerVisitas = async (page = 1, search = "") => {
+  try {
+    // Obtener el token de autenticación
+    const token = localStorage.getItem("AUTH_TOKEN");
+
+
+    const { data } = await clienteAxios.get(
+      `api/visitas?page=${page}&search=${encodeURIComponent(search)}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Configurar el token en los headers
+        },
+      },
+    );
+    // Actualizar el estado con los roles obtenidos
+    return data;
+  } catch (error) {
+    console.error("Error al obtener las visitas:", error);
     throw error; // Lanza el error para manejarlo donde sea llamado
   }
 };
