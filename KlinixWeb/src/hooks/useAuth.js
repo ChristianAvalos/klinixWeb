@@ -10,17 +10,18 @@ export const useAuth = ({middleware,url}) =>{
     const token = localStorage.getItem('AUTH_TOKEN');
     const navigate = useNavigate();
 
-    const {data: user, error,mutate}= useSWR('/api/user',()=>
-        clienteAxios('/api/user',{
-            headers:{
+    const { data: user, error, mutate } = useSWR('/api/user', () => {
+    const token = localStorage.getItem('AUTH_TOKEN');
+        return clienteAxios('/api/user', {
+            headers: {
                 Authorization: `Bearer ${token}`
             }
         })
         .then(res => res.data)
         .catch(error => {
-            throw Error (error?.response?.data?.errors)
-        })
-    )
+            throw Error(error?.response?.data?.errors)
+        });
+    });
 
     const login = async (datos,setErrores) =>{
         try {
