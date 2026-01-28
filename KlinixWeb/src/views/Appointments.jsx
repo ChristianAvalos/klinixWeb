@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
 import { toast } from 'react-toastify'
@@ -76,10 +76,13 @@ function getRangeForView(view, date) {
 }
 
 export default function Appointments() {
-  const token = localStorage.getItem('AUTH_TOKEN')
-
   const [loading, setLoading] = useState(true)
   const [loadingEvents, setLoadingEvents] = useState(false)
+
+  const appointmentsAbortRef = useRef(null)
+  const lastRequestedKeyRef = useRef(null)
+  const appointmentsCacheRef = useRef(new Map())
+  const rangeDebounceRef = useRef(null)
 
   const [currentDate, setCurrentDate] = useState(() => new Date())
   const [currentView, setCurrentView] = useState('week')
@@ -130,23 +133,56 @@ export default function Appointments() {
     async (currentRange) => {
       const norm = normalizeRange(currentRange)
       if (!norm?.start || !norm?.end) return
+
+      const currentToken = localStorage.getItem('AUTH_TOKEN')
+      if (!currentToken) return
+
+      const startParam = toApiDateTime(new Date(norm.start))
+      const endParam = toApiDateTime(new Date(norm.end))
+      const rangeKey = `${startParam}__${endParam}`
+
+      // Cancela la petición anterior si todavía está en vuelo (evita ráfagas)
+      if (appointmentsAbortRef.current) {
+        appointmentsAbortRef.current.abort()
+      }
+
+      // Cache: si ya cargamos este rango antes, pintamos inmediatamente sin pegarle al backend.
+      if (appointmentsCacheRef.current.has(rangeKey)) {
+        setAppointments(appointmentsCacheRef.current.get(rangeKey))
+        setLoadingEvents(false)
+        return
+      }
+
+      // Evita re-disparar el mismo rango mientras ya se está pidiendo.
+      if (lastRequestedKeyRef.current === rangeKey) return
+      lastRequestedKeyRef.current = rangeKey
+
+      const abortController = new AbortController()
+      appointmentsAbortRef.current = abortController
+
       setLoadingEvents(true)
 
       try {
-        const startParam = toApiDateTime(new Date(norm.start))
-        const endParam = toApiDateTime(new Date(norm.end))
-        const { data } = await clienteAxios.get(`api/appointments?start=${encodeURIComponent(startParam)}&end=${encodeURIComponent(endParam)}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        setAppointments(Array.isArray(data) ? data : [])
+        const { data } = await clienteAxios.get(
+          `api/appointments?start=${encodeURIComponent(startParam)}&end=${encodeURIComponent(endParam)}`,
+          {
+            headers: { Authorization: `Bearer ${currentToken}` },
+            signal: abortController.signal,
+          }
+        )
+
+        const normalized = Array.isArray(data) ? data : []
+        appointmentsCacheRef.current.set(rangeKey, normalized)
+        setAppointments(normalized)
       } catch (error) {
+        if (abortController.signal.aborted) return
         console.error('Error cargando citas', error)
         toast.error('Error cargando las citas.')
       } finally {
-        setLoadingEvents(false)
+        if (!abortController.signal.aborted) setLoadingEvents(false)
       }
     },
-    [token]
+    []
   )
 
   useEffect(() => {
@@ -160,8 +196,31 @@ export default function Appointments() {
   }, [loadCatalogs])
 
   useEffect(() => {
-    if (range) loadAppointments(range)
+    if (!range) return
+
+    // Debounce: si el usuario navega rápido (anterior/siguiente), solo pedimos el último rango.
+    if (rangeDebounceRef.current) {
+      clearTimeout(rangeDebounceRef.current)
+    }
+    rangeDebounceRef.current = setTimeout(() => {
+      loadAppointments(range)
+    }, 250)
+
+    return () => {
+      if (rangeDebounceRef.current) {
+        clearTimeout(rangeDebounceRef.current)
+        rangeDebounceRef.current = null
+      }
+    }
   }, [range, loadAppointments])
+
+  useEffect(() => {
+    return () => {
+      if (appointmentsAbortRef.current) {
+        appointmentsAbortRef.current.abort()
+      }
+    }
+  }, [])
 
   useEffect(() => {
     const next = getRangeForView(currentView, currentDate)
@@ -253,6 +312,12 @@ export default function Appointments() {
       const id = event?.id
       if (!id) return
 
+      const currentToken = localStorage.getItem('AUTH_TOKEN')
+      if (!currentToken) {
+        toast.error('Sesión expirada. Inicia sesión nuevamente.')
+        return
+      }
+
       // snapshot para rollback
       const previous = appointments.find((a) => a.id === id)
       if (!previous) return
@@ -289,7 +354,7 @@ export default function Appointments() {
         }
 
         const { data } = await clienteAxios.put(`api/appointments/${id}`, payload, {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${currentToken}` },
         })
 
         setAppointments((prev) => prev.map((a) => (a.id === id ? data : a)))
@@ -307,7 +372,7 @@ export default function Appointments() {
         }
       }
     },
-    [appointments, token]
+    [appointments]
   )
 
   const messages = useMemo(
