@@ -1,0 +1,20 @@
+vendor
+node_modules
+
+# Mantener estructura de directorios requerida por Laravel (artisan/package:discover)
+storage/logs/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+!storage/framework/.gitignore
+!storage/framework/cache/.gitignore
+!storage/framework/sessions/.gitignore
+!storage/framework/views/.gitignore
+
+bootstrap/cache/*
+!bootstrap/cache/.gitignore
+!bootstrap/cache/packages.php
+!bootstrap/cache/services.php
+.git
+.gitignore
+README.md

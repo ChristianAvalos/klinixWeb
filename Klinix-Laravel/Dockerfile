@@ -39,6 +39,16 @@ COPY . /var/www/html
 
 COPY .env /var/www/html/.env
 
+# Asegurar directorios requeridos por Laravel (y permisos) antes de ejecutar scripts de Composer
+RUN mkdir -p \
+        /var/www/html/bootstrap/cache \
+        /var/www/html/storage/framework/cache \
+        /var/www/html/storage/framework/sessions \
+        /var/www/html/storage/framework/views \
+        /var/www/html/storage/logs \
+    && chown -R www-data:www-data /var/www/html/bootstrap/cache /var/www/html/storage \
+    && chmod -R 775 /var/www/html/bootstrap/cache /var/www/html/storage
+
 # Instalar dependencias de Composer
 RUN composer install --no-dev --optimize-autoloader
 
@@ -47,7 +57,8 @@ RUN php artisan key:generate
 
 # Establecer permisos adecuados
 RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html
+    && chmod -R 755 /var/www/html \
+    && chmod -R 775 /var/www/html/bootstrap/cache /var/www/html/storage
 
 # Establecer el DocumentRoot en /var/www/html/public
 RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|' /etc/apache2/sites-available/000-default.conf
