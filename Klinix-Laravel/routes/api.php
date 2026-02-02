@@ -32,11 +32,15 @@ use App\Http\Controllers\MaritalStatusController;
 use App\Http\Controllers\DashboardController;
 
 Route::middleware('auth:sanctum')->group(function() {
-        // Endpoint único para dashboard contadores
-        Route::get('/dashboard/contadores', [DashboardController::class, 'contadores']);
+    //para los usuarios
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
+
+
+    // Endpoint único para dashboard contadores
+    Route::get('/dashboard/contadores', [DashboardController::class, 'contadores']);
+
     Route::post('/logout',[AuthController::class,'logout']);
     Route::get('/usuarios',[AuthController::class,'index']);
     Route::get('/usuarios/permisos', [AuthController::class, 'ObtenerPermisosUsuario']);
