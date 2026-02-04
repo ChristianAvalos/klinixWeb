@@ -159,7 +159,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="bg-red-500 rounded-lg shadow-md p-5 flex flex-col justify-between min-h-[140px] transition-transform hover:-translate-y-0.5 hover:shadow-lg">
+            <div className="klinix-danger rounded-lg shadow-md p-5 flex flex-col justify-between min-h-[140px] transition-transform hover:-translate-y-0.5 hover:shadow-lg">
               <div>
                 <h3 className="text-white text-3xl font-bold">{cantidadRoles}</h3>
                 <p className="text-white/90 text-lg">Roles</p>

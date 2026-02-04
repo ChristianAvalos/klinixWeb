@@ -19,3 +19,48 @@
 .rbc-btn-group button {
 	cursor: pointer;
 }
+
+/* Tema Klinix - utilidades que usan variables CSS proporcionadas por ThemeProvider */
+.klinix-gradient {
+	background-image: linear-gradient(to bottom right, rgb(var(--klinix-from)), rgb(var(--klinix-to)));
+	color: rgb(var(--klinix-on));
+}
+
+.klinix-gradient-r {
+	background-image: linear-gradient(to right, rgb(var(--klinix-from)), rgb(var(--klinix-to)));
+	color: rgb(var(--klinix-on));
+}
+
+.klinix-thead-gradient {
+	background-image: linear-gradient(to right, rgb(var(--klinix-from)), rgb(var(--klinix-to)));
+	color: rgb(var(--klinix-on));
+}
+
+.klinix-sidenav {
+	background-image: linear-gradient(to bottom, rgba(var(--klinix-from), 0.06), rgba(var(--klinix-to), 0.06));
+	color: rgb(var(--klinix-on));
+}
+
+.text-klinix-on {
+	color: rgb(var(--klinix-on)) !important;
+}
+
+.bg-klinix-on {
+	background-color: rgb(var(--klinix-on)) !important;
+}
+
+/* Botón destructivo consistente */
+.klinix-danger {
+	background-color: rgb(239 68 68); /* red-500 */
+	color: #fff;
+}
+.klinix-danger:hover {
+	background-color: rgb(220 38 38); /* red-600 */
+}
+
+/* Alertas destructivas que usan la variable klinix-from para borde y texto oscuro */
+.klinix-alert-danger {
+	background-color: rgba(239, 68, 68, 0.08); /* rojo muy suave */
+	border-left: 4px solid rgb(239 68 68);
+	color: rgb(127 29 29);
+}

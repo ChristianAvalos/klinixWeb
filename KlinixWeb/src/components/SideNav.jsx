@@ -41,8 +41,8 @@ export default function SideNav() {
       });
         if (loading) {
           return (
-            <div className="sidebar bg-gradient-to-br from-blue-900 to-cyan-900 w-64 min-h-screen fixed !z-[1] shadow-xl border-r border-cyan-800/40 overflow-y-auto flex items-center justify-center">
-              <span className="text-white font-bold">Cargando menú...</span>
+            <div className="sidebar klinix-gradient w-64 min-h-screen fixed !z-[1] shadow-xl border-r border-[color:rgb(var(--klinix-to))] overflow-y-auto flex items-center justify-center">
+              <span className="font-bold" style={{ color: 'rgb(var(--klinix-on))' }}>Cargando menú...</span>
             </div>
           );
         }
@@ -75,7 +75,7 @@ export default function SideNav() {
   return (
     <div>
       {/* Main Sidebar Container */}
-      <div className="sidebar bg-gradient-to-br from-blue-900 to-cyan-900 w-64 min-h-screen fixed !z-[1] shadow-xl border-r border-cyan-800/40 overflow-y-auto">
+      <div className="sidebar klinix-gradient w-64 min-h-screen fixed !z-[1] shadow-xl border-r border-[color:rgb(var(--klinix-to))] overflow-y-auto">
         {/* Sidebar user panel (optional) */}
         <div className="user-panel mt-3 pb-3 mb-3 flex justify-center">
           <div className="info">
@@ -127,7 +127,7 @@ export default function SideNav() {
               {filteredMenuItems.length > 0 ? (
                 filteredMenuItems.map((item, index) => (
                   <li key={index} className="nav-item">
-                    <Link to={item.route} className="nav-link text-white font-bold flex items-center gap-2 rounded-md hover:bg-cyan-800/30 transition-colors">
+                    <Link to={item.route} className="nav-link text-klinix-on font-bold flex items-center gap-2 rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors">
                       <i className="nav-icon fas fa-circle text-xs"></i>
                       <p className="m-0">{item.text}</p>
                     </Link>
@@ -148,10 +148,10 @@ export default function SideNav() {
               {(hasPermission('Visitas') || hasPermission('Doctores') || hasPermission('Pacientes') || hasPermission('Consultorios'))  && (
 
                 <li className="nav-item has-treeview">
-                  <a
+                    <a
                     href="#"
                     onClick={(e) => e.preventDefault()}
-                    className="nav-link text-white font-bold underline underline-offset-4 decoration-cyan-300/60 tracking-wide menu-toggle flex items-center justify-between rounded-md hover:bg-cyan-800/30 transition-colors"
+                    className="nav-link text-klinix-on font-bold underline underline-offset-4 decoration-cyan-300/60 tracking-wide menu-toggle flex items-center justify-between rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors"
                   >
                     <p className="m-0">
                       Operaciones
@@ -162,7 +162,7 @@ export default function SideNav() {
                   <ul className="nav nav-treeview px-2">
                     {hasPermission('Visitas') && (
                       <li className="nav-item">
-                        <Link to="/scanvisit" className="nav-link flex items-center gap-2 text-white font-bold rounded-md hover:bg-cyan-800/30 transition-colors">
+                        <Link to="/scanvisit" className="nav-link flex items-center gap-2 text-klinix-on font-bold rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors">
                           <img src="/img/Icon/access-card.png" alt="Organigrama" className="w-5 h-5 mr-2" />
                           <p className="ml-2 m-0">Escanear visitas</p>
                         </Link>
@@ -171,7 +171,7 @@ export default function SideNav() {
 
                     {hasPermission('Visitas') && (
                       <li className="nav-item">
-                        <Link to="/visit" className="nav-link flex items-center gap-2 text-white font-bold rounded-md hover:bg-cyan-800/30 transition-colors">
+                        <Link to="/visit" className="nav-link flex items-center gap-2 text-klinix-on font-bold rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors">
                           <img src="/img/Icon/user-group-men.png" alt="Organigrama" className="w-5 h-5 mr-2" />
                           <p className="ml-2 m-0">Fichero de visitas</p>
                         </Link>
@@ -180,7 +180,7 @@ export default function SideNav() {
 
                     {hasPermission('Doctores') && (
                       <li className="nav-item">
-                        <Link to="/doctor" className="nav-link flex items-center gap-2 text-white font-bold rounded-md hover:bg-cyan-800/30 transition-colors">
+                        <Link to="/doctor" className="nav-link flex items-center gap-2 text-klinix-on font-bold rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors">
                           <img src="/img/Icon/people_doctor.png" alt="Organigrama" className="w-5 h-5 mr-2" />
                           <p className="ml-2 m-0">Fichero de doctores</p>
                         </Link>
@@ -189,7 +189,7 @@ export default function SideNav() {
 
                     {hasPermission('Pacientes') && (
                       <li className="nav-item">
-                        <Link to="/patients" className="nav-link flex items-center gap-2 text-white font-bold rounded-md hover:bg-cyan-800/30 transition-colors">
+                        <Link to="/patients" className="nav-link flex items-center gap-2 text-klinix-on font-bold rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors">
                           <i className="fas fa-user-injured mr-1"></i>
                           <p className="ml-2 m-0">Fichero de pacientes</p>
                         </Link>
@@ -198,7 +198,7 @@ export default function SideNav() {
 
                     {hasPermission('Consultorios') && (
                       <li className="nav-item">
-                        <Link to="/consultorios" className="nav-link flex items-center gap-2 text-white font-bold rounded-md hover:bg-cyan-800/30 transition-colors">
+                        <Link to="/consultorios" className="nav-link flex items-center gap-2 text-klinix-on font-bold rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors">
                           <img src="/img/Icon/pharmacy.png" alt="Organigrama" className="w-5 h-5 mr-2" />
                           <p className="ml-2 m-0">Fichero de consultorios</p>
                         </Link>
@@ -207,7 +207,7 @@ export default function SideNav() {
 
                     {hasPermission('Agenda') && (
                       <li className="nav-item">
-                        <Link to="/agenda" className="nav-link flex items-center gap-2 text-white font-bold rounded-md hover:bg-cyan-800/30 transition-colors">
+                        <Link to="/agenda" className="nav-link flex items-center gap-2 text-klinix-on font-bold rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors">
                           <img src="/img/Icon/calendar2.png" alt="Organigrama" className="w-5 h-5 mr-2" />
                           <p className="ml-2 m-0">Agendamientos</p>
                         </Link>
@@ -226,10 +226,10 @@ export default function SideNav() {
               {(hasPermission('Herraminetas_usuarios') || hasPermission('Organizacion')) && (
 
                 <li className="nav-item has-treeview">
-                  <a
+                    <a
                     href="#"
                     onClick={(e) => e.preventDefault()}
-                    className="nav-link text-white font-bold underline underline-offset-4 decoration-cyan-300/60 tracking-wide menu-toggle flex items-center justify-between rounded-md hover:bg-cyan-800/30 transition-colors"
+                    className="nav-link text-klinix-on font-bold underline underline-offset-4 decoration-cyan-300/60 tracking-wide menu-toggle flex items-center justify-between rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors"
                   >
                     <p className="m-0">
                       Herramientas
@@ -240,7 +240,7 @@ export default function SideNav() {
                   <ul className="nav nav-treeview px-2">
                     {hasPermission('Organizacion') && (
                       <li className="nav-item">
-                        <Link to="/organizacion" className="nav-link flex items-center gap-2 text-white font-bold rounded-md hover:bg-cyan-800/30 transition-colors">
+                        <Link to="/organizacion" className="nav-link flex items-center gap-2 text-klinix-on font-bold rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors">
                           <img src="/img/Icon/organogram.png" alt="Organigrama" className="w-5 h-5 mr-2" />
                           <p className="ml-2 m-0">Organización</p>
                         </Link>
@@ -250,14 +250,14 @@ export default function SideNav() {
                     {hasPermission('Herraminetas_usuarios') && (
                       <>
                         <li className="nav-item">
-                          <Link to="/usuarios" className="nav-link flex items-center gap-2 text-white font-bold rounded-md hover:bg-cyan-800/30 transition-colors">
+                          <Link to="/usuarios" className="nav-link flex items-center gap-2 text-klinix-on font-bold rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors">
                              <img src="/img/Icon/user-group.png" alt="User" className="w-5 h-5 mr-2" />
                             <p className="ml-2 m-0">Usuarios</p>
                           </Link>
                         </li>
 
                         <li className="nav-item">
-                          <Link to="/usuarios/roles" className="nav-link flex items-center gap-2 text-white font-bold rounded-md hover:bg-cyan-800/30 transition-colors">
+                          <Link to="/usuarios/roles" className="nav-link flex items-center gap-2 text-klinix-on font-bold rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors">
                             <img src="/img/Icon/manage-user.png" alt="Roles User" className="w-5 h-5 mr-2" />
                             <p className="ml-2 m-0">Roles usuario </p>
                           </Link>
@@ -272,10 +272,10 @@ export default function SideNav() {
 
               {hasPermission('Reporte_Usuarios') && (
                 <li className="nav-item has-treeview">
-                  <a
+                    <a
                     href="#"
                     onClick={(e) => e.preventDefault()}
-                    className="nav-link text-white font-bold underline underline-offset-4 decoration-cyan-300/60 tracking-wide menu-toggle flex items-center justify-between rounded-md hover:bg-cyan-800/30 transition-colors"
+                    className="nav-link text-klinix-on font-bold underline underline-offset-4 decoration-cyan-300/60 tracking-wide menu-toggle flex items-center justify-between rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors"
                   >
                     <p className="m-0">
                       Reportes
@@ -286,7 +286,7 @@ export default function SideNav() {
                   <ul className="nav nav-treeview px-2">
                     {hasPermission('Reporte_Usuarios') && (
                       <li className="nav-item">
-                        <Link to="/usuarios/reporte" className="nav-link flex items-center gap-2 text-white font-bold rounded-md hover:bg-cyan-800/30 transition-colors">
+                        <Link to="/usuarios/reporte" className="nav-link flex items-center gap-2 text-klinix-on font-bold rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors">
                           <img src="/img/Icon/report-print.png" alt="Report" className="w-5 h-5 mr-2" />
                           <p className="ml-2 m-0">Reporte de usuarios</p>
                         </Link>

@@ -3,8 +3,10 @@ import ReactDOM from 'react-dom';
 import ModalUsuarios from '../views/ModalUsuarios';
 import { useAuth } from "../hooks/useAuth";
 import ChangePasswordModal from '../views/ModalPassword';
+import { useTheme } from '../context/ThemeContext';
 
 export default function Header() {
+    const { themes, themeName, setTheme, resetTheme } = useTheme();
   const { logout, user } = useAuth({ middleware: 'auth' })
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -16,28 +18,28 @@ export default function Header() {
     setDropdownOpen(false);  // Cerrar el menú después de hacer logout
   };
 
-  //para cuando se toca fuera del boton el menu desplegable 
-  const toggleDropdown = () => {
-    setDropdownOpen(!dropdownOpen);
-  };
-  const handleClickOutside = (event) => {
-    // Verifica si el clic fue fuera del botón y del menú
-    const isOutsideDropdown = dropdownRef.current && !dropdownRef.current.contains(event.target);
-    const isOutsideMenu = menuRef.current && !menuRef.current.contains(event.target);
-    if (dropdownOpen && isOutsideDropdown && isOutsideMenu) {
-      setDropdownOpen(false);
-    }
-  };
+  // Manejo del dropdown y cierre al hacer clic fuera (usa captura para mayor fiabilidad)
+  const toggleDropdown = () => setDropdownOpen((v) => !v);
 
   useEffect(() => {
-    // Agrega el evento de clic en el documento
-    document.addEventListener('mousedown', handleClickOutside);
-    
-    // Limpia el evento al desmontar el componente
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+    const handleOutside = (event) => {
+      if (!dropdownOpen) return;
+      const target = event.target;
+      const btn = dropdownRef.current;
+      const menu = menuRef.current;
+      if (btn && btn.contains(target)) return;
+      if (menu && menu.contains(target)) return;
+      setDropdownOpen(false);
     };
-  }, []);
+
+    document.addEventListener('mousedown', handleOutside, true);
+    document.addEventListener('touchstart', handleOutside, true);
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutside, true);
+      document.removeEventListener('touchstart', handleOutside, true);
+    };
+  }, [dropdownOpen]);
 
 
 
@@ -61,17 +63,17 @@ export default function Header() {
   return (
     <div>
       {/* Navbar */}
-      <nav className="main-header navbar navbar-expand navbar-white navbar-light !z-[1]">
+      <nav className="main-header navbar navbar-expand klinix-gradient !z-[1]">
         {/* Left navbar links */}
         <ul className="navbar-nav">
           <li className="nav-item">
-            <a className="nav-link" data-widget="pushmenu" href="#" role="button"><i className="fas fa-bars" /></a>
+            <a className="nav-link text-klinix-on" data-widget="pushmenu" href="#" role="button"><i className="fas fa-bars" /></a>
           </li>
         </ul>
         {/* Right navbar links */}
         <ul className="navbar-nav ml-auto">
           <li className="nav-item">
-            <a className="nav-link" data-widget="fullscreen" href="#" role="button">
+            <a className="nav-link text-klinix-on" data-widget="fullscreen" href="#" role="button">
               <i className="fas fa-expand-arrows-alt" />
             </a>
           </li>
@@ -80,7 +82,7 @@ export default function Header() {
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={toggleDropdown}
-                className="nav-link text-black font-semibold focus:outline-none flex items-center space-x-2"
+                className="nav-link text-klinix-on font-semibold focus:outline-none flex items-center space-x-2"
               >
                 {user?.name} {/* Muestra el nombre del usuario */}
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -90,7 +92,27 @@ export default function Header() {
 
               {/* Menú desplegable usando Portal */}
               {dropdownOpen && ReactDOM.createPortal(
-                <ul ref={menuRef} className="fixed right-4 top-16 w-48 bg-white rounded-lg shadow-lg z-[9999] transition-all duration-200 ease-in-out border border-gray-200">
+                <ul ref={menuRef} className="fixed right-4 top-16 w-56 bg-white rounded-lg shadow-lg z-[9999] transition-all duration-200 ease-in-out border border-gray-200">
+                  <li className="px-4 pt-3 pb-2">
+                    <div className="text-xs font-semibold text-gray-500">Tema</div>
+                    <select
+                      className="mt-2 w-full rounded-md border border-gray-300 px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      value={themeName}
+                      onChange={(e) => setTheme(e.target.value)}
+                    >
+                      {Object.entries(themes).map(([key, t]) => (
+                        <option key={key} value={key}>{t.label}</option>
+                      ))}
+                    </select>
+                    <button
+                      type="button"
+                      onClick={resetTheme}
+                      className="mt-2 w-full rounded-md bg-gray-100 px-2 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-200"
+                    >
+                      Restaurar por defecto
+                    </button>
+                  </li>
+                  <li><hr className="my-1 border-gray-200" /></li>
                   <li>
                     <button
                       onClick={() => { setDropdownOpen(false); openProfileModal('perfil'); }}

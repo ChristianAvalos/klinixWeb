@@ -103,7 +103,7 @@ const ModalRolPermisos = ({ roleId, onClose, refrescarRoles }) => {
                     <button
                         type="button"
                         onClick={handleDeselectAll}
-                        className="flex items-center bg-red-500 text-white text-sm px-3 py-1 rounded hover:bg-red-600 transition duration-200"
+                        className="flex items-center klinix-danger text-white text-sm px-3 py-1 rounded hover:opacity-90 transition duration-200"
                     >
                         <img src="/img/unchecked.png" alt="Desmarcar Todo" className="w-4 h-4 mr-1" />
                         Desmarcar Todo
@@ -132,14 +132,14 @@ const ModalRolPermisos = ({ roleId, onClose, refrescarRoles }) => {
                     <button
                         onClick={handleSave}
                         type="button"
-                        className={`inline-flex items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-cyan-900 px-4 py-2 font-semibold text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-400 ${isSubmitting ? 'opacity-60 cursor-not-allowed' : 'hover:from-blue-800 hover:to-cyan-800'}`}
+                        className={`inline-flex items-center justify-center rounded-lg px-4 py-2 font-semibold text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-400 ${isSubmitting ? 'opacity-60 cursor-not-allowed bg-gray-400' : 'klinix-gradient'}`}
                     >
                         {isSubmitting ? 'Guardando...' : 'Guardar'}
                     </button>
                     <button
                         onClick={onClose}
                         type="button"
-                        className={`inline-flex items-center justify-center rounded-lg border border-red-200 bg-red-500 px-4 py-2 font-medium text-white focus:outline-none focus:ring-2 focus:ring-red-200 ${isSubmitting ? 'opacity-60 cursor-not-allowed' : 'hover:bg-red-600'}`}
+                        className={`inline-flex items-center justify-center rounded-lg border border-red-200 klinix-danger px-4 py-2 font-medium focus:outline-none focus:ring-2 focus:ring-red-200 ${isSubmitting ? 'opacity-60 cursor-not-allowed' : 'hover:opacity-90'}`}
                     >
                         Cerrar
                     </button>

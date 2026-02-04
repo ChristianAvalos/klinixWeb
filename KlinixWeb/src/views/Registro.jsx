@@ -98,7 +98,7 @@ export default function Registro() {
                             ref={passwordConfirmationRef}/>
                 </div>
                 <input type="submit" value="Crear cuenta"
-                        className="bg-indigo-600 hover:bg-indigo-800 text-white w-full mt-5 p3 uppercase cursor-pointer"
+                    className="klinix-gradient-r hover:opacity-90 w-full mt-5 p3 uppercase cursor-pointer"
                 />
             </form>
 

@@ -5,10 +5,13 @@ import 'react-big-calendar/lib/addons/dragAndDrop/styles.css'
 import { RouterProvider } from 'react-router-dom'
 import router from './router'
 import './index.css'
+import { ThemeProvider } from './context/ThemeContext'
 
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider  router={router}/>
+    <ThemeProvider>
+      <RouterProvider  router={router}/>
+    </ThemeProvider>
   </StrictMode>,
 )

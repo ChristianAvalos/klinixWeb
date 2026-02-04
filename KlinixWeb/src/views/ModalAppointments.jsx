@@ -436,7 +436,7 @@ export default function AppointmentModal({
 										 <button
 											 type="button"
 											 onClick={handleDelete}
-											 className="inline-flex items-center justify-center rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 disabled:opacity-60"
+											 className="inline-flex items-center justify-center rounded-md klinix-danger px-4 py-2 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-60"
 											 disabled={isSubmitting}
 										 >
 											 Eliminar
@@ -455,7 +455,7 @@ export default function AppointmentModal({
 									 </button>
 									 <button
 										 type="submit"
-										 className="inline-flex items-center justify-center rounded-md bg-gradient-to-br from-blue-900 to-cyan-900 px-4 py-2 text-sm font-semibold text-white hover:from-blue-800 hover:to-cyan-800 disabled:opacity-60"
+										 className="inline-flex items-center justify-center rounded-md klinix-gradient px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
 										 disabled={isSubmitting}
 									 >
 										 {isSubmitting ? 'Guardando…' : 'Guardar'}

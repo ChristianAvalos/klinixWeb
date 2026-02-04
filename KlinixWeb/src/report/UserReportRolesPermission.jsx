@@ -66,7 +66,7 @@ function UserReport() {
                 />
                 <button
                     onClick={() => downloadReport(filteredUsers)} // Llamar a la función de descarga con los usuarios filtrados
-                    className="px-4 py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 transition"
+                    className="px-4 py-2 font-semibold rounded transition klinix-gradient hover:opacity-90"
                 >
                     Descargar PDF
                 </button>

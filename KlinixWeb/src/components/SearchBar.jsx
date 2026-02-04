@@ -6,7 +6,7 @@ const SearchBar = ({ title, placeholder, buttonLabel, onSearch, onAdd }) => {
         onSearch(term);
     };
     return (
-        <div className="content-header font-bold bg-gradient-to-br from-blue-900 to-cyan-900 text-white rounded">
+        <div className="content-header font-bold klinix-gradient rounded">
             <div className="container-fluid">
                 <div className="row mb-2">
                     <div className="col-sm-6 d-flex align-items-center">

@@ -278,7 +278,7 @@ export default function ModalResource({ onClose, modo, resource = {}, refrescarR
                                         checked={!!visible}
                                         onChange={(e) => setVisible(e.target.checked)}
                                     />
-                                    <div className="relative w-11 h-6 bg-gray-200 rounded-full peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-cyan-400 peer-checked:bg-gradient-to-br peer-checked:from-blue-900 peer-checked:to-cyan-900 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:border-gray-300 after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-5"></div>
+                                    <div className="relative w-11 h-6 bg-gray-200 rounded-full peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-cyan-400 peer-checked:klinix-gradient after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:border-gray-300 after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-5"></div>
                                     <span className="ml-3 text-sm font-medium text-slate-700">
                                         {visible ? 'Sí' : 'No'}
                                     </span>
@@ -335,13 +335,13 @@ export default function ModalResource({ onClose, modo, resource = {}, refrescarR
                         <button
                             type="button"
                             onClick={onClose}
-                            className={`inline-flex items-center justify-center rounded-lg border border-red-200 bg-red-500 px-4 py-2 font-medium text-white focus:outline-none focus:ring-2 focus:ring-red-200 ${isSubmitting ? 'opacity-60 cursor-not-allowed' : 'hover:bg-red-600'}`}
+                            className={`inline-flex items-center justify-center rounded-lg border border-red-200 klinix-danger px-4 py-2 font-medium focus:outline-none focus:ring-2 focus:ring-red-200 ${isSubmitting ? 'opacity-60 cursor-not-allowed' : 'hover:opacity-90'}`}
                         >
                             Cancelar
                         </button>
                         <button
                             type="submit"
-                            className={`inline-flex items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-cyan-900 px-4 py-2 font-semibold text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-400 ${isSubmitting ? 'opacity-60 cursor-not-allowed' : 'hover:from-blue-800 hover:to-cyan-800'}`}
+                            className={`inline-flex items-center justify-center rounded-lg px-4 py-2 font-semibold text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-400 ${isSubmitting ? 'opacity-60 cursor-not-allowed bg-gray-400' : 'klinix-gradient'}`}
                         >
                             {isSubmitting ? 'Guardando...' : (modo === 'crear' ? 'Crear consultorio' : 'Guardar cambios')}
                         </button>

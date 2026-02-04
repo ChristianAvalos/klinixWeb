@@ -231,14 +231,14 @@ export default function ModalDoctor({ onClose, modo, doctor = {}, refrescarDocto
                             type="button"
                             onClick={onClose}
                             disabled={isSubmitting}
-                            className={`inline-flex items-center justify-center rounded-lg border border-red-200 bg-red-500 px-4 py-2 font-medium text-white focus:outline-none focus:ring-2 focus:ring-red-200 ${isSubmitting ? 'opacity-60 cursor-not-allowed' : 'hover:bg-red-600'}`}
+                            className={`inline-flex items-center justify-center rounded-lg border border-red-200 klinix-danger px-4 py-2 font-medium focus:outline-none focus:ring-2 focus:ring-red-200 ${isSubmitting ? 'opacity-60 cursor-not-allowed' : 'hover:opacity-90'}`}
                         >
                             Cancelar
                         </button>
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className={`inline-flex items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-cyan-900 px-4 py-2 font-semibold text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-400 ${isSubmitting ? 'opacity-60 cursor-not-allowed' : 'hover:from-blue-800 hover:to-cyan-800'}`}
+                            className={`inline-flex items-center justify-center rounded-lg px-4 py-2 font-semibold text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-400 ${isSubmitting ? 'opacity-60 cursor-not-allowed bg-gray-400' : 'klinix-gradient'}`}
                         >
                             {isSubmitting ? 'Guardando...' : (modo === 'crear' ? 'Crear Doctor' : 'Guardar Cambios')}
                         </button>

@@ -6,7 +6,12 @@ export default {
 
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        brandFrom: 'rgb(var(--klinix-from) / <alpha-value>)',
+        brandTo: 'rgb(var(--klinix-to) / <alpha-value>)',
+      },
+    },
   },
   plugins: [],
 }

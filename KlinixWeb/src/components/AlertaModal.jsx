@@ -31,14 +31,14 @@ export default function Alerta({ tipo = 'informativo', mensaje, onClose, onConfi
                         <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
                             <button
                                 type="button"
-                                className="inline-flex items-center justify-center rounded-lg border border-red-200 bg-red-500 px-4 py-2 font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-200"
+                                className="inline-flex items-center justify-center rounded-lg border border-red-200 klinix-danger px-4 py-2 font-medium hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-red-200"
                                 onClick={onClose}
                             >
                                 No
                             </button>
                             <button
                                 type="button"
-                                className="inline-flex items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-cyan-900 px-4 py-2 font-semibold text-white shadow-sm hover:from-blue-800 hover:to-cyan-800 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                                className="inline-flex items-center justify-center rounded-lg klinix-gradient px-4 py-2 font-semibold text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
                                 onClick={onConfirm}
                             >
                                 Sí
@@ -48,7 +48,7 @@ export default function Alerta({ tipo = 'informativo', mensaje, onClose, onConfi
                         <div className="mt-8 flex justify-end">
                             <button
                                 type="button"
-                                className="inline-flex items-center justify-center rounded-lg border border-red-200 bg-red-500 px-4 py-2 font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-200"
+                                className="inline-flex items-center justify-center rounded-lg border border-red-200 klinix-danger px-4 py-2 font-medium hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-red-200"
                                 onClick={onClose}
                             >
                                 Cerrar

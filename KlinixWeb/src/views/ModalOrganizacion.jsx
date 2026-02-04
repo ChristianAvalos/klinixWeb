@@ -416,13 +416,13 @@ export default function ModalOrganizacion({ onClose, modo, refrescarOrganizacion
                         <button
                             type="button"
                             onClick={onClose}
-                            className={`bg-red-500 text-white rounded px-4 py-2 transition ${isSubmitting ? 'opacity-60 cursor-not-allowed' : 'hover:bg-red-600'}`}
+                            className={`klinix-danger rounded px-4 py-2 transition ${isSubmitting ? 'opacity-60 cursor-not-allowed' : 'hover:opacity-90'}`}
                         >
                             Cancelar
                         </button>
                         <button
                             type="submit"
-                            className={`bg-blue-500 text-white rounded px-4 py-2 transition ${isSubmitting ? 'opacity-60 cursor-not-allowed' : 'hover:bg-blue-600'}`}
+                            className={`rounded px-4 py-2 transition ${isSubmitting ? 'opacity-60 cursor-not-allowed' : 'hover:opacity-90'} klinix-gradient`}
                         >
                             {isSubmitting ? 'Guardando...' : (modo === "crear" ? "Crear" : "Guardar")}
                         </button>

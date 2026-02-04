@@ -416,7 +416,7 @@ export default function Appointments() {
       <section className="content">
         <div className="container-fluid">
           <div className="card shadow-sm">
-            <div className="card-header bg-gradient-to-br from-blue-900 to-cyan-900 text-white">
+            <div className="card-header klinix-gradient">
               <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
                 <h3 className="card-title text-lg font-semibold">Agenda</h3>
                 <div className="flex items-center gap-2">

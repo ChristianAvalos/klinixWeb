@@ -34,8 +34,7 @@ export default function Login() {
     }
 
     return (
-        <div className=" flex flex-col justify-center items-center">
-
+        <div className="min-h-screen flex flex-col justify-center items-center klinix-gradient-r">
             <div className="bg-white shadow-lg rounded-2xl px-8 py-10 w-full max-w-md">
                 <div className="flex justify-center">
                     <img src="/img/Logo Institucional.png" alt="Logo" className="w-24 mb-4" />
@@ -86,7 +85,7 @@ export default function Login() {
                     <input
                         type="submit"
                         value="Iniciar sesión"
-                        className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white w-full py-3 rounded-lg font-semibold transition"
+                        className="klinix-gradient-r hover:opacity-90 w-full py-3 rounded-lg font-semibold transition"
                     />
                     {cargando && errores.length === 0 && <Spinner />}
                 </form>
