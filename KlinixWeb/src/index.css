@@ -64,3 +64,69 @@
 	border-left: 4px solid rgb(239 68 68);
 	color: rgb(127 29 29);
 }
+
+/* Quitar overlays en patrones (pace, etc.) que generan rayas */
+.pace .pace-activity,
+.pace .pace-progress,
+.pace {
+	background-image: none !important;
+	background-size: auto !important;
+	background-repeat: no-repeat !important;
+}
+
+/* Asegurar que las utilidades de gradiente no repitan */
+.klinix-gradient,
+.klinix-gradient-r {
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+/* Forzar gradiente limpio en contenedores de pantalla completa (login) */
+.min-h-screen.klinix-gradient-r,
+.klinix-gradient-r.min-h-screen {
+	background-image: linear-gradient(to right, rgb(var(--klinix-from)), rgb(var(--klinix-to))) !important;
+	background-repeat: no-repeat !important;
+	background-position: center !important;
+	background-attachment: fixed !important;
+}
+
+/* Override extra: neutralizar pseudo-elementos y cualquier fondo animado/pattern
+	 inyectado por plugins (pace, etc.). Específico para `.pace` y sus hijos. */
+.pace,
+.pace *,
+.pace::before,
+.pace::after,
+.pace .pace-activity::before,
+.pace .pace-activity::after,
+.pace .pace-progress:before,
+.pace .pace-progress:after {
+	background-image: none !important;
+	background: transparent !important;
+	background-repeat: no-repeat !important;
+	background-size: auto !important;
+	box-shadow: none !important;
+}
+
+/* Forzar que pseudo-elementos globales no inyecten patrones */
+html::before,
+html::after,
+body::before,
+body::after,
+#root::before,
+#root::after,
+.wrapper::before,
+.wrapper::after,
+main::before,
+main::after {
+	content: "" !important;
+	display: none !important;
+	background: transparent !important;
+	background-image: none !important;
+	box-shadow: none !important;
+}
+
+/* Desactivar temporalmente backgrounds inline que no pertenezcan a utilidades de tema */
+*[style*="background-image"]:not(.klinix-gradient):not(.klinix-gradient-r) {
+	background-image: none !important;
+	background: transparent !important;
+}

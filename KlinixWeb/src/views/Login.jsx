@@ -34,7 +34,7 @@ export default function Login() {
     }
 
     return (
-        <div className="min-h-screen flex flex-col justify-center items-center klinix-gradient-r">
+        <div className="min-h-screen flex flex-col justify-center items-center">
             <div className="bg-white shadow-lg rounded-2xl px-8 py-10 w-full max-w-md">
                 <div className="flex justify-center">
                     <img src="/img/Logo Institucional.png" alt="Logo" className="w-24 mb-4" />
