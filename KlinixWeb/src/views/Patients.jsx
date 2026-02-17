@@ -212,7 +212,7 @@ export default function Pacientes() {
                         <div className="card-body">
                             <div className="overflow-auto max-h-[70vh] relative">
                                 <table className="table table-bordered w-full bg-white">
-                                    <thead className="[&>tr>th]:sticky [&>tr>th]:top-0 [&>tr>th]:z-30 klinix-thead-gradient [&>tr>th:last-child]:right-0 [&>tr>th:last-child]:z-40">
+                                    <thead className="klinix-thead-gradient">
                                         <tr className="font-bold rounded text-center">
                                             <th>ID</th>
                                             <th>Codigo del paciente</th>
@@ -246,7 +246,7 @@ export default function Pacientes() {
                                             <th>Utilidades</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="[&>tr>td:last-child]:sticky [&>tr>td:last-child]:right-0 [&>tr>td:last-child]:z-20 [&>tr>td:last-child]:whitespace-nowrap [&>tr>td:last-child]:bg-inherit">
+                                    <tbody>
                                         {pacientesRender.length === 0 ? (
                                             <tr>
                                                 <td colSpan={30} className="text-center text-gray-600 py-6">

@@ -74,7 +74,7 @@ function UserReport() {
 
             <div className="overflow-auto max-h-[70vh] relative">
                 <table className="w-full border border-gray-200 rounded-lg bg-white">
-                    <thead className="[&>tr>th]:sticky [&>tr>th]:top-0 [&>tr>th]:z-30 [&>tr>th]:bg-gray-100">
+                    <thead className="bg-gray-100">
                         <tr>
                             <th className="px-4 py-2 border-b-2 border-gray-200 text-left text-sm font-semibold text-gray-600">Usuario</th>
                             <th className="px-4 py-2 border-b-2 border-gray-200 text-left text-sm font-semibold text-gray-600">Roles</th>

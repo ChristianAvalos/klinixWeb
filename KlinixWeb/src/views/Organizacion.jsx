@@ -203,7 +203,7 @@ export default function Organizacion() {
                         <div className="card-body">
                             <div className="overflow-auto max-h-[70vh] relative">
                                 <table className="table table-bordered w-full bg-white">
-                                    <thead className="[&>tr>th]:sticky [&>tr>th]:top-0 [&>tr>th]:z-30 klinix-thead-gradient">
+                                    <thead className="klinix-thead-gradient">
                                         <tr className="font-bold rounded text-center">
                                             <th>ID</th>
                                             <th>Razón social</th>
