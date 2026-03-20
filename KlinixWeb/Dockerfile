@@ -9,6 +9,7 @@ ENV NODE_ENV=development \
 	NPM_CONFIG_BIN_LINKS=true
 
 # Instala dependencias (incluye devDependencies como vite) de forma determinística
+RUN echo $RANDOM
 COPY package.json package-lock.json ./
 RUN npm ci --include=dev
 
