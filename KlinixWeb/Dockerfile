@@ -16,6 +16,7 @@ RUN npm ci --include=dev
 COPY . .
 
 # Falla temprano con un error claro si vite no quedó disponible
+RUN ls -l node_modules/.bin
 RUN test -e node_modules/.bin/vite
 
 # Ejecuta Vite sin depender de PATH ni de cómo npm inyecte node_modules/.bin
