@@ -3,10 +3,9 @@
 FROM node:20-alpine as build
 
 WORKDIR /app
-COPY package.json package-lock.json vite.config.js index.html ./
+COPY . .
 RUN npm install
 RUN npm run build
-COPY . .
 
 # Etapa final: usar "serve" para servir el contenido estático de Vite
 FROM node:20-alpine
