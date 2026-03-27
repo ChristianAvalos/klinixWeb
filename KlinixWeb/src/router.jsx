@@ -20,7 +20,10 @@ import Resource from "./views/Resource";
 import Appointments from "./views/Appointments";
 
 
-const router = createBrowserRouter ([
+const viteBaseUrl = import.meta.env.BASE_URL || "/";
+const routerBasename = viteBaseUrl === "/" ? undefined : viteBaseUrl.replace(/\/$/, "");
+
+const router = createBrowserRouter([
     {
         path: '/',
         element:  <Layout/>,
@@ -163,6 +166,6 @@ const router = createBrowserRouter ([
         
         
     }
-])
+], routerBasename ? { basename: routerBasename } : undefined)
 
 export default router

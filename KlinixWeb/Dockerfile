@@ -6,11 +6,12 @@ WORKDIR /app
 # Asegura que se instalen devDependencies (vite) y que npm cree binarios en node_modules/.bin
 ENV NODE_ENV=development \
 	NPM_CONFIG_PRODUCTION=false \
-	NPM_CONFIG_BIN_LINKS=true
+	NPM_CONFIG_BIN_LINKS=true \
+	NODE_OPTIONS=--max-old-space-size=768
 
 # Instala dependencias (incluye devDependencies como vite) de forma determinística
 COPY package.json package-lock.json ./
-RUN npm ci --include=dev
+RUN npm ci --include=dev --no-audit --no-fund
 
 # Copia el resto del proyecto y compila
 COPY . .
