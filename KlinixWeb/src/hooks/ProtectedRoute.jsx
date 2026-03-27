@@ -4,7 +4,17 @@ import { usePermisos } from "../context/PermisosContext";
 import Spinner from '../components/Spinner';
 
 const ProtectedRoute = ({ permission, children }) => {
-    const { hasPermission, loading } = usePermisos();
+    const token = localStorage.getItem('AUTH_TOKEN');
+
+    if (!token) {
+        return <Navigate to="/auth/login" replace />;
+    }
+
+    const { hasPermission, loading, authError, connectionError } = usePermisos();
+
+    if (authError) {
+        return <Navigate to="/auth/login" replace />;
+    }
 
 
         // Mostrar spinner mientras se cargan los permisos
@@ -12,10 +22,14 @@ const ProtectedRoute = ({ permission, children }) => {
             return <Spinner />;
         }
 
+    if (connectionError) {
+        return children;
+    }
+
 
     if (!hasPermission(permission)) {
 
-        return <Navigate to="/error" />;
+        return <Navigate to="/error" replace />;
     }
 
     return (
