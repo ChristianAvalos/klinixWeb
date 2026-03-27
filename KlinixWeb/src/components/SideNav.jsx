@@ -1,15 +1,23 @@
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import React, { useEffect, useState } from 'react';
 import { usePermisos } from "../context/PermisosContext";
+
+const buildExpandedSections = (pathname) => ({
+  operaciones: pathname === '/scanvisit' || pathname === '/visit' || pathname === '/doctor' || pathname === '/patients' || pathname === '/consultorios' || pathname === '/agenda',
+  herramientas: pathname === '/organizacion' || pathname === '/usuarios' || pathname === '/usuarios/roles',
+  reportes: pathname === '/usuarios/reporte',
+});
 
 export default function SideNav() {
 
 
   const { permissions, hasPermission, loading } = usePermisos();
+  const location = useLocation();
 
   // Estado para el término de búsqueda y los ítems del menú
   const [searchTerm, setSearchTerm] = useState('');
   const [menuItems, setMenuItems] = useState([]);
+  const [expandedSections, setExpandedSections] = useState(() => buildExpandedSections(location.pathname));
 
   // Función para manejar el cambio del input de búsqueda
   const handleSearch = (e) => {
@@ -58,11 +66,31 @@ export default function SideNav() {
     return () => observer.disconnect();
   }, []); // Solo ejecuta al montar
 
+  useEffect(() => {
+    setExpandedSections((prev) => ({
+      ...prev,
+      ...buildExpandedSections(location.pathname),
+    }));
+  }, [location.pathname]);
+
 
   // Filtrar los items del menú según el término de búsqueda
   const filteredMenuItems = menuItems.filter(item =>
     item.text.includes(searchTerm.trim().toLowerCase())
   );
+
+  const toggleSection = (sectionName) => {
+    setExpandedSections((prev) => ({
+      ...prev,
+      [sectionName]: !prev[sectionName],
+    }));
+  };
+
+  const handleSectionToggle = (event, sectionName) => {
+    event.preventDefault();
+    event.stopPropagation();
+    toggleSection(sectionName);
+  };
 
 
 
@@ -75,7 +103,7 @@ export default function SideNav() {
   return (
     <div>
       {/* Main Sidebar Container */}
-      <div className="sidebar klinix-gradient w-64 min-h-screen fixed !z-[1] shadow-xl border-r border-[color:rgb(var(--klinix-to))] overflow-y-auto">
+      <div className="sidebar h-full klinix-gradient shadow-xl border-r border-[color:rgb(var(--klinix-to))] overflow-y-auto">
         {/* Sidebar user panel (optional) */}
         <div className="user-panel mt-3 pb-3 mb-3 flex justify-center">
           <div className="info">
@@ -143,23 +171,23 @@ export default function SideNav() {
 
 
           <nav className="mt-2 px-1">
-            <ul className="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <ul className="nav nav-pills nav-sidebar flex-column" role="menu" data-accordion="false">
 
               {(hasPermission('Visitas') || hasPermission('Doctores') || hasPermission('Pacientes') || hasPermission('Consultorios'))  && (
 
-                <li className="nav-item has-treeview">
-                    <a
-                    href="#"
-                    onClick={(e) => e.preventDefault()}
-                    className="nav-link text-klinix-on font-bold underline underline-offset-4 decoration-cyan-300/60 tracking-wide menu-toggle flex items-center justify-between rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors"
+                <li className={`nav-item has-treeview ${expandedSections.operaciones ? 'menu-open' : ''}`}>
+                    <button
+                    type="button"
+                    onClick={(event) => handleSectionToggle(event, 'operaciones')}
+                    className="nav-link text-klinix-on font-bold underline underline-offset-4 decoration-cyan-300/60 tracking-wide flex items-center justify-between rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors w-full border-0 bg-transparent text-left"
                   >
                     <p className="m-0">
                       Operaciones
-                      <i className="right fas fa-angle-left ml-2" />
+                      <i className={`right fas fa-angle-left ml-2 transition-transform ${expandedSections.operaciones ? 'rotate-[-90deg]' : ''}`} />
                     </p>
-                  </a>
+                  </button>
 
-                  <ul className="nav nav-treeview px-2">
+                  <ul className="nav nav-treeview px-2" style={{ display: expandedSections.operaciones ? 'block' : 'none' }}>
                     {hasPermission('Visitas') && (
                       <li className="nav-item">
                         <Link to="/scanvisit" className="nav-link flex items-center gap-2 text-klinix-on font-bold rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors">
@@ -225,19 +253,19 @@ export default function SideNav() {
 
               {(hasPermission('Herraminetas_usuarios') || hasPermission('Organizacion')) && (
 
-                <li className="nav-item has-treeview">
-                    <a
-                    href="#"
-                    onClick={(e) => e.preventDefault()}
-                    className="nav-link text-klinix-on font-bold underline underline-offset-4 decoration-cyan-300/60 tracking-wide menu-toggle flex items-center justify-between rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors"
+                <li className={`nav-item has-treeview ${expandedSections.herramientas ? 'menu-open' : ''}`}>
+                    <button
+                    type="button"
+                    onClick={(event) => handleSectionToggle(event, 'herramientas')}
+                    className="nav-link text-klinix-on font-bold underline underline-offset-4 decoration-cyan-300/60 tracking-wide flex items-center justify-between rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors w-full border-0 bg-transparent text-left"
                   >
                     <p className="m-0">
                       Herramientas
-                      <i className="right fas fa-angle-left ml-2" />
+                      <i className={`right fas fa-angle-left ml-2 transition-transform ${expandedSections.herramientas ? 'rotate-[-90deg]' : ''}`} />
                     </p>
-                  </a>
+                  </button>
 
-                  <ul className="nav nav-treeview px-2">
+                  <ul className="nav nav-treeview px-2" style={{ display: expandedSections.herramientas ? 'block' : 'none' }}>
                     {hasPermission('Organizacion') && (
                       <li className="nav-item">
                         <Link to="/organizacion" className="nav-link flex items-center gap-2 text-klinix-on font-bold rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors">
@@ -271,19 +299,19 @@ export default function SideNav() {
 
 
               {hasPermission('Reporte_Usuarios') && (
-                <li className="nav-item has-treeview">
-                    <a
-                    href="#"
-                    onClick={(e) => e.preventDefault()}
-                    className="nav-link text-klinix-on font-bold underline underline-offset-4 decoration-cyan-300/60 tracking-wide menu-toggle flex items-center justify-between rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors"
+                <li className={`nav-item has-treeview ${expandedSections.reportes ? 'menu-open' : ''}`}>
+                    <button
+                    type="button"
+                    onClick={(event) => handleSectionToggle(event, 'reportes')}
+                    className="nav-link text-klinix-on font-bold underline underline-offset-4 decoration-cyan-300/60 tracking-wide flex items-center justify-between rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors w-full border-0 bg-transparent text-left"
                   >
                     <p className="m-0">
                       Reportes
-                      <i className="right fas fa-angle-left ml-2" />
+                      <i className={`right fas fa-angle-left ml-2 transition-transform ${expandedSections.reportes ? 'rotate-[-90deg]' : ''}`} />
                     </p>
-                  </a>
+                  </button>
 
-                  <ul className="nav nav-treeview px-2">
+                  <ul className="nav nav-treeview px-2" style={{ display: expandedSections.reportes ? 'block' : 'none' }}>
                     {hasPermission('Reporte_Usuarios') && (
                       <li className="nav-item">
                         <Link to="/usuarios/reporte" className="nav-link flex items-center gap-2 text-klinix-on font-bold rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors">

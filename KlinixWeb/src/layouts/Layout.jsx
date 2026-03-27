@@ -12,10 +12,10 @@ export default function Layout() {
             <ThemeProvider>
                 <div className="wrapper">
                     <Header />
-                    <aside className="main-sidebar font-bold klinix-sidenav elevation-4 !z-[1]">
+                    <aside className="main-sidebar font-bold klinix-sidenav klinix-gradient elevation-4 !z-[1040]">
                         <SideNav />
                     </aside>
-                    <main className="content-wrapper flex-1 h-screen overflow-y-scroll bg-white p-3 ml-64">
+                    <main className="content-wrapper flex-1 h-screen overflow-y-scroll bg-white p-3">
                         <Outlet />
                     </main>
                     <Footer />
