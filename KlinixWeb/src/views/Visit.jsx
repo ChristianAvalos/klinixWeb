@@ -167,7 +167,7 @@ export default function Visits() {
                             title="Visitas"
                             placeholder="Buscar visita..."
                             // buttonLabel="Añadir visita"
-                             onSearch={handleSearch}
+                            onSearch={handleSearch}
                             // onAdd={handleAdd}
                         />
                         <div className="card-body">
@@ -193,7 +193,7 @@ export default function Visits() {
                                     <tbody>
                                         {visitsRender.length === 0 ? (
                                             <tr>
-                                                <td colSpan={11} className="text-center text-gray-600 py-6">
+                                                <td colSpan={13} className="text-center text-gray-600 py-6">
                                                     No existen visitas.
                                                 </td>
                                             </tr>

@@ -34,13 +34,13 @@ export default function Login() {
     }
 
     return (
-        <div className="min-h-screen flex flex-col justify-center items-center">
-            <div className="bg-white shadow-lg rounded-2xl px-8 py-10 w-full max-w-md">
+        <div className="flex min-h-[calc(100vh-5rem)] w-full items-center justify-center">
+            <div className="w-full max-w-md rounded-3xl bg-white px-8 py-10 shadow-2xl ring-1 ring-slate-200/70">
                 <div className="flex justify-center">
-                    <img src="/img/Logo Institucional.png" alt="Logo" className="w-24 mb-4" />
+                    <img src="/img/Logo Institucional.png" alt="Logo" className="mb-4 h-24 w-24 rounded-full bg-slate-50 object-contain p-2 shadow-sm" />
                 </div>
 
-                <h1 className="text-3xl font-bold text-center mb-2">Iniciar sesión</h1>
+                <h1 className="mb-2 text-center text-3xl font-bold text-slate-900">Iniciar sesión</h1>
                 <p className="text-center text-gray-500 mb-6">Accede a tu cuenta para gestionar tus eventos</p>
                 <form onSubmit={handleSubmit} noValidate>
                     {errores && errores.map((error, i) => <Alerta key={i}>{error}</Alerta>)}
@@ -56,7 +56,7 @@ export default function Login() {
                             <input
                                 type="text"
                                 id="nameUser"
-                                className="pl-10 pr-3 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-gray-50"
+                                className="w-full rounded-lg border border-gray-300 bg-gray-50 py-3 pl-10 pr-3 text-slate-900 placeholder:text-slate-400 caret-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-400"
                                 name="nameUser"
                                 placeholder="Usuario"
                                 ref={nameUserRef}
@@ -75,7 +75,7 @@ export default function Login() {
                             <input
                                 type="password"
                                 id="password"
-                                className="pl-10 pr-3 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-gray-50"
+                                className="w-full rounded-lg border border-gray-300 bg-gray-50 py-3 pl-10 pr-3 text-slate-900 placeholder:text-slate-400 caret-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-400"
                                 name="password"
                                 placeholder="Contraseña"
                                 ref={passwordRef}

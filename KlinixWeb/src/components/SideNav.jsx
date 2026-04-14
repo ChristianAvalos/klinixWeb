@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom"
 import React, { useEffect, useState } from 'react';
 import { usePermisos } from "../context/PermisosContext";
+import { useTheme } from '../context/ThemeContext';
 
 const buildExpandedSections = (pathname) => ({
   operaciones: pathname === '/scanvisit' || pathname === '/visit' || pathname === '/doctor' || pathname === '/patients' || pathname === '/consultorios' || pathname === '/agenda',
@@ -8,63 +9,45 @@ const buildExpandedSections = (pathname) => ({
   reportes: pathname === '/usuarios/reporte',
 });
 
+const parseTriplet = (value) => String(value).trim().split(/\s+/).map(Number);
+const mixTriplets = (base, mixWith, weight) => {
+  const baseParts = parseTriplet(base);
+  const mixParts = parseTriplet(mixWith);
+
+  if (baseParts.length !== 3 || mixParts.length !== 3) {
+    return base;
+  }
+
+  return baseParts
+    .map((part, index) => Math.round(part * (1 - weight) + mixParts[index] * weight))
+    .join(' ');
+};
+
+const sectionTitleClasses = "mt-5 flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-sm font-extrabold uppercase tracking-[0.14em] transition hover:bg-white/10";
+const itemLinkClasses = "flex items-center gap-3 rounded-xl px-3 py-2 text-[1.02rem] font-semibold transition hover:bg-white/10";
+
 export default function SideNav() {
-
-
   const { permissions, hasPermission, loading } = usePermisos();
+  const { theme } = useTheme();
   const location = useLocation();
-
-  // Estado para el término de búsqueda y los ítems del menú
-  const [searchTerm, setSearchTerm] = useState('');
-  const [menuItems, setMenuItems] = useState([]);
   const [expandedSections, setExpandedSections] = useState(() => buildExpandedSections(location.pathname));
+  const isLightTheme = theme.on === '15 23 42';
+  const sidebarFrom = isLightTheme ? mixTriplets(theme.from, '15 23 42', 0.12) : theme.from;
+  const sidebarTo = isLightTheme ? mixTriplets(theme.to, '15 23 42', 0.18) : theme.to;
+  const dividerColor = isLightTheme ? `rgba(${theme.on}, 0.14)` : 'rgba(255, 255, 255, 0.1)';
 
-  // Función para manejar el cambio del input de búsqueda
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
+  const loadingStyle = {
+    backgroundColor: `rgb(${sidebarFrom})`,
+    backgroundImage: `linear-gradient(180deg, rgb(${sidebarFrom}) 0%, rgb(${sidebarTo}) 100%)`,
+    color: `rgb(${theme.on})`,
   };
 
-  // useEffect para extraer automáticamente los ítems del menú
-  useEffect(() => {
-    // Crear un observador para detectar cambios en el DOM
-    const observer = new MutationObserver(() => {
-      // Obtener los ítems dinámicamente del DOM usando querySelectorAll
-      // Excluye toggles de treeview para no contaminar la búsqueda
-      const links = document.querySelectorAll(".nav-item .nav-link:not(.menu-toggle)");
-      const items = Array.from(links).map(link => {
-        const route = link.getAttribute('href'); // Obtener el atributo to directamente del Link
-        const textElement = link.querySelector('p'); // Buscar el elemento <p> dentro del Link
-        const text = textElement ? textElement.textContent.trim().toLowerCase() : '';
-
-        return {
-          text: text,
-          route: route, // Guardar la ruta junto con el texto
-          originalElement: link
-        };
-      });
-      // Actualizar el estado solo si hay un cambio real
-      setMenuItems(prevItems => {
-        const newItems = items.filter(item => !prevItems.some(prev => prev.text === item.text));
-        return [...prevItems, ...newItems];
-      });
-        if (loading) {
-          return (
-            <div className="sidebar klinix-gradient w-64 min-h-screen fixed !z-[1] shadow-xl border-r border-[color:rgb(var(--klinix-to))] overflow-y-auto flex items-center justify-center">
-              <span className="font-bold" style={{ color: 'rgb(var(--klinix-on))' }}>Cargando menú...</span>
-            </div>
-          );
-        }
-    });
-
-    // Observar cambios en el contenedor principal de la barra lateral
-    const sidebar = document.querySelector('.main-sidebar');
-    if (sidebar) {
-      observer.observe(sidebar, { childList: true, subtree: true });
-    }
-
-    // Desconectar el observador cuando se desmonte el componente
-    return () => observer.disconnect();
-  }, []); // Solo ejecuta al montar
+  const sidenavStyle = {
+    backgroundColor: `rgb(${sidebarFrom})`,
+    backgroundImage: `linear-gradient(180deg, rgb(${sidebarFrom}) 0%, rgb(${sidebarTo}) 100%)`,
+    color: `rgb(${theme.on})`,
+    borderRightColor: dividerColor,
+  };
 
   useEffect(() => {
     setExpandedSections((prev) => ({
@@ -73,11 +56,6 @@ export default function SideNav() {
     }));
   }, [location.pathname]);
 
-
-  // Filtrar los items del menú según el término de búsqueda
-  const filteredMenuItems = menuItems.filter(item =>
-    item.text.includes(searchTerm.trim().toLowerCase())
-  );
 
   const toggleSection = (sectionName) => {
     setExpandedSections((prev) => ({
@@ -92,152 +70,103 @@ export default function SideNav() {
     toggleSection(sectionName);
   };
 
-
-
-  //esto es para ver la cantidad de permisos que tiene
-  //   permissions.forEach(permission => {
-  //     console.log(`El usuario tiene permiso: ${permission}`);
-  // });
-
+  if (loading) {
+    return (
+      <div className="flex h-full w-full items-center justify-center" style={loadingStyle}>
+        <span className="text-lg font-bold">Cargando menú...</span>
+      </div>
+    );
+  }
 
   return (
-    <div className="flex h-full w-full">
-      {/* Main Sidebar Container */}
-      <div className="sidebar flex-1 min-h-0 klinix-gradient shadow-xl border-r border-[color:rgb(var(--klinix-to))] overflow-y-auto">
-        {/* Sidebar user panel (optional) */}
-        <div className="user-panel mt-3 pb-3 mb-3 flex justify-center">
-          <div className="info">
+    <div className="flex h-full min-h-full w-full">
+      <div className="sidebar flex h-full min-h-full flex-1 flex-col overflow-y-auto border-r shadow-2xl" style={sidenavStyle}>
+        <div className="flex flex-col items-center gap-4 px-5 pb-4 pt-6">
+          <div className="flex justify-center">
             {hasPermission('Principal') ? (
-
               <Link to="/" className="flex justify-center">
                 <img
                   src="/img/Logo Institucional.png"
                   alt="CDSystem"
-                  className="rounded-full bg-white w-50 h-30"
+                  className="h-40 w-40 rounded-full bg-white object-contain p-3 shadow-xl ring-1 ring-white/15"
                 />
               </Link>
             ) : (
               <img
                 src="/img/Logo Institucional.png"
                 alt="CDSystem"
-                className="rounded-full bg-white w-50 h-30"
+                className="h-40 w-40 rounded-full bg-white object-contain p-3 shadow-xl ring-1 ring-white/15"
               />
             )}
           </div>
+          <div className="h-px w-full" style={{ backgroundColor: dividerColor }} />
         </div>
-
-
-          {/* SidebarSearch Form */}
-          {/* <div className="form-inline px-3">
-            <div className="input-group" data-widget="sidebar-search">
-              <input
-                className="form-control form-control-sidebar"
-                type="search"
-                placeholder="Buscar"
-                aria-label="Search"
-                value={searchTerm}
-                onChange={handleSearch}
-              />
-              <div className="input-group-append">
-                <button className="btn btn-sidebar" type="button">
-                  <span className="font-bold text-white">
-                    <i className="fas fa-search fa-fw" />
-                  </span>
-                </button>
-              </div>
-            </div>
-          </div> */}
-
-
-          {/* Mostrar los items filtrados solo si hay término de búsqueda */}
-          {/* {searchTerm && (
-            <ul className="nav nav-pills nav-sidebar flex-column px-2">
-              {filteredMenuItems.length > 0 ? (
-                filteredMenuItems.map((item, index) => (
-                  <li key={index} className="nav-item">
-                    <Link to={item.route} className="nav-link text-klinix-on font-bold flex items-center gap-2 rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors">
-                      <i className="nav-icon fas fa-circle text-xs"></i>
-                      <p className="m-0">{item.text}</p>
-                    </Link>
-                  </li>
-                ))
-              ) : (
-                <p className="text-white ml-3">No results found</p>
-              )}
-            </ul>
-          )} */}
-
-          {/* Sidebar Menu */}
-
-
-          <nav className="mt-2 px-1">
-            <ul className="nav nav-pills nav-sidebar flex-column" role="menu" data-accordion="false">
+        <nav className="flex-1 px-3 pb-6">
+          <ul className="space-y-1" role="menu">
 
               {(hasPermission('Visitas') || hasPermission('Doctores') || hasPermission('Pacientes') || hasPermission('Consultorios'))  && (
 
-                <li className={`nav-item has-treeview ${expandedSections.operaciones ? 'menu-open' : ''}`}>
+                <li>
                     <button
                     type="button"
                     onClick={(event) => handleSectionToggle(event, 'operaciones')}
-                    className="nav-link text-klinix-on font-bold underline underline-offset-4 decoration-cyan-300/60 tracking-wide flex items-center justify-between rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors w-full border-0 bg-transparent text-left"
+                    className={sectionTitleClasses}
                   >
-                    <p className="m-0">
-                      Operaciones
-                      <i className={`right fas fa-angle-left ml-2 transition-transform ${expandedSections.operaciones ? 'rotate-[-90deg]' : ''}`} />
-                    </p>
+                    <span>Operaciones</span>
+                    <i className={`fas fa-angle-left text-sm transition-transform ${expandedSections.operaciones ? '-rotate-90' : ''}`} />
                   </button>
 
-                  <ul className="nav nav-treeview px-2" style={{ display: expandedSections.operaciones ? 'block' : 'none' }}>
+                  <ul className={`space-y-1 overflow-hidden pl-2 transition-all ${expandedSections.operaciones ? 'mt-2 max-h-[420px] opacity-100' : 'max-h-0 opacity-0'}`}>
                     {hasPermission('Visitas') && (
-                      <li className="nav-item">
-                        <Link to="/scanvisit" className="nav-link flex items-center gap-2 text-klinix-on font-bold rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors">
-                          <img src="/img/Icon/access-card.png" alt="Organigrama" className="w-5 h-5 mr-2" />
-                          <p className="ml-2 m-0">Escanear visitas</p>
+                      <li>
+                        <Link to="/scanvisit" className={itemLinkClasses}>
+                          <img src="/img/Icon/access-card.png" alt="Escanear visitas" className="h-5 w-5 shrink-0" />
+                          <span>Escanear visitas</span>
                         </Link>
                       </li>
                     )}
 
                     {hasPermission('Visitas') && (
-                      <li className="nav-item">
-                        <Link to="/visit" className="nav-link flex items-center gap-2 text-klinix-on font-bold rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors">
-                          <img src="/img/Icon/user-group-men.png" alt="Organigrama" className="w-5 h-5 mr-2" />
-                          <p className="ml-2 m-0">Fichero de visitas</p>
+                      <li>
+                        <Link to="/visit" className={itemLinkClasses}>
+                          <img src="/img/Icon/user-group-men.png" alt="Fichero de visitas" className="h-5 w-5 shrink-0" />
+                          <span>Fichero de visitas</span>
                         </Link>
                       </li>
                     )}
 
                     {hasPermission('Doctores') && (
-                      <li className="nav-item">
-                        <Link to="/doctor" className="nav-link flex items-center gap-2 text-klinix-on font-bold rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors">
-                          <img src="/img/Icon/people_doctor.png" alt="Organigrama" className="w-5 h-5 mr-2" />
-                          <p className="ml-2 m-0">Fichero de doctores</p>
+                      <li>
+                        <Link to="/doctor" className={itemLinkClasses}>
+                          <img src="/img/Icon/people_doctor.png" alt="Fichero de doctores" className="h-5 w-5 shrink-0" />
+                          <span>Fichero de doctores</span>
                         </Link>
                       </li>
                     )}
 
                     {hasPermission('Pacientes') && (
-                      <li className="nav-item">
-                        <Link to="/patients" className="nav-link flex items-center gap-2 text-klinix-on font-bold rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors">
-                          <i className="fas fa-user-injured mr-1"></i>
-                          <p className="ml-2 m-0">Fichero de pacientes</p>
+                      <li>
+                        <Link to="/patients" className={itemLinkClasses}>
+                          <i className="fas fa-user-injured h-5 w-5 shrink-0 text-center" />
+                          <span>Fichero de pacientes</span>
                         </Link>
                       </li>
                     )}
 
                     {hasPermission('Consultorios') && (
-                      <li className="nav-item">
-                        <Link to="/consultorios" className="nav-link flex items-center gap-2 text-klinix-on font-bold rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors">
-                          <img src="/img/Icon/pharmacy.png" alt="Organigrama" className="w-5 h-5 mr-2" />
-                          <p className="ml-2 m-0">Fichero de consultorios</p>
+                      <li>
+                        <Link to="/consultorios" className={itemLinkClasses}>
+                          <img src="/img/Icon/pharmacy.png" alt="Fichero de consultorios" className="h-5 w-5 shrink-0" />
+                          <span>Fichero de consultorios</span>
                         </Link>
                       </li>
                     )}
 
                     {hasPermission('Agenda') && (
-                      <li className="nav-item">
-                        <Link to="/agenda" className="nav-link flex items-center gap-2 text-klinix-on font-bold rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors">
-                          <img src="/img/Icon/calendar2.png" alt="Organigrama" className="w-5 h-5 mr-2" />
-                          <p className="ml-2 m-0">Agendamientos</p>
+                      <li>
+                        <Link to="/agenda" className={itemLinkClasses}>
+                          <img src="/img/Icon/calendar2.png" alt="Agendamientos" className="h-5 w-5 shrink-0" />
+                          <span>Agendamientos</span>
                         </Link>
                       </li>
                     )}
@@ -253,41 +182,39 @@ export default function SideNav() {
 
               {(hasPermission('Herraminetas_usuarios') || hasPermission('Organizacion')) && (
 
-                <li className={`nav-item has-treeview ${expandedSections.herramientas ? 'menu-open' : ''}`}>
+                <li>
                     <button
                     type="button"
                     onClick={(event) => handleSectionToggle(event, 'herramientas')}
-                    className="nav-link text-klinix-on font-bold underline underline-offset-4 decoration-cyan-300/60 tracking-wide flex items-center justify-between rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors w-full border-0 bg-transparent text-left"
+                    className={sectionTitleClasses}
                   >
-                    <p className="m-0">
-                      Herramientas
-                      <i className={`right fas fa-angle-left ml-2 transition-transform ${expandedSections.herramientas ? 'rotate-[-90deg]' : ''}`} />
-                    </p>
+                    <span>Herramientas</span>
+                    <i className={`fas fa-angle-left text-sm transition-transform ${expandedSections.herramientas ? '-rotate-90' : ''}`} />
                   </button>
 
-                  <ul className="nav nav-treeview px-2" style={{ display: expandedSections.herramientas ? 'block' : 'none' }}>
+                  <ul className={`space-y-1 overflow-hidden pl-2 transition-all ${expandedSections.herramientas ? 'mt-2 max-h-[260px] opacity-100' : 'max-h-0 opacity-0'}`}>
                     {hasPermission('Organizacion') && (
-                      <li className="nav-item">
-                        <Link to="/organizacion" className="nav-link flex items-center gap-2 text-klinix-on font-bold rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors">
-                          <img src="/img/Icon/organogram.png" alt="Organigrama" className="w-5 h-5 mr-2" />
-                          <p className="ml-2 m-0">Organización</p>
+                      <li>
+                        <Link to="/organizacion" className={itemLinkClasses}>
+                          <img src="/img/Icon/organogram.png" alt="Organización" className="h-5 w-5 shrink-0" />
+                          <span>Organización</span>
                         </Link>
                       </li>
                     )}
 
                     {hasPermission('Herraminetas_usuarios') && (
                       <>
-                        <li className="nav-item">
-                          <Link to="/usuarios" className="nav-link flex items-center gap-2 text-klinix-on font-bold rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors">
-                             <img src="/img/Icon/user-group.png" alt="User" className="w-5 h-5 mr-2" />
-                            <p className="ml-2 m-0">Usuarios</p>
+                        <li>
+                          <Link to="/usuarios" className={itemLinkClasses}>
+                             <img src="/img/Icon/user-group.png" alt="Usuarios" className="h-5 w-5 shrink-0" />
+                            <span>Usuarios</span>
                           </Link>
                         </li>
 
-                        <li className="nav-item">
-                          <Link to="/usuarios/roles" className="nav-link flex items-center gap-2 text-klinix-on font-bold rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors">
-                            <img src="/img/Icon/manage-user.png" alt="Roles User" className="w-5 h-5 mr-2" />
-                            <p className="ml-2 m-0">Roles usuario </p>
+                        <li>
+                          <Link to="/usuarios/roles" className={itemLinkClasses}>
+                            <img src="/img/Icon/manage-user.png" alt="Roles usuario" className="h-5 w-5 shrink-0" />
+                            <span>Roles usuario</span>
                           </Link>
                         </li>
                       </>
@@ -299,24 +226,22 @@ export default function SideNav() {
 
 
               {hasPermission('Reporte_Usuarios') && (
-                <li className={`nav-item has-treeview ${expandedSections.reportes ? 'menu-open' : ''}`}>
+                <li>
                     <button
                     type="button"
                     onClick={(event) => handleSectionToggle(event, 'reportes')}
-                    className="nav-link text-klinix-on font-bold underline underline-offset-4 decoration-cyan-300/60 tracking-wide flex items-center justify-between rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors w-full border-0 bg-transparent text-left"
+                    className={sectionTitleClasses}
                   >
-                    <p className="m-0">
-                      Reportes
-                      <i className={`right fas fa-angle-left ml-2 transition-transform ${expandedSections.reportes ? 'rotate-[-90deg]' : ''}`} />
-                    </p>
+                    <span>Reportes</span>
+                    <i className={`fas fa-angle-left text-sm transition-transform ${expandedSections.reportes ? '-rotate-90' : ''}`} />
                   </button>
 
-                  <ul className="nav nav-treeview px-2" style={{ display: expandedSections.reportes ? 'block' : 'none' }}>
+                  <ul className={`space-y-1 overflow-hidden pl-2 transition-all ${expandedSections.reportes ? 'mt-2 max-h-28 opacity-100' : 'max-h-0 opacity-0'}`}>
                     {hasPermission('Reporte_Usuarios') && (
-                      <li className="nav-item">
-                        <Link to="/usuarios/reporte" className="nav-link flex items-center gap-2 text-klinix-on font-bold rounded-md hover:bg-[color:rgba(var(--klinix-to),0.12)] transition-colors">
-                          <img src="/img/Icon/report-print.png" alt="Report" className="w-5 h-5 mr-2" />
-                          <p className="ml-2 m-0">Reporte de usuarios</p>
+                      <li>
+                        <Link to="/usuarios/reporte" className={itemLinkClasses}>
+                          <img src="/img/Icon/report-print.png" alt="Reporte de usuarios" className="h-5 w-5 shrink-0" />
+                          <span>Reporte de usuarios</span>
                         </Link>
                       </li>
                     )}
@@ -324,11 +249,8 @@ export default function SideNav() {
                 </li>
               )}
             </ul>
-          </nav>
-          {/* /.sidebar-menu */}
-        </div>
-        {/* /.sidebar */}
-
+        </nav>
+      </div>
     </div>
   )
 }

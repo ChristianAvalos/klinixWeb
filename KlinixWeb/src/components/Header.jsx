@@ -5,8 +5,8 @@ import { useAuth } from "../hooks/useAuth";
 import ChangePasswordModal from '../views/ModalPassword';
 import { useTheme } from '../context/ThemeContext';
 
-export default function Header() {
-    const { themes, themeName, setTheme, resetTheme } = useTheme();
+export default function Header({ onToggleSidebar }) {
+  const { themes, themeName, setTheme, resetTheme } = useTheme();
   const { logout, user } = useAuth({ middleware: 'auth' })
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -20,6 +20,15 @@ export default function Header() {
 
   // Manejo del dropdown y cierre al hacer clic fuera (usa captura para mayor fiabilidad)
   const toggleDropdown = () => setDropdownOpen((v) => !v);
+
+  const toggleFullscreen = async () => {
+    if (!document.fullscreenElement) {
+      await document.documentElement.requestFullscreen?.();
+      return;
+    }
+
+    await document.exitFullscreen?.();
+  };
 
   useEffect(() => {
     const handleOutside = (event) => {
@@ -62,35 +71,28 @@ export default function Header() {
 
   return (
     <div>
-      {/* Navbar */}
-      <nav className="main-header navbar navbar-expand klinix-gradient !z-[1]">
-        {/* Left navbar links */}
-        <ul className="navbar-nav">
-          <li className="nav-item">
-            <a className="nav-link text-klinix-on" data-widget="pushmenu" href="#" role="button"><i className="fas fa-bars" /></a>
-          </li>
-        </ul>
-        {/* Right navbar links */}
-        <ul className="navbar-nav ml-auto">
-          <li className="nav-item">
-            <a className="nav-link text-klinix-on" data-widget="fullscreen" href="#" role="button">
-              <i className="fas fa-expand-arrows-alt" />
-            </a>
-          </li>
-          <li className="nav-item">
-            {/* Usuario logueado y menú desplegable */}
-            <div className="relative" ref={dropdownRef}>
+      <nav className="sticky top-0 z-20 flex min-h-16 items-center gap-3 border-b border-slate-200/60 klinix-gradient px-4 shadow-md md:px-6">
+        <div className="flex items-center gap-2">
+          <button type="button" className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-white/10 text-klinix-on transition hover:bg-white/15" onClick={onToggleSidebar} aria-label="Alternar menú lateral">
+            <i className="fas fa-bars" />
+          </button>
+        </div>
+        <div className="ml-auto flex items-center gap-2">
+          <button type="button" className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-white/10 text-klinix-on transition hover:bg-white/15" onClick={toggleFullscreen} aria-label="Pantalla completa">
+            <i className="fas fa-expand-arrows-alt" />
+          </button>
+          <div className="relative" ref={dropdownRef}>
               <button
+                type="button"
                 onClick={toggleDropdown}
-                className="nav-link text-klinix-on font-semibold focus:outline-none flex items-center space-x-2"
+                className="inline-flex items-center gap-2 rounded-xl bg-white/10 px-3 py-2 font-semibold text-klinix-on transition hover:bg-white/15"
               >
-                {user?.name} {/* Muestra el nombre del usuario */}
+                <span>{user?.name}</span>
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
               </button>
 
-              {/* Menú desplegable usando Portal */}
               {dropdownOpen && ReactDOM.createPortal(
                 <ul ref={menuRef} className="fixed right-4 top-16 w-56 bg-white rounded-lg shadow-lg z-[9999] transition-all duration-200 ease-in-out border border-gray-200">
                   <li className="px-4 pt-3 pb-2">
@@ -149,13 +151,9 @@ export default function Header() {
                 </ul>,
                 document.body
               )}
-            </div>
-          </li>
-
-
-        </ul>
+          </div>
+        </div>
       </nav>
-      {/* Renderizar el modal usuario */}
       {isModalOpen && (
         <ModalUsuarios
           usuario={user}
@@ -165,7 +163,6 @@ export default function Header() {
         />
       )}
 
-      {/* Renderizar el modal de cambio de contraseña */}
       {isModalOpenPassword && (
         <ChangePasswordModal
           isOpen={isModalOpenPassword}
