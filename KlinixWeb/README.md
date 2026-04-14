@@ -1,8 +1,13 @@
 # React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Base path del frontend
 
-Currently, two official plugins are available:
+El proyecto ahora compila con `/` como base por defecto, para que funcione normal en `http://localhost:3002` o detrás de cualquier servidor estático sin un prefijo especial.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Si necesitas publicarlo detrás de un subpath, por ejemplo `/klinix/`, define la variable antes de compilar:
+
+```bash
+VITE_APP_BASE=/klinix/ npm run build
+```
+
+El router usa automáticamente la misma base que configure Vite, así que no hace falta tocar código adicional.

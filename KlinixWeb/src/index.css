@@ -41,6 +41,17 @@
 	color: rgb(var(--klinix-on));
 }
 
+.main-sidebar.klinix-sidenav {
+	min-height: 100vh;
+	height: 100vh;
+	overflow: hidden;
+}
+
+.main-sidebar.klinix-sidenav .sidebar {
+	height: 100%;
+	overflow-y: auto;
+}
+
 .text-klinix-on {
 	color: rgb(var(--klinix-on)) !important;
 }
