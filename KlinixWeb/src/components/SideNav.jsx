@@ -101,9 +101,9 @@ export default function SideNav() {
 
 
   return (
-    <div>
+    <div className="flex h-full w-full">
       {/* Main Sidebar Container */}
-      <div className="sidebar h-full klinix-gradient shadow-xl border-r border-[color:rgb(var(--klinix-to))] overflow-y-auto">
+      <div className="sidebar flex-1 min-h-0 klinix-gradient shadow-xl border-r border-[color:rgb(var(--klinix-to))] overflow-y-auto">
         {/* Sidebar user panel (optional) */}
         <div className="user-panel mt-3 pb-3 mb-3 flex justify-center">
           <div className="info">

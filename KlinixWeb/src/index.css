@@ -42,13 +42,21 @@
 }
 
 .main-sidebar.klinix-sidenav {
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 0;
 	min-height: 100vh;
 	height: 100vh;
+	display: flex;
+	flex-direction: column;
 	overflow: hidden;
 }
 
 .main-sidebar.klinix-sidenav .sidebar {
+	flex: 1 1 auto;
 	height: 100%;
+	min-height: 0;
 	overflow-y: auto;
 }
 
