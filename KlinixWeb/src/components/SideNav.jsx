@@ -9,20 +9,6 @@ const buildExpandedSections = (pathname) => ({
   reportes: pathname === '/usuarios/reporte',
 });
 
-const parseTriplet = (value) => String(value).trim().split(/\s+/).map(Number);
-const mixTriplets = (base, mixWith, weight) => {
-  const baseParts = parseTriplet(base);
-  const mixParts = parseTriplet(mixWith);
-
-  if (baseParts.length !== 3 || mixParts.length !== 3) {
-    return base;
-  }
-
-  return baseParts
-    .map((part, index) => Math.round(part * (1 - weight) + mixParts[index] * weight))
-    .join(' ');
-};
-
 const sectionTitleClasses = "mt-5 flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-sm font-extrabold uppercase tracking-[0.14em] transition hover:bg-white/10";
 const itemLinkClasses = "flex items-center gap-3 rounded-xl px-3 py-2 text-[1.02rem] font-semibold transition hover:bg-white/10";
 
@@ -32,19 +18,21 @@ export default function SideNav() {
   const location = useLocation();
   const [expandedSections, setExpandedSections] = useState(() => buildExpandedSections(location.pathname));
   const isLightTheme = theme.on === '15 23 42';
-  const sidebarFrom = isLightTheme ? mixTriplets(theme.from, '15 23 42', 0.12) : theme.from;
-  const sidebarTo = isLightTheme ? mixTriplets(theme.to, '15 23 42', 0.18) : theme.to;
   const dividerColor = isLightTheme ? `rgba(${theme.on}, 0.14)` : 'rgba(255, 255, 255, 0.1)';
 
   const loadingStyle = {
-    backgroundColor: `rgb(${sidebarFrom})`,
-    backgroundImage: `linear-gradient(180deg, rgb(${sidebarFrom}) 0%, rgb(${sidebarTo}) 100%)`,
+    backgroundColor: `rgb(${theme.from})`,
+    backgroundImage: `linear-gradient(180deg, rgb(${theme.from}) 0%, rgb(${theme.to}) 100%)`,
+    backgroundRepeat: 'no-repeat',
     color: `rgb(${theme.on})`,
   };
 
   const sidenavStyle = {
-    backgroundColor: `rgb(${sidebarFrom})`,
-    backgroundImage: `linear-gradient(180deg, rgb(${sidebarFrom}) 0%, rgb(${sidebarTo}) 100%)`,
+    backgroundColor: `rgb(${theme.from})`,
+    backgroundImage: `linear-gradient(180deg, rgb(${theme.from}) 0%, rgb(${theme.to}) 100%)`,
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: '100% 100%',
+    opacity: 1,
     color: `rgb(${theme.on})`,
     borderRightColor: dividerColor,
   };
@@ -88,7 +76,7 @@ export default function SideNav() {
                 <img
                   src="/img/Logo Institucional.png"
                   alt="CDSystem"
-                  className="h-40 w-40 rounded-full bg-white object-contain p-3 shadow-xl ring-1 ring-white/15"
+                  className="mb-4 h-24 w-24 rounded-full bg-slate-50 object-contain p-2 shadow-sm"
                 />
               </Link>
             ) : (

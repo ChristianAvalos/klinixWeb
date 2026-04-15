@@ -1,5 +1,5 @@
 import clienteAxios from "../config/axios";
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from "react-toastify";
 import AlertaModal from "../components/AlertaModal";
 import SearchBar from "../components/SearchBar";
@@ -53,37 +53,74 @@ export default function Visits() {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [totalRecords, setTotalRecords] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
 
     // buscador
     const [searchTerm, setSearchTerm] = useState('');
     const token = localStorage.getItem('AUTH_TOKEN');
+    const activeRequestRef = useRef(null);
+    const lastRequestIdRef = useRef(0);
 
     // obtener visitas
     const fetchVisits = async (page = 1, search = '') => {
+        activeRequestRef.current?.abort();
+        const controller = new AbortController();
+        activeRequestRef.current = controller;
+        const requestId = ++lastRequestIdRef.current;
+        setIsLoading(true);
+
         try {
             const { data } = await clienteAxios.get(
                 `api/visitas?page=${page}&search=${encodeURIComponent(search)}`,
                 {
-                    headers: { Authorization: `Bearer ${token}` }
+                    headers: { Authorization: `Bearer ${token}` },
+                    signal: controller.signal,
                 }
             );
+
+            if (requestId !== lastRequestIdRef.current) {
+                return;
+            }
+
             setVisits(data.data);
             setTotalPages(data.last_page);
             setTotalRecords(data.total);
             setCurrentPage(data.current_page);
         } catch (error) {
+            if (error?.code === 'ERR_CANCELED' || error?.name === 'CanceledError') {
+                return;
+            }
+
+            if (error?.response?.status === 429) {
+                toast.warning('Se alcanzó el límite temporal de consultas. Espera un momento e inténtalo de nuevo.');
+                return;
+            }
+
             console.error('Error al obtener las visitas:', error);
-            throw error;
+        } finally {
+            if (requestId === lastRequestIdRef.current) {
+                setIsLoading(false);
+            }
         }
     };
 
     useEffect(() => {
-        fetchVisits(currentPage);
-    }, [currentPage]);
+        fetchVisits(currentPage, searchTerm);
+    }, [currentPage, searchTerm]);
+
+    useEffect(() => {
+        return () => {
+            activeRequestRef.current?.abort();
+        };
+    }, []);
 
     // paginación
     const handlePageChange = (newPage) => {
-        if (newPage > 0 && newPage <= totalPages) {
+        if (isLoading) {
+            return;
+        }
+
+        if (newPage > 0 && newPage <= totalPages && newPage !== currentPage) {
             setCurrentPage(newPage);
         }
     };
@@ -129,7 +166,7 @@ export default function Visits() {
                 headers: { Authorization: `Bearer ${token}` }
             });
             toast.success('Visita eliminada correctamente.');
-            fetchVisits();
+            fetchVisits(currentPage, searchTerm);
         } catch (error) {
             setAlertType('informativo');
             setAlertMessage('Hubo un problema al eliminar la visita.');
@@ -151,7 +188,7 @@ export default function Visits() {
 
     const handleSearch = (term) => {
         setSearchTerm(term);
-        fetchVisits(1, term);
+        setCurrentPage(1);
     };
 
     const handleAdd = () => {
@@ -244,19 +281,24 @@ export default function Visits() {
                                 <span className="text-lg font-semibold text-gray-700">Total de registros:</span>
                                 <span className="text-lg font-bold text-gray-700">{totalRecords}</span>
                             </div>
+                            {isLoading && (
+                                <div className="py-2 text-sm font-medium text-slate-600">
+                                    Cargando visitas...
+                                </div>
+                            )}
                             <div className="flex flex-col items-center sm:flex-row sm:justify-between py-4 space-y-2 sm:space-y-0">
                                 <div className="flex items-center space-x-2">
                                     <button
                                         onClick={() => handlePageChange(1)}
-                                        disabled={currentPage === 1}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base font-semibold rounded-lg ${currentPage === 1 ? 'bg-gray-400 text-white cursor-not-allowed' : 'klinix-gradient'}`}
+                                        disabled={isLoading || currentPage === 1}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base font-semibold rounded-lg ${(isLoading || currentPage === 1) ? 'bg-gray-400 text-white cursor-not-allowed' : 'klinix-gradient'}`}
                                     >
                                         Primera
                                     </button>
                                     <button
                                         onClick={() => handlePageChange(currentPage - 1)}
-                                        disabled={currentPage === 1}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base font-semibold rounded-lg ${currentPage === 1 ? 'bg-gray-400 text-white cursor-not-allowed' : 'klinix-gradient'}`}
+                                        disabled={isLoading || currentPage === 1}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base font-semibold rounded-lg ${(isLoading || currentPage === 1) ? 'bg-gray-400 text-white cursor-not-allowed' : 'klinix-gradient'}`}
                                     >
                                         Anterior
                                     </button>
@@ -267,15 +309,15 @@ export default function Visits() {
                                 <div className="flex items-center space-x-2">
                                     <button
                                         onClick={() => handlePageChange(currentPage + 1)}
-                                        disabled={currentPage === totalPages}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base font-semibold rounded-lg ${currentPage === totalPages ? 'bg-gray-400 text-white cursor-not-allowed' : 'klinix-gradient'}`}
+                                        disabled={isLoading || currentPage === totalPages}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base font-semibold rounded-lg ${(isLoading || currentPage === totalPages) ? 'bg-gray-400 text-white cursor-not-allowed' : 'klinix-gradient'}`}
                                     >
                                         Siguiente
                                     </button>
                                     <button
                                         onClick={() => handlePageChange(totalPages)}
-                                        disabled={currentPage === totalPages}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base font-semibold rounded-lg ${currentPage === totalPages ? 'bg-gray-400 text-white cursor-not-allowed' : 'klinix-gradient'}`}
+                                        disabled={isLoading || currentPage === totalPages}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base font-semibold rounded-lg ${(isLoading || currentPage === totalPages) ? 'bg-gray-400 text-white cursor-not-allowed' : 'klinix-gradient'}`}
                                     >
                                         Última
                                     </button>

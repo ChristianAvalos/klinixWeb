@@ -264,12 +264,6 @@ main::after {
 	box-shadow: none !important;
 }
 
-/* Desactivar temporalmente backgrounds inline que no pertenezcan a utilidades de tema */
-*[style*="background-image"]:not(.klinix-gradient):not(.klinix-gradient-r) {
-	background-image: none !important;
-	background: transparent !important;
-}
-
 /* Compatibilidad mínima para clases heredadas de las vistas */
 .content,
 .container-fluid,
