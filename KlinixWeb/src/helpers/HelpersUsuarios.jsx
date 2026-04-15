@@ -18,7 +18,7 @@ export const obtenerContadoresDashboard = async () => {
 };
 import clienteAxios from "../config/axios";
 
-export const obtenerUsuarios = async (page = 1, search = "") => {
+export const obtenerUsuarios = async (page = 1, search = "", config = {}) => {
   try {
     // Obtener el token de autenticación
     const token = localStorage.getItem("AUTH_TOKEN");
@@ -30,6 +30,7 @@ export const obtenerUsuarios = async (page = 1, search = "") => {
         headers: {
           Authorization: `Bearer ${token}`, // Configurar el token en los headers
         },
+        ...config,
       },
     );
     // Actualizar el estado con los usuarios obtenidos
@@ -40,7 +41,7 @@ export const obtenerUsuarios = async (page = 1, search = "") => {
   }
 };
 
-export const obtenerRoles = async (page = 1, search = "") => {
+export const obtenerRoles = async (page = 1, search = "", config = {}) => {
   try {
     // Obtener el token de autenticación
     const token = localStorage.getItem("AUTH_TOKEN");
@@ -52,6 +53,7 @@ export const obtenerRoles = async (page = 1, search = "") => {
         headers: {
           Authorization: `Bearer ${token}`, // Configurar el token en los headers
         },
+        ...config,
       },
     );
     // Actualizar el estado con los roles obtenidos
@@ -62,7 +64,7 @@ export const obtenerRoles = async (page = 1, search = "") => {
   }
 };
 
-export const obtenerDoctores = async (page = 1, search = "") => {
+export const obtenerDoctores = async (page = 1, search = "", config = {}) => {
   try {
     // Obtener el token de autenticación
     const token = localStorage.getItem("AUTH_TOKEN");
@@ -74,6 +76,7 @@ export const obtenerDoctores = async (page = 1, search = "") => {
         headers: {
           Authorization: `Bearer ${token}`, // Configurar el token en los headers
         },
+        ...config,
       },
     );
     // Actualizar el estado con los doctores obtenidos
@@ -84,7 +87,7 @@ export const obtenerDoctores = async (page = 1, search = "") => {
   }
 };
 
-export const obtenerConsultorios = async (page = 1, search = "") => {
+export const obtenerConsultorios = async (page = 1, search = "", config = {}) => {
   try {
     // Obtener el token de autenticación
     const token = localStorage.getItem("AUTH_TOKEN");
@@ -96,6 +99,7 @@ export const obtenerConsultorios = async (page = 1, search = "") => {
         headers: {
           Authorization: `Bearer ${token}`, // Configurar el token en los headers
         },
+        ...config,
       },
     );
     // Actualizar el estado con los consultorios obtenidos
@@ -106,7 +110,7 @@ export const obtenerConsultorios = async (page = 1, search = "") => {
   }
 };
 
-export const obtenerPacientes = async (page = 1, search = "") => {
+export const obtenerPacientes = async (page = 1, search = "", config = {}) => {
   try {
     // Obtener el token de autenticación
     const token = localStorage.getItem("AUTH_TOKEN");
@@ -118,6 +122,7 @@ export const obtenerPacientes = async (page = 1, search = "") => {
         headers: {
           Authorization: `Bearer ${token}`, // Configurar el token en los headers
         },
+        ...config,
       },
     );
     // Actualizar el estado con los roles obtenidos
@@ -128,7 +133,7 @@ export const obtenerPacientes = async (page = 1, search = "") => {
   }
 };
 
-export const obtenerVisitas = async (page = 1, search = "") => {
+export const obtenerVisitas = async (page = 1, search = "", config = {}) => {
   try {
     // Obtener el token de autenticación
     const token = localStorage.getItem("AUTH_TOKEN");
@@ -140,6 +145,7 @@ export const obtenerVisitas = async (page = 1, search = "") => {
         headers: {
           Authorization: `Bearer ${token}`, // Configurar el token en los headers
         },
+        ...config,
       },
     );
     // Actualizar el estado con los roles obtenidos

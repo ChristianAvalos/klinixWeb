@@ -1,5 +1,5 @@
 import clienteAxios from "../config/axios";
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from "react-toastify";
 import AlertaModal from "../components/AlertaModal"
 import ModalRol from './ModalRol';
@@ -25,6 +25,7 @@ export default function Roles() {
     //paginacion
     const [paginaActual, setPaginaActual] = useState(1);
     const [totalPaginas, setTotalPaginas] = useState(1);
+    const [isLoading, setIsLoading] = useState(false);
 
     //session total
     const [totalRegistros, setTotalRegistros] = useState(0);
@@ -33,13 +34,22 @@ export default function Roles() {
     const [searchTerm, setSearchTerm] = useState('');
     // Obtener el token de autenticación
     const token = localStorage.getItem('AUTH_TOKEN');
+    const activeRequestRef = useRef(null);
+    const lastRequestIdRef = useRef(0);
 
     //funcion para obtener los roles
     const fetchRoles = async (page = 1, search = '') => {
-        try {
+        activeRequestRef.current?.abort();
+        const controller = new AbortController();
+        activeRequestRef.current = controller;
+        const requestId = ++lastRequestIdRef.current;
+        setIsLoading(true);
 
-            // Realizar la solicitud a la API
-            const data = await obtenerRoles(page, search);
+        try {
+            const data = await obtenerRoles(page, search, { signal: controller.signal });
+            if (requestId !== lastRequestIdRef.current) {
+                return;
+            }
             // Actualizar el estado con los usuarios obtenidos
             setRoles(data.data);
             setTotalPaginas(data.last_page);
@@ -50,23 +60,45 @@ export default function Roles() {
             }
 
         } catch (error) {
+            if (error?.code === 'ERR_CANCELED' || error?.name === 'CanceledError') {
+                return;
+            }
+
+            if (error?.response?.status === 429) {
+                toast.warning('Se alcanzó el límite temporal de consultas. Espera un momento e inténtalo de nuevo.');
+                return;
+            }
+
             console.error('Error al obtener los roles:', error);
-            throw error; // Lanza el error para manejarlo donde sea llamado
+        } finally {
+            if (requestId === lastRequestIdRef.current) {
+                setIsLoading(false);
+            }
         }
     };
 
     //llamo con la pagina para obtener la lista 
     useEffect(() => {
 
-        fetchRoles(paginaActual);
-    }, [paginaActual]);
+        fetchRoles(paginaActual, searchTerm);
+    }, [paginaActual, searchTerm]);
+
+    useEffect(() => {
+        return () => {
+            activeRequestRef.current?.abort();
+        };
+    }, []);
 
 
 
 
     // Función para manejar el cambio de página
     const handlePageChange = (newPage) => {
-        if (newPage > 0 && newPage <= totalPaginas) {
+        if (isLoading) {
+            return;
+        }
+
+        if (newPage > 0 && newPage <= totalPaginas && newPage !== paginaActual) {
             setPaginaActual(newPage); // Actualizar la página actual
         }
     };
@@ -115,7 +147,7 @@ export default function Roles() {
             });
 
             toast.success('Rol eliminado correctamente.');
-            fetchRoles();
+            fetchRoles(paginaActual, searchTerm);
         } catch (error) {
             setTipoAlertaModal('informativo');
             setMensajeAlertaModal('Hubo un problema al eliminar el rol.');
@@ -139,8 +171,7 @@ export default function Roles() {
 
     const handleSearch = (term) => {
         setSearchTerm(term);
-        // console.log("Buscando:", term); // Reemplaza con tu lógica de búsqueda
-        fetchRoles(1, term);
+        setPaginaActual(1);
     };
 
     const handleAdd = () => {
@@ -201,6 +232,11 @@ export default function Roles() {
                                 <span className="text-lg font-semibold text-gray-700">Total de registros:</span>
                                 <span className="text-lg font-bold text-gray-700">{totalRegistros}</span> {/* Aquí el total dinámico */}
                             </div>
+                            {isLoading && (
+                                <div className="py-2 text-sm font-medium text-slate-600">
+                                    Cargando roles...
+                                </div>
+                            )}
 
                             {/* Controles de paginación */}
                             <div className="flex flex-col items-center sm:flex-row sm:justify-between py-4 space-y-2 sm:space-y-0">
@@ -208,15 +244,15 @@ export default function Roles() {
                                 <div className="flex items-center space-x-2">
                                     <button
                                         onClick={() => handlePageChange(1)}
-                                        disabled={paginaActual === 1}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base font-semibold rounded-lg ${paginaActual === 1 ? 'bg-gray-400 text-white cursor-not-allowed' : 'klinix-gradient'}`}
+                                        disabled={isLoading || paginaActual === 1}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base font-semibold rounded-lg ${(isLoading || paginaActual === 1) ? 'bg-gray-400 text-white cursor-not-allowed' : 'klinix-gradient'}`}
                                     >
                                         Primera
                                     </button>
                                     <button
                                         onClick={() => handlePageChange(paginaActual - 1)}
-                                        disabled={paginaActual === 1}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base font-semibold rounded-lg ${paginaActual === 1 ? 'bg-gray-400 text-white cursor-not-allowed' : 'klinix-gradient'}`}
+                                        disabled={isLoading || paginaActual === 1}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base font-semibold rounded-lg ${(isLoading || paginaActual === 1) ? 'bg-gray-400 text-white cursor-not-allowed' : 'klinix-gradient'}`}
                                     >
                                         Anterior
                                     </button>
@@ -231,15 +267,15 @@ export default function Roles() {
                                 <div className="flex items-center space-x-2">
                                     <button
                                         onClick={() => handlePageChange(paginaActual + 1)}
-                                        disabled={paginaActual === totalPaginas}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base font-semibold rounded-lg ${paginaActual === totalPaginas ? 'bg-gray-400 text-white cursor-not-allowed' : 'klinix-gradient'}`}
+                                        disabled={isLoading || paginaActual === totalPaginas}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base font-semibold rounded-lg ${(isLoading || paginaActual === totalPaginas) ? 'bg-gray-400 text-white cursor-not-allowed' : 'klinix-gradient'}`}
                                     >
                                         Siguiente
                                     </button>
                                     <button
                                         onClick={() => handlePageChange(totalPaginas)}
-                                        disabled={paginaActual === totalPaginas}
-                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base font-semibold rounded-lg ${paginaActual === totalPaginas ? 'bg-gray-400 text-white cursor-not-allowed' : 'klinix-gradient'}`}
+                                        disabled={isLoading || paginaActual === totalPaginas}
+                                        className={`px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base font-semibold rounded-lg ${(isLoading || paginaActual === totalPaginas) ? 'bg-gray-400 text-white cursor-not-allowed' : 'klinix-gradient'}`}
                                     >
                                         Última
                                     </button>
