@@ -1,0 +1,5 @@
+KlinixWeb/node_modules/
+Klinix-Laravel/node_modules/
+Klinix-Laravel/vendor/
+Klinix-Laravel/public/build/
+Klinix-Laravel/storage/*.key
